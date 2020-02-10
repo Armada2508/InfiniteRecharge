@@ -83,5 +83,10 @@ public final class Constants {
     public static final int kLShift = 0;
     public static final int kRShift = 1;
 
+    // Shooter Settings
+    public static final int kShooterEncoderUnitsPerRev = 2048;
+    public static final double kShooterGearRatio = 1.0;
+    public static final double kShooterVelocitySampleTime = 0.1;
+    
 
 }

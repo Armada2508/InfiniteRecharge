@@ -41,4 +41,30 @@ public class EncoderUtil {
         return (((double)velocity / (double)(encoderUnitsPerRev * gearRatio)) * Math.PI * wheelDiameter) / time;
     }
 
+    /**
+     * Converts encoder velocity to RPM
+     * @param velocity The encoder velocity
+     * @param encoderUnitsPerRev The number of encoder units per revolution
+     * @param gearRatio The gear ratio between the output and the motor
+     * @param time The time over which the velocity was measued(e.g. 100ms for Talons)
+     * @return RPM of the output
+     */
+    public static double toRPM(double velocity, int encoderUnitsPerRev, double gearRatio, double time) {
+        return (velocity * 60.0 / (double)encoderUnitsPerRev) / (gearRatio * time);
+    }
+
+    
+
+    /**
+     * Converts RPM to encoder velocity
+     * @param velocity The input RPM
+     * @param encoderUnitsPerRev The number of encoder units per revolution
+     * @param gearRatio The gear ratio between the output and the motor
+     * @param time The time over which the velocity is measued(e.g. 100ms for Talons)
+     * @return RPM encoder velocity
+     */
+    public static double fromRPM(double RPM, int encoderUnitsPerRev, double gearRatio, double time) {
+        return RPM * ((double)encoderUnitsPerRev / 60.0) * time * gearRatio;
+    }
+
 }

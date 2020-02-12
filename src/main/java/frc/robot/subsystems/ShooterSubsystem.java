@@ -4,10 +4,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.motion.EncoderUtil;
 import frc.robot.Constants;
 
-public class ShooterSubsystem {
+public class ShooterSubsystem extends SubsystemBase {
 
     private WPI_TalonFX m_leftMotor;
     private WPI_TalonFX m_rightMotor;
@@ -17,6 +18,11 @@ public class ShooterSubsystem {
         m_rightMotor = new WPI_TalonFX(rightTalonID);
 
         m_leftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    }
+
+    @Override
+    public void periodic() {
+        
     }
 
     public void leftInverted(boolean inverted) {

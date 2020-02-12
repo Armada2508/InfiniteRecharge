@@ -87,6 +87,12 @@ public final class Constants {
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
+
+    // Color Wheel Constants
+    public static final double kColorWheelDiameter = 13;
+    public static final double kEncoderUnitsPerRev = 1024;
+    public static final double kColorWheelGearRatio = 20.0;
+    public static final double kWOFStealthWheelDiameter = 4.0;
     
 
 }

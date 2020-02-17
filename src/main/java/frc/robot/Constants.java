@@ -12,7 +12,7 @@ import frc.lib.vision.Resolution;
 
 public final class Constants {
 
-    // Motor Ports
+    // Drive Motor Ports
     public static final int kRightMotorPort = 3;
     public static final int kRightMotorFollowerPort = 4;
     public static final int kLeftMotorPort = 7;
@@ -87,12 +87,26 @@ public final class Constants {
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
+    public static final boolean kShooterLeftInverted = false;
+    public static final boolean kShooterRightInverted = false;
+
 
     // Color Wheel Constants
     public static final double kColorWheelDiameter = 13;
-    public static final double kEncoderUnitsPerRev = 1024;
+    public static final int kWOFEncoderUnitsPerRev = 1024;
     public static final double kColorWheelGearRatio = 20.0;
     public static final double kWOFStealthWheelDiameter = 4.0;
-    
+
+    // Transport Constants
+    public static final double kElevatorPulleyDiameter = 2.60;
+    public static final double kDiagonalPulleyDiameter = 2.60;
+    public static final int kTransportEncoderUnitsPerRev = 1024;
+
+    public static final int kElevatorMotorPort = 0;
+    public static final int kDiagonalMotorPort = 0;
+    public static final int kElevatorEncoderPortA = 0;
+    public static final int kElevatorEncoderPortB = 0;
+    public static final int kDiagonalEncoderPortA = 0;
+    public static final int kDiagonalEncoderPortB = 0;
 
 }

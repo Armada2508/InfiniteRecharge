@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
 import frc.robot.Constants;
 
@@ -17,7 +17,8 @@ public class ShooterSubsystem extends SubsystemBase {
         m_leftMotor = new WPI_TalonFX(leftTalonID);
         m_rightMotor = new WPI_TalonFX(rightTalonID);
 
-        m_leftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        MotorConfig.configTalon(m_leftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
+        MotorConfig.configTalon(m_rightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
     }
 
     @Override

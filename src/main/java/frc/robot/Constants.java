@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import frc.lib.config.MotionMagicConfig;
+import frc.lib.config.MotorConfig;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 
@@ -36,11 +41,11 @@ public final class Constants {
     public static final boolean kDriveInverted = false;
     public static final boolean kRightSensorInverted = false;
     public static final boolean kLeftSensorInverted = true;
+    public static final int kDriveSlot = 0;
+    public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, FeedbackDevice.IntegratedSensor, 0.001);
 
     // Trajectory Following Constants
-    public static final double kS = 1.35;
-    public static final double kV = 3.52;
-    public static final double kA = 0.129;
+    public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.129, 1.35, 3.52);
     public static final double kTrackWidth = 0.5612243747769792;
     public static final double kB = 2.0;
     public static final double kZeta = 0.7;
@@ -50,49 +55,47 @@ public final class Constants {
     public static final double kVelSampleTime = 0.1;
     public static final double kMaxMotorVoltage = 0.0;
 
-    // Trajectory Generation constants
+    // Trajectory Generation Constants
     public static final double kMaxVelocity = 0.75;
     public static final double kMaxAcceleration = 0.75;
 
-    // PID
-    public static final int kSlot = 0;
-    public static final double kF = 0.0;
-    public static final double kP = 0.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final int kMIA = 200;
+    // Motion Magic Constants
+    public static final int kMotionMagicPeriod = 10;
 
-    // Gyro Settings
+    // Gyro Constants
     public static final boolean kGyroReversed = false;
 
-    // Dashboard Settings
+    // Dashboard Constants
     public static final double kUpdateRate = 0.5;
 
-    // Vision Test Settings
-    public static final double kTurn = 0.02;
-    public static final double kThrottle = 0.03;
-    public static final double kMaxFollowOutput = 0.6;
-    public static final double kTargetWidth = 4.0;
-    public static final double kTargetDistance = 60;
-
-    // Vision Settings
+    // Vision Constants
     public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
     public static final Resolution kLimelighResolution = new Resolution(320, 240);
 
-    // Pneumatic Settings
-    public static final int kLShift = 0;
-    public static final int kRShift = 1;
-
-    // Shooter Settings
+    // Shooter Constants
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
+    public static final MotorConfig kShooterConfig = new MotorConfig(0, 0, 0, 0, 0, 40, FeedbackDevice.QuadEncoder, 0.001);
+    public static final MotionMagicConfig kShooterMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final int kShooterSlot = 0;
 
     // Color Wheel Constants
-    public static final double kColorWheelDiameter = 13;
-    public static final double kEncoderUnitsPerRev = 1024;
-    public static final double kColorWheelGearRatio = 20.0;
-    public static final double kWOFStealthWheelDiameter = 4.0;
+    public static final double kWOFDiameter = 13;
+    public static final int kWOFEncoderUnitsPerRev = 1024;
+    public static final double kWOFGearRatio = 20.0;
+    public static final double kWOFWheelDiameter = 4.0;
+    public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
+    public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final int kWOFSlot = 0;
+
+    // Transport Constants
+    public static final double kPulleyDiameter = 2.75;
+    public static final int kTransportEncoderUnitsPerRev = 1024;
+    public static final double kTransportGearRatio = 20.0;
+    public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
+    public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final int kTransportSlot = 0;
     
 
 }

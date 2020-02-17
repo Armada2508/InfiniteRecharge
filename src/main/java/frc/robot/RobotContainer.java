@@ -38,9 +38,6 @@ public class RobotContainer {
     private ShuffleboardTab m_sensorLoggerTab = Shuffleboard.getTab("Logger");
     private NetworkTableEntry m_gyroEntry;
     private NetworkTableEntry m_odometer;
-    private NetworkTableEntry m_kP;
-    private NetworkTableEntry m_kI;
-    private NetworkTableEntry m_kD;
 
 
     /**
@@ -55,7 +52,6 @@ public class RobotContainer {
     public void robotInit() {
         initDashboard();
         m_driveSubsystem.configTalons();
-        FollowTrajectory.config(Constants.kS, Constants.kV, Constants.kA, Constants.kP, Constants.kI, Constants.kD, Constants.kB, Constants.kZeta, Constants.kTrackWidth);
     }
 
     /**
@@ -69,14 +65,9 @@ public class RobotContainer {
     }
 
     public void initDashboard() {
+        WPI_TalonFX[] allTalons = m_driveSubsystem.getAllTalons();
 
-        m_kP = m_robotTab.add("kP", Constants.kP).getEntry();
-        m_kI = m_robotTab.add("kI", Constants.kI).getEntry();
-        m_kD = m_robotTab.add("kD", Constants.kD).getEntry();
-
-        WPI_TalonSRX[] allTalons = m_driveSubsystem.getAllTalons();
-
-        for (WPI_TalonSRX talon : allTalons) {
+        for (WPI_TalonFX talon : allTalons) {
             talonEntries.add(m_sensorLoggerTab.add("Talon " + (talon.getDeviceID()),
                     talon.getMotorOutputVoltage())
                     .withWidget(BuiltInWidgets.kGraph)
@@ -120,11 +111,6 @@ public class RobotContainer {
 
         driveCommand.schedule();
     }
-
-    public void updateFromDashboard() {
-        FollowTrajectory.configPID(m_kP.getDouble(Constants.kP), m_kI.getDouble(Constants.kI), m_kD.getDouble(Constants.kD));
-    }
-
 
     public void startDashboardCapture() {
         if(DriverStation.getInstance().isFMSAttached()) {

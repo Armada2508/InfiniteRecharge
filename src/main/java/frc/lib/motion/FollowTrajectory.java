@@ -41,17 +41,6 @@ public class FollowTrajectory {
     }
 
     /**
-     * 
-     * @param kP The kP constant
-     * @param kI The kI constant
-     * @param kD The kD constant
-     */
-
-    public static void configPID(double kP, double kI, double kD) {
-        m_pidController = new PIDController(kP, kI, kD);
-    }
-
-    /**
      * Returns a RamseteCommand that follows the specified trajectory
      * @param driveSubsystem The DriveSubsystem to use
      * @param trajectory The Trajectory to follow

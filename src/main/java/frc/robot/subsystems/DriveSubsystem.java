@@ -16,16 +16,17 @@ import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.config.MotorConfig;
 import frc.lib.motion.*;
 import frc.robot.*;
 
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private final WPI_TalonSRX m_right = new WPI_TalonSRX(Constants.kRightMotorPort);
-    private final WPI_TalonSRX m_rightFollower = new WPI_TalonSRX(Constants.kRightMotorFollowerPort);
-    private final WPI_TalonSRX m_left = new WPI_TalonSRX(Constants.kLeftMotorPort);
-    private final WPI_TalonSRX m_leftFollower = new WPI_TalonSRX(Constants.kLeftMotorFollowerPort);
+    private final WPI_TalonFX m_right = new WPI_TalonFX(Constants.kRightMotorPort);
+    private final WPI_TalonFX m_rightFollower = new WPI_TalonFX(Constants.kRightMotorFollowerPort);
+    private final WPI_TalonFX m_left = new WPI_TalonFX(Constants.kLeftMotorPort);
+    private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.kLeftMotorFollowerPort);
 
     private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(m_right, m_rightFollower);
     private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(m_left, m_leftFollower);
@@ -35,9 +36,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final PigeonIMU m_imu = new PigeonIMU(0);
 
-    private final Solenoid m_lShift = new Solenoid(Constants.kLShift);
-    private final Solenoid m_rShift = new Solenoid(Constants.kRShift);
-    
     private ShuffleboardTab m_robotTab = Shuffleboard.getTab("Robot");
     
     public DriveSubsystem() {
@@ -82,11 +80,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightMotors.set(throttle - turn);
         m_leftMotors.set(throttle + turn);
     }
-    
-    public void shift(boolean lowGear) {
-        m_lShift.set(lowGear);
-        m_rShift.set(lowGear);
-    }
 
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
@@ -127,7 +120,7 @@ public class DriveSubsystem extends SubsystemBase {
         resetEncoder(m_left);
     }
 
-    private void resetEncoder(TalonSRX talon) {
+    private void resetEncoder(TalonFX talon) {
         talon.setSelectedSensorPosition(0);
     }
 
@@ -152,6 +145,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_right.configMotionProfileTrajectoryPeriod(0);
         m_left.configMotionProfileTrajectoryPeriod(0);
+        MotorConfig.configTalon(m_right, Constants.kDriveConfig, Constants.kDriveSlot);
+        MotorConfig.configTalon(m_left, Constants.kDriveConfig, Constants.kDriveSlot);
     }
 
     public double getPositionLeft() {
@@ -182,29 +177,13 @@ public class DriveSubsystem extends SubsystemBase {
         return EncoderUtil.toVelocity(velocity, Constants.kTicksPerRev, Constants.kGearRatio, Constants.kWheelDiameter, Constants.kVelSampleTime);
     }
 
-    public void setConfigRight(double kP, double kI, double kD, double kF, double kMIA) {
-        setConfig(kP, kI, kD, kF, kMIA, m_right);
-    }
-
-    public void setConfigLeft(double kP, double kI, double kD, double kF, double kMIA) {
-        setConfig(kP, kI, kD, kF, kMIA, m_left);
-    }
-
-
-    private void setConfig(double kP, double kI, double kD, double kF, double kMIA, TalonSRX talon) {
-        talon.config_kP(Constants.kSlot, kP);
-        talon.config_kI(Constants.kSlot, kI);
-        talon.config_kD(Constants.kSlot, kD);
-        talon.config_kF(Constants.kSlot, kF);
-        talon.configMaxIntegralAccumulator(Constants.kSlot, kMIA);
-    }
 
     public void setMaxOutput(double maxOutput) {
         m_drive.setMaxOutput(maxOutput);
     }
 
-    public WPI_TalonSRX[] getAllTalons() {
-        return new WPI_TalonSRX[]{ m_right, m_rightFollower, m_left, m_leftFollower };
+    public WPI_TalonFX[] getAllTalons() {
+        return new WPI_TalonFX[]{ m_right, m_rightFollower, m_left, m_leftFollower };
     }
 
     public DifferentialDriveOdometry getOdometry() {

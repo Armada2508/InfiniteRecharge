@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +20,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         MotorConfig.configTalon(m_leftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
         MotorConfig.configTalon(m_rightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
+
+        m_leftMotor.setNeutralMode(NeutralMode.Coast);
+        m_rightMotor.setNeutralMode(NeutralMode.Coast);
     }
 
     @Override
@@ -47,5 +51,9 @@ public class ShooterSubsystem extends SubsystemBase {
         double velocity = EncoderUtil.fromRPM(rpm, Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
         m_leftMotor.set(ControlMode.Velocity, velocity);
         m_rightMotor.set(ControlMode.Velocity, velocity);
+    }
+
+    public double getRPM() {
+        return  EncoderUtil.toRPM(m_rightMotor.getSelectedSensorPosition(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
     }
 }

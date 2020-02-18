@@ -67,6 +67,14 @@ public class TransportSubsystem extends SubsystemBase {
     public void setDiagPosition(double position) {
         m_diagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
     }
+    
+    public void zeroElevPosition() {
+        m_elevTalon.setSelectedSensorPosition(0);   
+    }
+    
+    public void zeroDiagPosition() {
+        m_diagTalon.setSelectedSensorPosition(0);
+    }
 
     public void incrementElevPosition(double increment) {
         setElevPosition(getElevPosition()+increment);
@@ -75,4 +83,6 @@ public class TransportSubsystem extends SubsystemBase {
     public void incrementDiagPosition(double increment) {
        setDiagPosition(getDiagPosition()+increment);
     }
+
+    
 }

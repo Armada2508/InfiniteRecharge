@@ -77,7 +77,7 @@ public final class Constants {
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
     public static final MotorConfig kShooterConfig = new MotorConfig(0, 0, 0, 0, 0, 40, FeedbackDevice.QuadEncoder, 0.001);
-    public static final MotionMagicConfig kShooterMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final int kMaxSlewRate = 5000;
     public static final int kShooterSlot = 0;
 
     // Color Wheel Constants

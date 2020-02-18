@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -31,6 +32,7 @@ import java.util.*;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+    private final TransportSubsystem m_transportSubsystem = new TransportSubsystem(new WPI_TalonSRX(0), new WPI_TalonSRX(0));
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick m_joystick = new Joystick(Constants.kJoystickPort);
     private ShuffleboardTab m_sensorLoggerTab = Shuffleboard.getTab("Logger");
@@ -60,7 +62,10 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
+        new JoystickButton(m_joystick, 0).whenHeld(new TransportPower(0.5, false, m_transportSubsystem));
+        new JoystickButton(m_joystick, 1).whenHeld(new TransportPower(0.5, true, m_transportSubsystem));
+        new JoystickButton(m_joystick, 2).whenHeld(new TransportPower(-0.5, false, m_transportSubsystem));
+        new JoystickButton(m_joystick, 3).whenHeld(new TransportPower(-0.5, true, m_transportSubsystem));
     }
 
     public void initDashboard() {

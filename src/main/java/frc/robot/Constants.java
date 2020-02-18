@@ -90,6 +90,8 @@ public final class Constants {
     public static final int kWOFSlot = 0;
 
     // Transport Constants
+    public static final int kElevatorTalon = 6;
+    public static final int kDiagonalTalon = 7;
     public static final double kPulleyDiameter = 2.75;
     public static final int kTransportEncoderUnitsPerRev = 1024;
     public static final double kTransportGearRatio = 20.0;

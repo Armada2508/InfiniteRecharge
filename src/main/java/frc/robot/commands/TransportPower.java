@@ -11,6 +11,7 @@ public class TransportPower extends CommandBase {
     public TransportPower(double power, boolean elevator, TransportSubsystem transportSubsystem) {
         m_power = power;
         m_elevator = elevator;
+        m_transportSubsystem = transportSubsystem;
     }
 
     @Override
@@ -28,6 +29,11 @@ public class TransportPower extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        if(m_elevator) {
+            m_transportSubsystem.setElevPower(0);
+        } else {
+            m_transportSubsystem.setDiagPower(0);
+        }
     }
 
     @Override

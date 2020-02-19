@@ -28,7 +28,7 @@ public class SpinRoller extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_shooterSubsystem.spin(0);
+        m_shooterSubsystem.stop();
     }
 
     @Override

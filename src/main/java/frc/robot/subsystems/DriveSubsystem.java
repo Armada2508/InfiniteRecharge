@@ -23,10 +23,10 @@ import frc.robot.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private final WPI_TalonFX m_right = new WPI_TalonFX(Constants.kRightMotorPort);
-    private final WPI_TalonFX m_rightFollower = new WPI_TalonFX(Constants.kRightMotorFollowerPort);
-    private final WPI_TalonFX m_left = new WPI_TalonFX(Constants.kLeftMotorPort);
-    private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.kLeftMotorFollowerPort);
+    private final WPI_TalonFX m_right = new WPI_TalonFX(Constants.kRightDriveMotorPort);
+    private final WPI_TalonFX m_rightFollower = new WPI_TalonFX(Constants.kRightDriveMotorFollowerPort);
+    private final WPI_TalonFX m_left = new WPI_TalonFX(Constants.kLeftDriveMotorPort);
+    private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.kLeftDriveMotorFollowerPort);
 
     private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(m_right, m_rightFollower);
     private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(m_left, m_leftFollower);

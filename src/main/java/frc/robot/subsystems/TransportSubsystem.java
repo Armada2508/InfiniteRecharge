@@ -14,9 +14,9 @@ public class TransportSubsystem extends SubsystemBase {
     private WPI_TalonSRX m_diagTalon;
     private WPI_TalonSRX m_elevTalon;
 
-    public TransportSubsystem(WPI_TalonSRX diagTalon, WPI_TalonSRX elevTalon) {
-        m_diagTalon = diagTalon;
-        m_elevTalon = elevTalon;
+    public TransportSubsystem(int diagTalonID, int elevTalonID) {
+        m_diagTalon = new WPI_TalonSRX(diagTalonID);
+        m_elevTalon = new WPI_TalonSRX(elevTalonID);
         m_diagTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         m_elevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         MotorConfig.configTalon(m_diagTalon, Constants.kTransportConfig, Constants.kTransportSlot);

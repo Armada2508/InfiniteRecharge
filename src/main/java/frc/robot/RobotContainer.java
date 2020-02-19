@@ -31,8 +31,11 @@ import java.util.*;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-    private final TransportSubsystem m_transportSubsystem = new TransportSubsystem(new WPI_TalonSRX(0), new WPI_TalonSRX(0));
+    private final DriveSubsystem m_drive = new DriveSubsystem();
+    private final TransportSubsystem m_transport = new TransportSubsystem(Constants.kDiagonalTalon, Constants.kElevatorTalon);
+    private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(Constants.kLeftShooterMotor, Constants.kRightShooterMotor);
+    private final IntakeSubsystem m_frontIntake = new IntakeSubsystem(Constants.kFrontIntakeTalon);
+    private final IntakeSubsystem m_backIntake = new IntakeSubsystem(Constants.kBackIntakeTalon);
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick m_joystick = new Joystick(Constants.kJoystickPort);
     private ShuffleboardTab m_sensorLoggerTab = Shuffleboard.getTab("Logger");
@@ -52,7 +55,9 @@ public class RobotContainer {
 
     public void robotInit() {
         initDashboard();
-        m_driveSubsystem.configTalons();
+        m_drive.configTalons();
+        m_shooterSubsystem.leftInverted(false);
+        m_shooterSubsystem.rightInverted(true);
     }
 
     /**
@@ -62,14 +67,18 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        new JoystickButton(m_joystick, 0).whenHeld(new TransportPower(0.5, false, m_transportSubsystem));
-        new JoystickButton(m_joystick, 1).whenHeld(new TransportPower(0.5, true, m_transportSubsystem));
-        new JoystickButton(m_joystick, 2).whenHeld(new TransportPower(-0.5, false, m_transportSubsystem));
-        new JoystickButton(m_joystick, 3).whenHeld(new TransportPower(-0.5, true, m_transportSubsystem));
+        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooterSubsystem, 4000, Constants.kMaxShooterSlewRate));
+        new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(0.5, false, m_transport));
+        new JoystickButton(m_joystick, 9).whenHeld(new TransportPower(0.5, true, m_transport));
+        new JoystickButton(m_joystick, 8).whenHeld(new TransportPower(-0.5, false, m_transport));
+        new JoystickButton(m_joystick, 10).whenHeld(new TransportPower(-0.5, true, m_transport));
+        new JoystickButton(m_joystick, 11).whenHeld(new Intake(m_frontIntake, m_frontIntake::set, 0.5, false));
+        new JoystickButton(m_joystick, 12).whenHeld(new Intake(m_backIntake, m_backIntake::set, 0.5, false));
+
     }
 
     public void initDashboard() {
-        WPI_TalonFX[] allTalons = m_driveSubsystem.getAllTalons();
+        WPI_TalonFX[] allTalons = m_drive.getAllTalons();
 
         for (WPI_TalonFX talon : allTalons) {
             talonEntries.add(m_sensorLoggerTab.add("Talon " + (talon.getDeviceID()),
@@ -78,12 +87,12 @@ public class RobotContainer {
                     .getEntry());
         }
 
-        m_gyroEntry = m_sensorLoggerTab.add("Gyro", m_driveSubsystem.getGyro()
+        m_gyroEntry = m_sensorLoggerTab.add("Gyro", m_drive.getGyro()
                 .getFusedHeading())
                 .withWidget(BuiltInWidgets.kGraph)
                 .getEntry();
 
-        m_odometer = m_sensorLoggerTab.add("Odometer", m_driveSubsystem.getAverageDistance())
+        m_odometer = m_sensorLoggerTab.add("Odometer", m_drive.getAverageDistance())
                 .withWidget(BuiltInWidgets.kGraph)
                 .getEntry();
     }
@@ -93,19 +102,19 @@ public class RobotContainer {
         if ((Timer.getFPGATimestamp() % Constants.kUpdateRate) / 0.02 < 1) {
 
             Random noise = new Random();
-            m_gyroEntry.setDouble(m_driveSubsystem.getGyro().getFusedHeading() + (noise.nextDouble() / 10000));
-            m_odometer.setDouble(m_driveSubsystem.getAverageDistance() + (noise.nextDouble() / 10000));
+            m_gyroEntry.setDouble(m_drive.getGyro().getFusedHeading() + (noise.nextDouble() / 10000));
+            m_odometer.setDouble(m_drive.getAverageDistance() + (noise.nextDouble() / 10000));
 
             int count = 0;
             for (NetworkTableEntry t : talonEntries) {
-                t.setDouble(m_driveSubsystem.getAllTalons()[count].getMotorOutputVoltage() + (noise.nextDouble() / 10000));
+                t.setDouble(m_drive.getAllTalons()[count].getMotorOutputVoltage() + (noise.nextDouble() / 10000));
                 count++;
             }
         }
     }
 
     public void drive() {
-        Command driveCommand = new Drive(m_driveSubsystem,
+        Command driveCommand = new Drive(m_drive,
                 () -> (m_joystick.getRawAxis(Constants.kThrottleAxis) * (Constants.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTrimAxis) * (Constants.kTrimInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTurnAxis) * (Constants.kTurnInverted ? -1.0 : 1.0)),
@@ -127,18 +136,18 @@ public class RobotContainer {
     }
 
     public void changeMode() {
-        m_driveSubsystem.reset();
+        m_drive.reset();
     }
 
     public void stopTalons() {
-        m_driveSubsystem.setVoltage(0.0, 0.0);
+        m_drive.setVoltage(0.0, 0.0);
     }
 
     public Command getAutonomousCommand() {
 
         FollowTrajectory followTrajectory = new FollowTrajectory();
 
-        return followTrajectory.getCommand(m_driveSubsystem,
+        return followTrajectory.getCommand(m_drive,
             new Pose2d(),
             new Pose2d(5, 0, new Rotation2d()),
             Constants.kMaxVelocity,
@@ -165,14 +174,18 @@ public class RobotContainer {
     }
 
     public void printOdo() {
-        System.out.println(m_driveSubsystem.getPose());
+        System.out.println(m_drive.getPose());
     }
 
     public void printPos() {
-        System.out.println(new WheelPositions(m_driveSubsystem.getPositionLeft(), m_driveSubsystem.getPositionRight()));
+        System.out.println(new WheelPositions(m_drive.getPositionLeft(), m_drive.getPositionRight()));
     }
 
     public void printVel() {
-        System.out.println(m_driveSubsystem.getWheelSpeeds());
+        System.out.println(m_drive.getWheelSpeeds());
+    }
+
+    public void printRPM() {
+        System.out.println(m_shooterSubsystem.getRPM());
     }
 }

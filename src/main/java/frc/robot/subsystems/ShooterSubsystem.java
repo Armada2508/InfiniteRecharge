@@ -38,22 +38,18 @@ public class ShooterSubsystem extends SubsystemBase {
         m_rightMotor.setInverted(inverted);
     }
 
-    public void configPID(double p, double i, double d) {
-        m_rightMotor.config_kP(0, p);
-        m_rightMotor.config_kI(0, i);
-        m_rightMotor.config_kD(0, d);
-        m_leftMotor.config_kP(0, p);
-        m_leftMotor.config_kI(0, i);
-        m_leftMotor.config_kD(0, d);
-    }
-
     public void spin(double rpm) {
         double velocity = EncoderUtil.fromRPM(rpm, Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
         m_leftMotor.set(ControlMode.Velocity, velocity);
         m_rightMotor.set(ControlMode.Velocity, velocity);
     }
 
+    public void stop() {
+        m_leftMotor.set(ControlMode.PercentOutput, 0.0);
+        m_rightMotor.set(ControlMode.PercentOutput, 0.0);
+    }
+
     public double getRPM() {
-        return  EncoderUtil.toRPM(m_rightMotor.getSelectedSensorPosition(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
+        return EncoderUtil.toRPM(m_rightMotor.getSelectedSensorVelocity(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
     }
 }

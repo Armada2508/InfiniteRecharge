@@ -3,13 +3,14 @@ package frc.robot.commands;
 import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class Intake extends CommandBase {
 
     private Consumer<Double> m_intake;
     private double m_power;
 
-    public Intake(Consumer<Double> intake, double power, boolean reversed) {
+    public Intake(IntakeSubsystem subsystem, Consumer<Double> intake, double power, boolean reversed) {
         m_intake = intake;
         m_power = power * (reversed ? -1.0 : 1.0);
     }

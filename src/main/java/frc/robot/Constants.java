@@ -18,10 +18,10 @@ import frc.lib.vision.Resolution;
 public final class Constants {
 
     // Drive Motor Ports
-    public static final int kRightMotorPort = 3;
-    public static final int kRightMotorFollowerPort = 4;
-    public static final int kLeftMotorPort = 7;
-    public static final int kLeftMotorFollowerPort = 8;
+    public static final int kLeftDriveMotorPort = 0;
+    public static final int kLeftDriveMotorFollowerPort = 1;
+    public static final int kRightDriveMotorPort = 2;
+    public static final int kRightDriveMotorFollowerPort = 3;
 
     // Driving Constants
     public static final double kDeadbandThreshold = 0.06;
@@ -73,11 +73,13 @@ public final class Constants {
     public static final Resolution kLimelighResolution = new Resolution(320, 240);
 
     // Shooter Constants
+    public static final int kLeftShooterMotor = 11;
+    public static final int kRightShooterMotor = 10;
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
-    public static final MotorConfig kShooterConfig = new MotorConfig(0, 0, 0, 0, 0, 40, FeedbackDevice.QuadEncoder, 0.001);
-    public static final int kMaxSlewRate = 5000;
+    public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 0.0, 40, FeedbackDevice.IntegratedSensor, 0.001);
+    public static final int kMaxShooterSlewRate = 2000;
     public static final int kShooterSlot = 0;
 
     // Color Wheel Constants
@@ -90,14 +92,18 @@ public final class Constants {
     public static final int kWOFSlot = 0;
 
     // Transport Constants
-    public static final int kElevatorTalon = 6;
-    public static final int kDiagonalTalon = 7;
+    public static final int kElevatorTalon = 9;
+    public static final int kDiagonalTalon = 6;
     public static final double kPulleyDiameter = 2.75;
     public static final int kTransportEncoderUnitsPerRev = 1024;
     public static final double kTransportGearRatio = 20.0;
     public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
     public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);
     public static final int kTransportSlot = 0;
+
+    // Intake Constants
+    public static final int kFrontIntakeTalon = 8;
+    public static final int kBackIntakeTalon = 4;
     
 
 }

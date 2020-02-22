@@ -8,7 +8,9 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
@@ -17,6 +19,26 @@ import frc.lib.vision.Resolution;
 
 public final class Constants {
 
+    // Button Board Constants
+    public class ButtonBoard {
+        public static final int port = 1;
+        public static final int kSpinUp = 0;
+        public static final int kAim = 1;
+        public static final int kFeedShooter = 2;
+        public static final int kShootSequence = 3;
+        public static final int kFrontIntake = 4;
+        public static final int kBackIntake = 5;
+        public static final int kBothIntake = 6;
+        public static final int kFrontOutput = 7;
+        public static final int kBackOutput = 8;
+        public static final int kSpinWOF = 9;
+        public static final int kIncrementWOF = 10;
+        public static final int kClimbExtend = 11;
+        public static final int kClimbRetract = 12;
+        public static final int kStop = 13;
+        
+    }
+
     // Drive Motor Ports
     public static final int kLeftDriveMotorPort = 0;
     public static final int kLeftDriveMotorFollowerPort = 1;
@@ -24,7 +46,8 @@ public final class Constants {
     public static final int kRightDriveMotorFollowerPort = 3;
 
     // Driving Constants
-    public static final double kDeadbandThreshold = 0.06;
+    public static final double kMinBatteryVoltage = 10;  // TODO: Determine correct value
+    public static final double kDeadbandThreshold = 0.06;  // TODO: Determine correct value
     public static final int kJoystickPort = 0;
     public static final int kThrottleAxis = 1;
     public static final int kTurnAxis = 2;
@@ -42,31 +65,34 @@ public final class Constants {
     public static final boolean kRightSensorInverted = false;
     public static final boolean kLeftSensorInverted = true;
     public static final int kDriveSlot = 0;
-    public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, FeedbackDevice.IntegratedSensor, 0.001);
+    public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
+    public static final PIDController kDrivePositionPID = new PIDController(0, 0, 0);  // TODO: Tune PID
+    public static final double kCoolingTemp = 60.0;
+    public static final double kCoolingDelay = 5.0;
+    public static final int kCoolingSolenoid = 4;
 
     // Trajectory Following Constants
-    public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.129, 1.35, 3.52);
-    public static final double kTrackWidth = 0.5612243747769792;
+    public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.129, 1.35, 3.52);  // TODO: Redo drive characterization
+    public static final double kTrackWidth = 0.5612243747769792;  // TODO: Find track width
     public static final double kB = 2.0;
     public static final double kZeta = 0.7;
-    public static final int kTicksPerRev = 4096;
-    public static final double kWheelDiameter = 0.1524;
-    public static final double kGearRatio = 42.0/38.0;
+    public static final int kDriveEncoderUnitsPerRev = 2048;
+    public static final double kDriveWheelDiameter = 0.2032;
+    public static final double kDriveGearRatio = 42.0/38.0;  // TODO: Determine correct value
     public static final double kVelSampleTime = 0.1;
-    public static final double kMaxMotorVoltage = 0.0;
 
     // Trajectory Generation Constants
-    public static final double kMaxVelocity = 0.75;
-    public static final double kMaxAcceleration = 0.75;
+    public static final double kMaxVelocity = 0.75;  // TODO: Determine correct value
+    public static final double kMaxAcceleration = 0.75;  // TODO: Determine correct value
 
     // Motion Magic Constants
     public static final int kMotionMagicPeriod = 10;
 
     // Gyro Constants
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = false;  // TODO: Determine correct value
 
     // Dashboard Constants
-    public static final double kUpdateRate = 0.5;
+    public static final double kUpdateRate = 0.5;  // TODO: Determine correct value
 
     // Vision Constants
     public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
@@ -78,18 +104,21 @@ public final class Constants {
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
-    public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 0.0, 40, FeedbackDevice.IntegratedSensor, 0.001);
-    public static final int kMaxShooterSlewRate = 2000;
+    public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 10000.0, 40, FeedbackDevice.IntegratedSensor, 0.001);
+    public static final int kMaxShooterSlewRate = 2000;  // TODO: Determine correct value
     public static final int kShooterSlot = 0;
+    public static final boolean kShooterLeftInveted = false;
+    public static final boolean kShooterRightInverted = true;
 
     // Color Wheel Constants
     public static final double kWOFDiameter = 13;
     public static final int kWOFEncoderUnitsPerRev = 1024;
     public static final double kWOFGearRatio = 20.0;
     public static final double kWOFWheelDiameter = 4.0;
-    public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
-    public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
+    public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
     public static final int kWOFSlot = 0;
+    public static final int kWOFMotor = 5;
 
     // Transport Constants
     public static final int kElevatorTalon = 9;
@@ -98,12 +127,28 @@ public final class Constants {
     public static final int kTransportEncoderUnitsPerRev = 1024;
     public static final double kTransportGearRatio = 20.0;
     public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
-    public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);
+    public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
     public static final int kTransportSlot = 0;
+    // TOF Sensors
+    public static final int kFIntakeTofID = 0;  // TODO: Determine correct value
+    public static final int kBIntakeTofID = 1;  // TODO: Determine correct value
+    public static final int kInterfaceTofID = 2;  // TODO: Determine correct value
+    public static final int kShooterTofID = 3;  // TODO: Determine correct value
+    public static final double kMaxDistance = 2.0;  // TODO: Determine correct value
+    public static final double kMaxDeviation = 1000000.0;  // TODO: Determine correct value
+    public static final RangingMode kRangingMode = RangingMode.Short;  // TODO: Determine best value
+    public static final double kTOFSampleTime = 50;  // TODO: Determine best value
 
     // Intake Constants
     public static final int kFrontIntakeTalon = 8;
     public static final int kBackIntakeTalon = 4;
+    public static final double kIntakePower = 0.75;
+
+    // Climb Constants
+    public static final int kLeftClimbTop = 0;
+    public static final int kLeftClimbBottom = 1;
+    public static final int kRightClimbTop = 2;
+    public static final int kRightClimbBottom = 3;
     
 
 }

@@ -7,25 +7,26 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Drive extends CommandBase {
+public class DriveClosedLoop extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_driveSubsystem;
-  private DoubleSupplier m_throttle;
-  private DoubleSupplier m_trim;
-  private DoubleSupplier m_turn;
-  private double m_maxPower;
-  private double m_turnRatio;
-  private double m_trimRatio;
+  private final DoubleSupplier m_throttle;
+  private final DoubleSupplier m_trim;
+  private final DoubleSupplier m_turn;
+  private final double m_maxPower;
+  private final double m_turnRatio;
+  private final double m_trimRatio;
   /**
    * Creates a new Drive.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Drive(DriveSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn, double maxPower, double turnRatio, double trimRatio) {
+  public DriveClosedLoop(DriveSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn, double maxPower, double turnRatio, double trimRatio) {
     m_driveSubsystem = subsystem;
     m_throttle = throttle;
     m_trim = trim;
@@ -69,7 +70,7 @@ public class Drive extends CommandBase {
       powerL = m_maxPower + turningPower;
     }
 
-    m_driveSubsystem.setPowers(powerL, powerR);
+    m_driveSubsystem.driveClosedLoop((int)(powerL*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)), (int)(powerR*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)));
   }
 
   // Called once the command ends or is interrupted.

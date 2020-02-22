@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 
 import java.util.*;
 
@@ -32,12 +34,15 @@ import java.util.*;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveSubsystem m_drive = new DriveSubsystem();
-    private final TransportSubsystem m_transport = new TransportSubsystem(Constants.kDiagonalTalon, Constants.kElevatorTalon);
-    private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(Constants.kLeftShooterMotor, Constants.kRightShooterMotor);
+    private final TransportSubsystem m_transport = new TransportSubsystem();
+    private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
     private final IntakeSubsystem m_frontIntake = new IntakeSubsystem(Constants.kFrontIntakeTalon);
     private final IntakeSubsystem m_backIntake = new IntakeSubsystem(Constants.kBackIntakeTalon);
+    private final ClimbSubsystem m_climb = new ClimbSubsystem();
+    private final ColorWheelSubsystem m_wof = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick m_joystick = new Joystick(Constants.kJoystickPort);
+    private Joystick m_buttonBoard = new Joystick(Constants.ButtonBoard.port);
     private ShuffleboardTab m_sensorLoggerTab = Shuffleboard.getTab("Logger");
     private NetworkTableEntry m_gyroEntry;
     private NetworkTableEntry m_odometer;
@@ -48,16 +53,14 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the button bindings
         configureButtonBindings();
-
         new PneumaticsSubsystem();
-
     }
 
     public void robotInit() {
+        Logger.configureLoggingAndConfig(this, false);
         initDashboard();
-        m_drive.configTalons();
-        m_shooterSubsystem.leftInverted(false);
-        m_shooterSubsystem.rightInverted(true);
+        m_shooterSubsystem.leftInverted(Constants.kShooterLeftInveted);
+        m_shooterSubsystem.rightInverted(Constants.kShooterRightInverted);
     }
 
     /**
@@ -67,14 +70,30 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooterSubsystem, 4000, Constants.kMaxShooterSlewRate));
-        new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(0.5, false, m_transport));
+        //new JoystickButton(m_joystick, 1).whenPressed(new Climb(m_climb, true));
+        //new JoystickButton(m_joystick, 1).whenReleased(new Climb(m_climb, false));
+        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooterSubsystem, 5000, Constants.kMaxShooterSlewRate));
+       /* new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(0.5, false, m_transport));
         new JoystickButton(m_joystick, 9).whenHeld(new TransportPower(0.5, true, m_transport));
         new JoystickButton(m_joystick, 8).whenHeld(new TransportPower(-0.5, false, m_transport));
         new JoystickButton(m_joystick, 10).whenHeld(new TransportPower(-0.5, true, m_transport));
         new JoystickButton(m_joystick, 11).whenHeld(new Intake(m_frontIntake, m_frontIntake::set, 0.5, false));
         new JoystickButton(m_joystick, 12).whenHeld(new Intake(m_backIntake, m_backIntake::set, 0.5, false));
-
+*/
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(m_shooterSubsystem, 4500, Constants.kMaxShooterSlewRate));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kAim).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFeedShooter).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFrontIntake).whenPressed(new Intake(m_frontIntake, Constants.kIntakePower, false));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBackIntake).whenPressed(new Intake(m_backIntake, Constants.kIntakePower, false));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBothIntake).whenPressed(new ParallelCommandGroup(new Intake(m_frontIntake, Constants.kIntakePower, false), new Intake(m_backIntake, Constants.kIntakePower, false)));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFrontOutput).whenPressed(new Intake(m_frontIntake, Constants.kIntakePower, true));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBackOutput).whenPressed(new Intake(m_backIntake, Constants.kIntakePower, true));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kIncrementWOF).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kClimbExtend).whenPressed(new Climb(m_climbSubsystem, 2));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kClimbRetract).whenPressed(new Climb(m_climbSubsystem, 0));
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kStop).whenPressed(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
     }
 
     public void initDashboard() {
@@ -95,6 +114,10 @@ public class RobotContainer {
         m_odometer = m_sensorLoggerTab.add("Odometer", m_drive.getAverageDistance())
                 .withWidget(BuiltInWidgets.kGraph)
                 .getEntry();
+    }
+
+    public void updateLogger() {
+        Logger.updateEntries();
     }
 
     public void updateDashboard() {

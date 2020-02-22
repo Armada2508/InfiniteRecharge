@@ -14,9 +14,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private WPI_TalonFX m_leftMotor;
     private WPI_TalonFX m_rightMotor;
 
-    public ShooterSubsystem(int leftTalonID, int rightTalonID) {
-        m_leftMotor = new WPI_TalonFX(leftTalonID);
-        m_rightMotor = new WPI_TalonFX(rightTalonID);
+    public ShooterSubsystem() {
+        m_leftMotor = new WPI_TalonFX(Constants.kLeftShooterMotor);
+        m_rightMotor = new WPI_TalonFX(Constants.kRightShooterMotor);
 
         MotorConfig.configTalon(m_leftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
         MotorConfig.configTalon(m_rightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
         m_rightMotor.set(ControlMode.Velocity, velocity);
     }
 
-    public void stop() {
+    public void coast() {
         m_leftMotor.set(ControlMode.PercentOutput, 0.0);
         m_rightMotor.set(ControlMode.PercentOutput, 0.0);
     }

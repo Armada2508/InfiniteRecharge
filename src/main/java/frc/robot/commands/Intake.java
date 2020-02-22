@@ -1,23 +1,21 @@
 package frc.robot.commands;
 
-import java.util.function.Consumer;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class Intake extends CommandBase {
-
-    private Consumer<Double> m_intake;
+    
+    IntakeSubsystem m_intakeSubsystem;
     private double m_power;
 
-    public Intake(IntakeSubsystem subsystem, Consumer<Double> intake, double power, boolean reversed) {
-        m_intake = intake;
+    public Intake(IntakeSubsystem intakeSubsystem, double power, boolean reversed) {
+        m_intakeSubsystem = intakeSubsystem;
         m_power = power * (reversed ? -1.0 : 1.0);
     }
 
     @Override
     public void initialize() {
-        m_intake.accept(m_power);
+        m_intakeSubsystem.set(m_power);
     }
 
     @Override
@@ -26,7 +24,7 @@ public class Intake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.accept(0.0);
+        m_intakeSubsystem.set(0.0);
     }
 
     @Override

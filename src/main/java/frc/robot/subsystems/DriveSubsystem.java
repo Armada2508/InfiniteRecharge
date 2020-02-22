@@ -36,17 +36,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final PigeonIMU m_imu = new PigeonIMU(0);
 
+    private final Solenoid m_cooling = new Solenoid(Constants.kCoolingSolenoid);
+    private final Timer m_coolingTimer = new Timer();
+
     private ShuffleboardTab m_robotTab = Shuffleboard.getTab("Robot");
     
     public DriveSubsystem() {
         m_right.setSensorPhase(Constants.kRightSensorInverted);
         m_left.setSensorPhase(Constants.kLeftSensorInverted);
-
-        
-        m_right.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_left.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_right.configVelocityMeasurementWindow(1);
-        m_left.configVelocityMeasurementWindow(1);
 
         m_drive.setRightSideInverted(Constants.kRightInverted);
 
@@ -54,19 +51,33 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_robotTab.add("Drive", m_drive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
+        coast();
 
+        configTalons();
         resetHeading();
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        m_coolingTimer.start();
     }
 
 
     @Override
     public void periodic() {
         m_odometry.update(Rotation2d.fromDegrees(getHeading()), getPositionLeft(), getPositionRight());
+        double[] temps = getTemps();
+        if(m_coolingTimer.hasPeriodPassed(Constants.kCoolingDelay)) {
+            m_cooling.set(false);
+        }
+        for (int i = 0; i < temps.length; i++) {
+            if(temps[i] >= Constants.kCoolingTemp) {
+                m_cooling.set(true);
+                m_coolingTimer.reset();
+                break;
+            }
+        }
     }
 
-    public void setPowers(double powerR, double powerL) {
+    public void setPowers(double powerL, double powerR) {
         m_rightMotors.set(powerR);
         m_leftMotors.set(powerL);
     }
@@ -79,6 +90,26 @@ public class DriveSubsystem extends SubsystemBase {
     public void setArcade(double throttle, double turn) {
         m_rightMotors.set(throttle - turn);
         m_leftMotors.set(throttle + turn);
+    }
+
+    public void driveClosedLoop(int left, int right) {
+        m_right.set(ControlMode.Velocity, toVelocity(right));
+        m_left.set(ControlMode.Velocity, toVelocity(left));
+    }
+
+    public void brake() {
+        m_left.setNeutralMode(NeutralMode.Brake);
+        m_right.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void coast() {
+        m_left.setNeutralMode(NeutralMode.Coast);
+        m_right.setNeutralMode(NeutralMode.Coast);
+    }
+
+    public void hold() {
+        m_left.set(ControlMode.Position, 0.0);
+        m_right.set(ControlMode.Position, 0.0);
     }
 
     public Pose2d getPose() {
@@ -162,7 +193,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toDistance(int sensorPosition) {
-        return EncoderUtil.toDistance(sensorPosition, Constants.kTicksPerRev, Constants.kGearRatio, Constants.kWheelDiameter);
+        return EncoderUtil.toDistance(sensorPosition, Constants.kDriveEncoderUnitsPerRev, Constants.kDriveGearRatio, Constants.kDriveWheelDiameter);
     }
 
     public double getVelocityRight() {
@@ -174,9 +205,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toVelocity(int velocity) {
-        return EncoderUtil.toVelocity(velocity, Constants.kTicksPerRev, Constants.kGearRatio, Constants.kWheelDiameter, Constants.kVelSampleTime);
+        return EncoderUtil.toVelocity(velocity, Constants.kDriveEncoderUnitsPerRev, Constants.kDriveGearRatio, Constants.kDriveWheelDiameter, Constants.kVelSampleTime);
     }
-
 
     public void setMaxOutput(double maxOutput) {
         m_drive.setMaxOutput(maxOutput);
@@ -193,4 +223,10 @@ public class DriveSubsystem extends SubsystemBase {
     public PigeonIMU getGyro() {
         return m_imu;
     }
+
+    public double[] getTemps() {
+        double[] temperatures = { m_right.getTemperature(), m_rightFollower.getTemperature(), m_left.getTemperature(), m_leftFollower.getTemperature() };
+        return temperatures;
+    }
+
 }

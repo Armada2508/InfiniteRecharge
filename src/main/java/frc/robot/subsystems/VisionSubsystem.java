@@ -35,7 +35,6 @@ public class VisionSubsystem extends SubsystemBase {
         m_res = res;
     }
 
-
     @Override
     public void periodic() {
         
@@ -90,5 +89,23 @@ public class VisionSubsystem extends SubsystemBase {
       double distance = (targetWidth / 2.0) / (Math.tan(Math.toRadians((widthAngle / 2.0))));
 
       return distance;
+    }
+
+    
+
+    public void defaultLED() {
+        m_limelight.getEntry("ledMode").setNumber(0);
+    }
+
+    public void blinkLED() {
+        m_limelight.getEntry("ledMode").setNumber(2);
+    }
+
+    public void setLED(boolean on) {
+        if (on) {
+            m_limelight.getEntry("ledMode").setNumber(1);
+        } else {
+            m_limelight.getEntry("ledMode").setNumber(3);
+        }
     }
 }

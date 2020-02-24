@@ -9,8 +9,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public WPI_TalonSRX m_intakeTalon;
 
-    public IntakeSubsystem(int talonID) {
+    public IntakeSubsystem(int talonID, boolean inverted) {
         m_intakeTalon = new WPI_TalonSRX(talonID);
+        m_intakeTalon.setInverted(inverted);
     }
 
     @Override
@@ -19,7 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void set(double power) {
-        System.out.println(power);
         m_intakeTalon.set(ControlMode.PercentOutput, power);
     }
 }

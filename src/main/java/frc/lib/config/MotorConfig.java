@@ -11,7 +11,9 @@ public class MotorConfig {
     private final double m_d;
     private final double m_f;
     private final double m_mia;
-    private final int m_maxCurrent;
+    private final int m_maxContCurrent;
+    private final int m_maxPeakCurrent;
+    private final int m_peakCurrentDuration;
     private final FeedbackDevice m_encoder;
     private final double m_deadband;
 
@@ -22,17 +24,21 @@ public class MotorConfig {
      * @param d The derivitive constant
      * @param f The feed-forward constant
      * @param mia The maximum integral accumulator constant
-     * @param maxCurrent The maximum current the motor will draw
+     * @param maxCurrent The maximum current the motor will draw continuously
+     * @param maxPeakCurrent The maximum current the motor will draw at peak
+     * @param peakCurrentDuration The duration of the peak current(in ms)
      * @param encoder The type of encoder the motor uses
      * @param deadband The deadband(0.0-1.0) to be applied to the motor controller
      */
-    public MotorConfig(double p, double i, double d, double f, double mia, int maxCurrent, FeedbackDevice encoder, double deadband) {
+    public MotorConfig(double p, double i, double d, double f, double mia, int maxContCurrent, int maxPeakCurrent, int peakCurrentDuration, FeedbackDevice encoder, double deadband) {
         m_p = p;
         m_i = i;
         m_d = d;
         m_f = f;
         m_mia = mia;
-        m_maxCurrent = maxCurrent;
+        m_maxContCurrent = maxContCurrent;
+        m_maxPeakCurrent = maxPeakCurrent;
+        m_peakCurrentDuration = peakCurrentDuration;
         m_encoder = encoder;
         m_deadband = deadband;
     }
@@ -73,10 +79,24 @@ public class MotorConfig {
     }
 
     /**
-     * @return The max current the motor will draw
+     * @return The max current the motor will draw continuously
      */
-    public int getMaxCurrent() {
-        return m_maxCurrent;
+    public int getContinuousCurrent() {
+        return m_maxContCurrent;
+    }
+
+    /**
+     * @return The max current the motor will draw at peak
+     */
+    public int getPeakCurrent() {
+        return m_maxPeakCurrent;
+    }
+
+    /**
+     * @return The maximum current the motor will draw at peak
+     */
+    public int getPeakDuration() {
+        return m_peakCurrentDuration;
     }
 
     /**
@@ -108,14 +128,12 @@ public class MotorConfig {
         talon.config_kD(slot, config.getD());
         talon.config_kF(slot, config.getF());
         talon.configMaxIntegralAccumulator(slot, config.getMIA());
-        talon.configContinuousCurrentLimit(slot, config.getMaxCurrent());
+        talon.configContinuousCurrentLimit(config.getContinuousCurrent());
+        talon.configPeakCurrentLimit(config.getPeakCurrent());
+        talon.configPeakCurrentDuration(config.getPeakDuration());
         talon.enableCurrentLimit(true);
         talon.configSelectedFeedbackSensor(config.getEncoder());
         talon.configNeutralDeadband(config.getDeadband());
-		talon.configNominalOutputForward(0);
-		talon.configNominalOutputReverse(0);
-		talon.configPeakOutputForward(1);
-		talon.configPeakOutputReverse(-1);
     }
     
     /**
@@ -132,12 +150,8 @@ public class MotorConfig {
         talon.config_kD(slot, config.getD());
         talon.config_kF(slot, config.getF());
         talon.configMaxIntegralAccumulator(slot, config.getMIA());
-        talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, config.getMaxCurrent(), 0, 0));
+        talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, config.getContinuousCurrent(), config.getPeakCurrent(), config.getPeakDuration()));
         talon.configSelectedFeedbackSensor(config.getEncoder());
         talon.configNeutralDeadband(config.getDeadband());
-		talon.configNominalOutputForward(0);
-		talon.configNominalOutputReverse(0);
-		talon.configPeakOutputForward(1);
-		talon.configPeakOutputReverse(-1);
     }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -35,9 +36,9 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveSubsystem m_drive = new DriveSubsystem();
     private final TransportSubsystem m_transport = new TransportSubsystem();
-    private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
-    private final IntakeSubsystem m_frontIntake = new IntakeSubsystem(Constants.kFrontIntakeTalon);
-    private final IntakeSubsystem m_backIntake = new IntakeSubsystem(Constants.kBackIntakeTalon);
+    private final ShooterSubsystem m_shooter = new ShooterSubsystem();
+    private final IntakeSubsystem m_frontIntake = new IntakeSubsystem(Constants.kFrontIntakeTalon, Constants.kFrontIntakeInverted);
+    private final IntakeSubsystem m_backIntake = new IntakeSubsystem(Constants.kBackIntakeTalon, Constants.kBackIntakeInverted);
     private final ClimbSubsystem m_climb = new ClimbSubsystem();
     private final ColorWheelSubsystem m_wof = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
@@ -59,8 +60,8 @@ public class RobotContainer {
     public void robotInit() {
         Logger.configureLoggingAndConfig(this, false);
         initDashboard();
-        m_shooterSubsystem.leftInverted(Constants.kShooterLeftInveted);
-        m_shooterSubsystem.rightInverted(Constants.kShooterRightInverted);
+        m_shooter.leftInverted(Constants.kShooterLeftInveted);
+        m_shooter.rightInverted(Constants.kShooterRightInverted);
     }
 
     /**
@@ -72,29 +73,36 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //new JoystickButton(m_joystick, 1).whenPressed(new Climb(m_climb, true));
         //new JoystickButton(m_joystick, 1).whenReleased(new Climb(m_climb, false));
-        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooterSubsystem, 5000, Constants.kMaxShooterSlewRate));
-       /* new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(0.5, false, m_transport));
-        new JoystickButton(m_joystick, 9).whenHeld(new TransportPower(0.5, true, m_transport));
-        new JoystickButton(m_joystick, 8).whenHeld(new TransportPower(-0.5, false, m_transport));
-        new JoystickButton(m_joystick, 10).whenHeld(new TransportPower(-0.5, true, m_transport));
-        new JoystickButton(m_joystick, 11).whenHeld(new Intake(m_frontIntake, m_frontIntake::set, 0.5, false));
-        new JoystickButton(m_joystick, 12).whenHeld(new Intake(m_backIntake, m_backIntake::set, 0.5, false));
-*/
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(m_shooterSubsystem, 4500, Constants.kMaxShooterSlewRate));
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kAim).whenPressed();
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFeedShooter).whenPressed();
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
+        new JoystickButton(m_joystick, 1).whenHeld(new TransportPower(1.0, true, m_transport));
+        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooter, 6000, Constants.kMaxShooterSlewRate));
+        new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(1.0, false, m_transport));
+        new JoystickButton(m_joystick, 9).whenHeld(new TransportPower(1.0, true, m_transport));
+        new JoystickButton(m_joystick, 8).whenHeld(new TransportPower(-0.25, false, m_transport));
+        new JoystickButton(m_joystick, 10).whenHeld(new TransportPower(-0.25, true, m_transport));
+        new JoystickButton(m_joystick, 3).whenHeld(new Intake(m_frontIntake, 0.5, false));
+        new JoystickButton(m_joystick, 4).whenHeld(new Intake(m_backIntake, 0.5, false));
+        new JoystickButton(m_joystick, 5).whenHeld(new Intake(m_frontIntake, 0.5, true));
+        new JoystickButton(m_joystick, 6).whenHeld(new Intake(m_backIntake, 0.5, true));
+        new POVButton(m_joystick, 180).whileHeld(new Climb(m_climb, 0));
+        new POVButton(m_joystick, -1).whileHeld(new Climb(m_climb, 1));
+        new POVButton(m_joystick, 0).whileHeld(new Climb(m_climb, 2));
+
+        /*new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(m_shooter, 4500, Constants.kMaxShooterSlewRate));
+      //  new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kAim).whenPressed();
+       // new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFeedShooter).whenPressed();
+       // new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
         new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFrontIntake).whenPressed(new Intake(m_frontIntake, Constants.kIntakePower, false));
         new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBackIntake).whenPressed(new Intake(m_backIntake, Constants.kIntakePower, false));
         new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBothIntake).whenPressed(new ParallelCommandGroup(new Intake(m_frontIntake, Constants.kIntakePower, false), new Intake(m_backIntake, Constants.kIntakePower, false)));
         new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kFrontOutput).whenPressed(new Intake(m_frontIntake, Constants.kIntakePower, true));
         new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kBackOutput).whenPressed(new Intake(m_backIntake, Constants.kIntakePower, true));
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed();
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kIncrementWOF).whenPressed();
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kClimbExtend).whenPressed(new Climb(m_climbSubsystem, 2));
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kClimbRetract).whenPressed(new Climb(m_climbSubsystem, 0));
-        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kStop).whenPressed(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
+        //new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed();
+        //new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kIncrementWOF).whenPressed();
+        new JoystickButton(m_buttonBoard, Constants.ButtonBoard.kStop).whenPressed(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
+     */
+    
     }
+    
 
     public void initDashboard() {
         WPI_TalonFX[] allTalons = m_drive.getAllTalons();
@@ -129,7 +137,7 @@ public class RobotContainer {
             m_odometer.setDouble(m_drive.getAverageDistance() + (noise.nextDouble() / 10000));
 
             int count = 0;
-            for (NetworkTableEntry t : talonEntries) {
+            for (NetworkTableEntry t : talonEntries) {  
                 t.setDouble(m_drive.getAllTalons()[count].getMotorOutputVoltage() + (noise.nextDouble() / 10000));
                 count++;
             }
@@ -137,7 +145,7 @@ public class RobotContainer {
     }
 
     public void drive() {
-        Command driveCommand = new Drive(m_drive,
+        /*Command driveCommand = new Drive(m_drive,
                 () -> (m_joystick.getRawAxis(Constants.kThrottleAxis) * (Constants.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTrimAxis) * (Constants.kTrimInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTurnAxis) * (Constants.kTurnInverted ? -1.0 : 1.0)),
@@ -146,7 +154,7 @@ public class RobotContainer {
                 Constants.kTrimRatio);
 
         driveCommand.schedule();
-    }
+    */}
 
     public void startDashboardCapture() {
         if(DriverStation.getInstance().isFMSAttached()) {
@@ -209,6 +217,6 @@ public class RobotContainer {
     }
 
     public void printRPM() {
-        System.out.println(m_shooterSubsystem.getRPM());
+        System.out.println(m_shooter.getRPM());
     }
 }

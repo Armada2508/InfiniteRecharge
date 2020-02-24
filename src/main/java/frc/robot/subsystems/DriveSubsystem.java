@@ -78,7 +78,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setPowers(double powerL, double powerR) {
-        m_rightMotors.set(powerR);
+        m_rightMotors.set(-powerR);
         m_leftMotors.set(powerL);
     }
 

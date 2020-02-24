@@ -27,7 +27,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
     }
 
     public void leftInverted(boolean inverted) {

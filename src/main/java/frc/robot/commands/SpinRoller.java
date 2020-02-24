@@ -3,13 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
-import io.github.oblarg.oblog.annotations.Config;
 
 public class SpinRoller extends CommandBase {
 
     private ShooterSubsystem m_shooterSubsystem;
     private SlewRateLimiter m_limiter;
-    @Config
     private double m_rpm;
 
     public SpinRoller(ShooterSubsystem shooterSubsystem, double rpm, int maxSlewRate) {

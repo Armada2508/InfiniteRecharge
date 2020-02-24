@@ -38,7 +38,6 @@ public class TransportSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
     }
 
     public double getRawElevPosition() {

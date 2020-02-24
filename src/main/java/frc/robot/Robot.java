@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     m_robotContainer.updateDashboard();
     m_robotContainer.updateLogger();
-    m_robotContainer.printRPM();
+    //m_robotContainer.printRPM();
   }
 
   /**

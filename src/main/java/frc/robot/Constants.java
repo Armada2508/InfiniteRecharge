@@ -52,7 +52,7 @@ public final class Constants {
     public static final int kThrottleAxis = 1;
     public static final int kTurnAxis = 2;
     public static final int kTrimAxis = 0;
-    public static final double kMaxPower = 1.0;
+    public static final double kMaxPower = 0.2;
     public static final double kTurnRatio = 0.5;
     public static final double kTrimRatio = 0.5;
     public static final boolean kThrottleInverted = true;
@@ -65,7 +65,7 @@ public final class Constants {
     public static final boolean kRightSensorInverted = false;
     public static final boolean kLeftSensorInverted = true;
     public static final int kDriveSlot = 0;
-    public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
+    public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
     public static final PIDController kDrivePositionPID = new PIDController(0, 0, 0);  // TODO: Tune PID
     public static final double kCoolingTemp = 60.0;
     public static final double kCoolingDelay = 5.0;
@@ -104,18 +104,18 @@ public final class Constants {
     public static final int kShooterEncoderUnitsPerRev = 2048;
     public static final double kShooterGearRatio = 1.0;
     public static final double kShooterVelocitySampleTime = 0.1;
-    public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 10000.0, 40, FeedbackDevice.IntegratedSensor, 0.001);
+    public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
     public static final int kMaxShooterSlewRate = 2000;  // TODO: Determine correct value
     public static final int kShooterSlot = 0;
-    public static final boolean kShooterLeftInveted = false;
-    public static final boolean kShooterRightInverted = true;
+    public static final boolean kShooterLeftInveted = true;
+    public static final boolean kShooterRightInverted = false;
 
     // Color Wheel Constants
     public static final double kWOFDiameter = 13;
     public static final int kWOFEncoderUnitsPerRev = 1024;
     public static final double kWOFGearRatio = 20.0;
     public static final double kWOFWheelDiameter = 4.0;
-    public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
+    public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
     public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
     public static final int kWOFSlot = 0;
     public static final int kWOFMotor = 5;
@@ -126,7 +126,7 @@ public final class Constants {
     public static final double kPulleyDiameter = 2.75;
     public static final int kTransportEncoderUnitsPerRev = 1024;
     public static final double kTransportGearRatio = 20.0;
-    public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 30, FeedbackDevice.QuadEncoder, 0.001);
+    public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
     public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
     public static final int kTransportSlot = 0;
     // TOF Sensors
@@ -143,12 +143,14 @@ public final class Constants {
     public static final int kFrontIntakeTalon = 8;
     public static final int kBackIntakeTalon = 4;
     public static final double kIntakePower = 0.75;
+    public static final boolean kFrontIntakeInverted = true;
+    public static final boolean kBackIntakeInverted = false;
 
     // Climb Constants
-    public static final int kLeftClimbTop = 0;
-    public static final int kLeftClimbBottom = 1;
-    public static final int kRightClimbTop = 2;
-    public static final int kRightClimbBottom = 3;
+    public static final int kLeftClimbTop = 3;
+    public static final int kLeftClimbBottom = 2;
+    public static final int kRightClimbTop = 1;
+    public static final int kRightClimbBottom = 0;
     
 
 }

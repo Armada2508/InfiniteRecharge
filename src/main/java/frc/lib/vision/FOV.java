@@ -1,8 +1,8 @@
 package frc.lib.vision;
 
 public class FOV {
-    public final double m_x;
-    public final double m_y;
+    public final double mX;
+    public final double mY;
 
     /**
      * Create a new Resolution object
@@ -11,8 +11,8 @@ public class FOV {
      * @param y The y resolution
      */
     public FOV(double x, double y) {
-        m_x = x;
-        m_y = y;
+        mX = x;
+        mY = y;
     }
 
     /**
@@ -20,7 +20,7 @@ public class FOV {
      * @return The x FOV
      */
     public double getX() {
-        return m_x;
+        return mX;
     }
 
     /**
@@ -28,6 +28,6 @@ public class FOV {
      * @return The y FOV
      */
     public double getY() {
-        return m_y;
+        return mY;
     }
 }

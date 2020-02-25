@@ -1,11 +1,11 @@
 package frc.lib.vision;
 
 public class CameraPoint2d {
-    private double m_x;
-    private double m_y;
-    private boolean m_isAngle;
-    private FOV m_fov;
-    private Resolution m_res;
+    private double mX;
+    private double mY;
+    private boolean mIsAngle;
+    private FOV mFov;
+    private Resolution mRes;
 
     /**
      * Creates a new CameraPoint2d
@@ -26,9 +26,9 @@ public class CameraPoint2d {
      */
     public CameraPoint2d(double x, double y, boolean angle) {
         if(angle) {
-            m_isAngle = angle;
-            m_x = x;
-            m_y = y;
+            mIsAngle = angle;
+            mX = x;
+            mY = y;
         }
     }
 
@@ -37,7 +37,7 @@ public class CameraPoint2d {
      * @return The x coordinate
      */
     public double getX() {
-        return m_x;
+        return mX;
     }
 
     /**
@@ -46,7 +46,7 @@ public class CameraPoint2d {
      */
 
     public double getY() {
-        return m_y;
+        return mY;
     }
 
     /**
@@ -55,7 +55,7 @@ public class CameraPoint2d {
      */
 
     public boolean isAngle() {
-        return m_isAngle;
+        return mIsAngle;
     }
 
     /**
@@ -66,9 +66,9 @@ public class CameraPoint2d {
      * @param yInverted If the y coordinate is inverted
      */
     public void center(Resolution resolution, boolean xInverted, boolean yInverted) {
-        if(!m_isAngle) {
-            m_x = VisionUtil.centerPixels((int)m_x, (double)resolution.getX(), xInverted);
-            m_y = VisionUtil.centerPixels((int)m_y, (double)resolution.getY(), yInverted);
+        if(!mIsAngle) {
+            mX = VisionUtil.centerPixels((int)mX, (double)resolution.getX(), xInverted);
+            mY = VisionUtil.centerPixels((int)mY, (double)resolution.getY(), yInverted);
         } else {
             System.out.println("Pair is not in pixels");
         }
@@ -81,9 +81,9 @@ public class CameraPoint2d {
      * @param resolution The resolution of the camera
      */
     public void toAngle(FOV fov, Resolution resolution) {
-        if(!m_isAngle) {
-            m_x = VisionUtil.pixelsToAngles(m_x, fov.getX(), resolution.getX());
-            m_y = VisionUtil.pixelsToAngles(m_y, fov.getY(), resolution.getY());
+        if(!mIsAngle) {
+            mX = VisionUtil.pixelsToAngles(mX, fov.getX(), resolution.getX());
+            mY = VisionUtil.pixelsToAngles(mY, fov.getY(), resolution.getY());
         }
     }
 
@@ -94,9 +94,9 @@ public class CameraPoint2d {
      * @param resolution The resolution of the camera
      */
     public void toPixels(FOV fov, Resolution resolution) {
-        if(m_isAngle) {
-            m_x = VisionUtil.anglesToPixels(m_x, fov.getX(), resolution.getX());
-            m_y = VisionUtil.anglesToPixels(m_y, fov.getY(), resolution.getY());
+        if(mIsAngle) {
+            mX = VisionUtil.anglesToPixels(mX, fov.getX(), resolution.getX());
+            mY = VisionUtil.anglesToPixels(mY, fov.getY(), resolution.getY());
         }
     }
 
@@ -107,8 +107,8 @@ public class CameraPoint2d {
      * @param resolution
      */
     public void config(FOV fov, Resolution resolution) {
-        m_fov = fov;
-        m_res = resolution;
+        mFov = fov;
+        mRes = resolution;
     }
 
     
@@ -116,12 +116,12 @@ public class CameraPoint2d {
      * Converts the CameraPoint2d to an angle using the FOV and Resolution set globally with {@link CameraPoint2d#config(FOV, Resolution)}
      */
     public void toAngle() {
-        if(m_fov == null || m_res == null) {
+        if(mFov == null || mRes == null) {
             return;
         }
-        if(!m_isAngle) {
-            m_x = VisionUtil.pixelsToAngles(m_x, m_fov.getX(), m_res.getX());
-            m_y = VisionUtil.pixelsToAngles(m_y, m_fov.getY(), m_res.getY());
+        if(!mIsAngle) {
+            mX = VisionUtil.pixelsToAngles(mX, mFov.getX(), mRes.getX());
+            mY = VisionUtil.pixelsToAngles(mY, mFov.getY(), mRes.getY());
         }
     }
 
@@ -130,12 +130,12 @@ public class CameraPoint2d {
      * Converts the CameraPoint2d to pixel coordinates using the FOV and Resolution set globally with {@link CameraPoint2d#config(FOV, Resolution)}
      */
     public void toPixels() {
-        if(m_fov == null || m_res == null) {
+        if(mFov == null || mRes == null) {
             return;
         }
-        if(m_isAngle) {
-            m_x = VisionUtil.anglesToPixels(m_x, m_fov.getX(), m_res.getX());
-            m_y = VisionUtil.anglesToPixels(m_y, m_fov.getY(), m_res.getY());
+        if(mIsAngle) {
+            mX = VisionUtil.anglesToPixels(mX, mFov.getX(), mRes.getX());
+            mY = VisionUtil.anglesToPixels(mY, mFov.getY(), mRes.getY());
         }
     }
 

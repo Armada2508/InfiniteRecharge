@@ -1,8 +1,8 @@
 package frc.lib.motion;
 
 public class WheelPositions {
-    private double m_RWheelPos;
-    private double m_LWheelPos;
+    private double mRWheelPos;
+    private double mLWheelPos;
 
     /**
      * An object that stores two wheel positions
@@ -10,8 +10,8 @@ public class WheelPositions {
      * @param lWheelPos The left wheel position
      */
     public WheelPositions(double rWheelPos, double lWheelPos) {
-        m_RWheelPos = rWheelPos;
-        m_LWheelPos = lWheelPos;
+        mRWheelPos = rWheelPos;
+        mLWheelPos = lWheelPos;
     }
 
     /**
@@ -28,7 +28,7 @@ public class WheelPositions {
      */
 
     public double getRight() {
-        return m_RWheelPos;
+        return mRWheelPos;
     }
 
     /**
@@ -36,7 +36,7 @@ public class WheelPositions {
      */
 
     public double getLeft() {
-        return m_LWheelPos;
+        return mLWheelPos;
     }
 
     /**
@@ -44,6 +44,6 @@ public class WheelPositions {
      */
     @Override
     public String toString() {
-        return ("Right Wheel Position: " + m_RWheelPos + ", Left Wheel Position: w" + m_LWheelPos);
+        return ("Right Wheel Position: " + mRWheelPos + ", Left Wheel Position: w" + mLWheelPos);
     }
 }

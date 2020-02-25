@@ -6,17 +6,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class EngageIntake extends CommandBase {
     
-    private Consumer<Boolean> m_engageIntake;
-    private boolean m_engaged;
+    private Consumer<Boolean> mEngageIntake;
+    private boolean mEngaged;
 
     public EngageIntake(Consumer<Boolean> engageIntake, boolean engaged) {
-        m_engageIntake = engageIntake;
-        m_engaged = engaged;
+        mEngageIntake = engageIntake;
+        mEngaged = engaged;
     }
     
     @Override
     public void initialize() {
-        m_engageIntake.accept(m_engaged);
+        mEngageIntake.accept(mEngaged);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class EngageIntake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_engageIntake.accept(false);
+        mEngageIntake.accept(false);
     }
 
     @Override

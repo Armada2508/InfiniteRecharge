@@ -13,26 +13,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Drive extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_driveSubsystem;
-  private DoubleSupplier m_throttle;
-  private DoubleSupplier m_trim;
-  private DoubleSupplier m_turn;
-  private double m_maxPower;
-  private double m_turnRatio;
-  private double m_trimRatio;
+  private final DriveSubsystem mDriveSubsystem;
+  private DoubleSupplier mThrottle;
+  private DoubleSupplier mTrim;
+  private DoubleSupplier mTurn;
+  private double mMaxPower;
+  private double mTurnRatio;
+  private double mTrimRatio;
   /**
    * Creates a new Drive.
    *
    * @param subsystem The subsystem used by this command.
    */
   public Drive(DriveSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn, double maxPower, double turnRatio, double trimRatio) {
-    m_driveSubsystem = subsystem;
-    m_throttle = throttle;
-    m_trim = trim;
-    m_turn = turn;
-    m_maxPower = maxPower;
-    m_turnRatio = turnRatio;
-    m_trimRatio = trimRatio;
+    mDriveSubsystem = subsystem;
+    mThrottle = throttle;
+    mTrim = trim;
+    mTurn = turn;
+    mMaxPower = maxPower;
+    mTurnRatio = turnRatio;
+    mTrimRatio = trimRatio;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -46,30 +46,30 @@ public class Drive extends CommandBase {
   @Override
   public void execute() {
 
-    double throttle = m_throttle.getAsDouble();
-    double trim = m_trim.getAsDouble();
-    double turn = m_turn.getAsDouble();
+    double throttle = mThrottle.getAsDouble();
+    double trim = mTrim.getAsDouble();
+    double turn = mTurn.getAsDouble();
     
-    turn *= m_turnRatio;
-    trim *= m_trimRatio;
+    turn *= mTurnRatio;
+    trim *= mTrimRatio;
     turn += trim; 
 
     double powerL = throttle + turn;
     double powerR = throttle - turn;
 
-    powerR *= m_maxPower;
-    powerL *= m_maxPower;
+    powerR *= mMaxPower;
+    powerL *= mMaxPower;
 
     double turningPower = powerL - powerR;
-    if(turningPower > 0 && powerL > m_maxPower) {
-      powerL = m_maxPower;
-      powerR = m_maxPower - turningPower;
-    } else if(turningPower < 0 && powerR > m_maxPower) {
-      powerR = m_maxPower;
-      powerL = m_maxPower + turningPower;
+    if(turningPower > 0 && powerL > mMaxPower) {
+      powerL = mMaxPower;
+      powerR = mMaxPower - turningPower;
+    } else if(turningPower < 0 && powerR > mMaxPower) {
+      powerR = mMaxPower;
+      powerL = mMaxPower + turningPower;
     }
 
-    m_driveSubsystem.setPowers(powerL, powerR);
+    mDriveSubsystem.setPowers(powerL, powerR);
   }
 
   // Called once the command ends or is interrupted.

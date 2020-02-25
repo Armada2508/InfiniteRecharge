@@ -14,26 +14,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveClosedLoop extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_driveSubsystem;
-  private final DoubleSupplier m_throttle;
-  private final DoubleSupplier m_trim;
-  private final DoubleSupplier m_turn;
-  private final double m_maxPower;
-  private final double m_turnRatio;
-  private final double m_trimRatio;
+  private final DriveSubsystem mDriveSubsystem;
+  private final DoubleSupplier mThrottle;
+  private final DoubleSupplier mTrim;
+  private final DoubleSupplier mTurn;
+  private final double mMaxPower;
+  private final double mTurnRatio;
+  private final double mTrimRatio;
   /**
    * Creates a new Drive.
    *
    * @param subsystem The subsystem used by this command.
    */
   public DriveClosedLoop(DriveSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn, double maxPower, double turnRatio, double trimRatio) {
-    m_driveSubsystem = subsystem;
-    m_throttle = throttle;
-    m_trim = trim;
-    m_turn = turn;
-    m_maxPower = maxPower;
-    m_turnRatio = turnRatio;
-    m_trimRatio = trimRatio;
+    mDriveSubsystem = subsystem;
+    mThrottle = throttle;
+    mTrim = trim;
+    mTurn = turn;
+    mMaxPower = maxPower;
+    mTurnRatio = turnRatio;
+    mTrimRatio = trimRatio;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -47,30 +47,30 @@ public class DriveClosedLoop extends CommandBase {
   @Override
   public void execute() {
 
-    double throttle = m_throttle.getAsDouble();
-    double trim = m_trim.getAsDouble();
-    double turn = m_turn.getAsDouble();
+    double throttle = mThrottle.getAsDouble();
+    double trim = mTrim.getAsDouble();
+    double turn = mTurn.getAsDouble();
     
-    turn *= m_turnRatio;
-    trim *= m_trimRatio;
+    turn *= mTurnRatio;
+    trim *= mTrimRatio;
     turn += trim; 
 
     double powerL = throttle + turn;
     double powerR = throttle - turn;
 
-    powerR *= m_maxPower;
-    powerL *= m_maxPower;
+    powerR *= mMaxPower;
+    powerL *= mMaxPower;
 
     double turningPower = powerL - powerR;
-    if(turningPower > 0 && powerL > m_maxPower) {
-      powerL = m_maxPower;
-      powerR = m_maxPower - turningPower;
-    } else if(turningPower < 0 && powerR > m_maxPower) {
-      powerR = m_maxPower;
-      powerL = m_maxPower + turningPower;
+    if(turningPower > 0 && powerL > mMaxPower) {
+      powerL = mMaxPower;
+      powerR = mMaxPower - turningPower;
+    } else if(turningPower < 0 && powerR > mMaxPower) {
+      powerR = mMaxPower;
+      powerL = mMaxPower + turningPower;
     }
 
-    m_driveSubsystem.driveClosedLoop((powerL*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)), (powerR*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)));
+    mDriveSubsystem.driveClosedLoop((powerL*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)), (powerR*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)));
   }
 
   // Called once the command ends or is interrupted.

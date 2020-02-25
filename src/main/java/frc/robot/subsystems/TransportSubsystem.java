@@ -13,25 +13,25 @@ import frc.robot.Constants;
 
 public class TransportSubsystem extends SubsystemBase {
 
-    private WPI_TalonSRX m_diagTalon;
-    private WPI_TalonSRX m_elevTalon;
-    private TimeOfFlight m_fIntake;
-    private TimeOfFlight m_bIntake;
-    private TimeOfFlight m_interface;
-    private TimeOfFlight m_shooter;
+    private WPI_TalonSRX mDiagTalon;
+    private WPI_TalonSRX mElevTalon;
+    private TimeOfFlight mFIntake;
+    private TimeOfFlight mBIntake;
+    private TimeOfFlight mInterface;
+    private TimeOfFlight mShooter;
 
     public TransportSubsystem() {
-        m_diagTalon = new WPI_TalonSRX(Constants.kDiagonalTalon);
-        m_elevTalon = new WPI_TalonSRX(Constants.kElevatorTalon);
-        m_diagTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        m_elevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        MotorConfig.configTalon(m_diagTalon, Constants.kTransportConfig, Constants.kTransportSlot);
-        MotorConfig.configTalon(m_elevTalon, Constants.kTransportConfig, Constants.kTransportSlot);
+        mDiagTalon = new WPI_TalonSRX(Constants.kDiagonalTalon);
+        mElevTalon = new WPI_TalonSRX(Constants.kElevatorTalon);
+        mDiagTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        mElevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        MotorConfig.configTalon(mDiagTalon, Constants.kTransportConfig, Constants.kTransportSlot);
+        MotorConfig.configTalon(mElevTalon, Constants.kTransportConfig, Constants.kTransportSlot);
 
-        m_fIntake = new TimeOfFlight(Constants.kFIntakeTofID);
-        m_bIntake = new TimeOfFlight(Constants.kBIntakeTofID);
-        m_interface = new TimeOfFlight(Constants.kInterfaceTofID);
-        m_shooter = new TimeOfFlight(Constants.kShooterTofID);
+        mFIntake = new TimeOfFlight(Constants.kFIntakeTofID);
+        mBIntake = new TimeOfFlight(Constants.kBIntakeTofID);
+        mInterface = new TimeOfFlight(Constants.kInterfaceTofID);
+        mShooter = new TimeOfFlight(Constants.kShooterTofID);
 
         setTOFMode(Constants.kRangingMode, Constants.kTOFSampleTime);
     }
@@ -41,51 +41,51 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double getRawElevPosition() {
-        return m_diagTalon.getSelectedSensorPosition();
+        return mDiagTalon.getSelectedSensorPosition();
     }
 
     public double getRawDiagPosition() {
-        return m_diagTalon.getSelectedSensorPosition();
+        return mDiagTalon.getSelectedSensorPosition();
     }
 
     public double getElevPosition() {
-        return EncoderUtil.toDistance(m_elevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
+        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
     }
 
     public double getDiagPosition() {
-        return EncoderUtil.toDistance(m_elevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
+        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
     }
 
     public void setElevPower(double power) {
-        m_elevTalon.set(ControlMode.PercentOutput, power);
+        mElevTalon.set(ControlMode.PercentOutput, power);
     }
 
     public void setDiagPower(double power) {
-        m_diagTalon.set(ControlMode.PercentOutput, power);
+        mDiagTalon.set(ControlMode.PercentOutput, power);
     }
 
     public void setRawElevPosition(double position) {
-        m_elevTalon.set(ControlMode.Position, position);
+        mElevTalon.set(ControlMode.Position, position);
     }
 
     public void setRawDiagPosition(double position) {
-        m_diagTalon.set(ControlMode.Position, position);
+        mDiagTalon.set(ControlMode.Position, position);
     }
 
     public void setElevPosition(double position) {
-        m_elevTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getElevPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mElevTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getElevPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
     }
 
     public void setDiagPosition(double position) {
-        m_diagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mDiagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
     }
     
     public void zeroElevPosition() {
-        m_elevTalon.setSelectedSensorPosition(0);   
+        mElevTalon.setSelectedSensorPosition(0);   
     }
     
     public void zeroDiagPosition() {
-        m_diagTalon.setSelectedSensorPosition(0);
+        mDiagTalon.setSelectedSensorPosition(0);
     }
 
     public void incrementElevPosition(double increment) {
@@ -97,17 +97,17 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double[] sense() {
-        double[] distance =  { m_fIntake.getRange(), m_bIntake.getRange(), m_interface.getRange(), m_shooter.getRange() };
+        double[] distance =  { mFIntake.getRange(), mBIntake.getRange(), mInterface.getRange(), mShooter.getRange() };
         return distance;
     }
 
     public double[] deviation() {
-        double[] deviation =  { m_fIntake.getRangeSigma(), m_bIntake.getRangeSigma(), m_interface.getRangeSigma(), m_shooter.getRangeSigma() };
+        double[] deviation =  { mFIntake.getRangeSigma(), mBIntake.getRangeSigma(), mInterface.getRangeSigma(), mShooter.getRangeSigma() };
         return deviation;
     }
 
     public boolean[] isValid() {
-        boolean[] isValid =  { m_fIntake.isRangeValid(), m_bIntake.isRangeValid(), m_interface.isRangeValid(), m_shooter.isRangeValid() };
+        boolean[] isValid =  { mFIntake.isRangeValid(), mBIntake.isRangeValid(), mInterface.isRangeValid(), mShooter.isRangeValid() };
         return isValid;
     }
 
@@ -134,9 +134,9 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public void setTOFMode(RangingMode rangingMode, double sampleTime) {
-        m_fIntake.setRangingMode(rangingMode, sampleTime);
-        m_bIntake.setRangingMode(rangingMode, sampleTime);
-        m_interface.setRangingMode(rangingMode, sampleTime);
-        m_shooter.setRangingMode(rangingMode, sampleTime);
+        mFIntake.setRangingMode(rangingMode, sampleTime);
+        mBIntake.setRangingMode(rangingMode, sampleTime);
+        mInterface.setRangingMode(rangingMode, sampleTime);
+        mShooter.setRangingMode(rangingMode, sampleTime);
     }
 }

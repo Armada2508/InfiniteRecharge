@@ -4,22 +4,22 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TransportSubsystem;
 
 public class TransportPower extends CommandBase {
-    private double m_power;
-    private boolean m_elevator;
-    private TransportSubsystem m_transportSubsystem;
+    private double mPower;
+    private boolean mElevator;
+    private TransportSubsystem mTransportSubsystem;
 
     public TransportPower(double power, boolean elevator, TransportSubsystem transportSubsystem) {
-        m_power = power;
-        m_elevator = elevator;
-        m_transportSubsystem = transportSubsystem;
+        mPower = power;
+        mElevator = elevator;
+        mTransportSubsystem = transportSubsystem;
     }
 
     @Override
     public void initialize() {
-        if(m_elevator) {
-            m_transportSubsystem.setElevPower(m_power);
+        if(mElevator) {
+            mTransportSubsystem.setElevPower(mPower);
         } else {
-            m_transportSubsystem.setDiagPower(m_power);
+            mTransportSubsystem.setDiagPower(mPower);
         }
     }
 
@@ -29,10 +29,10 @@ public class TransportPower extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if(m_elevator) {
-            m_transportSubsystem.setElevPower(0);
+        if(mElevator) {
+            mTransportSubsystem.setElevPower(0);
         } else {
-            m_transportSubsystem.setDiagPower(0);
+            mTransportSubsystem.setDiagPower(0);
         }
     }
 

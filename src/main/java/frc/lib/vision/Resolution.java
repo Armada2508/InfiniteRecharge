@@ -1,8 +1,8 @@
 package frc.lib.vision;
 
 public class Resolution {
-    public final int m_x;
-    public final int m_y;
+    public final int mX;
+    public final int mY;
 
     /**
      * Create a new Resolution object
@@ -11,8 +11,8 @@ public class Resolution {
      * @param y The y resolution
      */
     public Resolution(int x, int y) {
-        m_x = x;
-        m_y = y;
+        mX = x;
+        mY = y;
     }
 
     /**
@@ -20,7 +20,7 @@ public class Resolution {
      * @return The x resolution
      */
     public int getX() {
-        return m_x;
+        return mX;
     }
 
     /**
@@ -28,6 +28,6 @@ public class Resolution {
      * @return The y resolution
      */
     public int getY() {
-        return m_y;
+        return mY;
     }
 }

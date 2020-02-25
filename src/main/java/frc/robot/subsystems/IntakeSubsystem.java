@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    public WPI_TalonSRX m_intakeTalon;
+    public WPI_TalonSRX mIntakeTalon;
 
     public IntakeSubsystem(int talonID, boolean inverted) {
-        m_intakeTalon = new WPI_TalonSRX(talonID);
-        m_intakeTalon.setInverted(inverted);
+        mIntakeTalon = new WPI_TalonSRX(talonID);
+        mIntakeTalon.setInverted(inverted);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void set(double power) {
-        m_intakeTalon.set(ControlMode.PercentOutput, power);
+        mIntakeTalon.set(ControlMode.PercentOutput, power);
     }
 }

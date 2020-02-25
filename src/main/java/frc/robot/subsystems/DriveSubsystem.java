@@ -92,9 +92,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftMotors.set(throttle + turn);
     }
 
-    public void driveClosedLoop(int left, int right) {
-        m_right.set(ControlMode.Velocity, toVelocity(right));
-        m_left.set(ControlMode.Velocity, toVelocity(left));
+    public void driveClosedLoop(double left, double right) {
+        System.out.println(left + "\t" + fromVelocity(left));
+        m_right.set(ControlMode.Velocity, fromVelocity(right));
+        m_left.set(ControlMode.Velocity, fromVelocity(left));
     }
 
     public void brake() {
@@ -126,15 +127,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void reset() {
         resetOdometry(new Pose2d());
-        resetTalons();
+        configTalons();
         resetHeading();
         resetGyro();
-
-        
-        m_right.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_left.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_right.configVelocityMeasurementWindow(1);
-        m_left.configVelocityMeasurementWindow(1);
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -206,6 +201,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double toVelocity(int velocity) {
         return EncoderUtil.toVelocity(velocity, Constants.kDriveEncoderUnitsPerRev, Constants.kDriveGearRatio, Constants.kDriveWheelDiameter, Constants.kVelSampleTime);
+    }
+
+    public double fromVelocity(double velocity) {
+        return EncoderUtil.fromVelocity(velocity, Constants.kDriveEncoderUnitsPerRev, Constants.kDriveGearRatio, Constants.kDriveWheelDiameter, Constants.kVelSampleTime);
     }
 
     public void setMaxOutput(double maxOutput) {

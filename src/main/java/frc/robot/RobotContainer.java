@@ -73,8 +73,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //new JoystickButton(m_joystick, 1).whenPressed(new Climb(m_climb, true));
         //new JoystickButton(m_joystick, 1).whenReleased(new Climb(m_climb, false));
-        new JoystickButton(m_joystick, 1).whenHeld(new TransportPower(1.0, true, m_transport));
-        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooter, 6000, Constants.kMaxShooterSlewRate));
+        //new JoystickButton(m_joystick, 1).whenHeld(new TransportPower(1.0, true, m_transport));
+        new JoystickButton(m_joystick, 1).whenHeld(new SpinRoller(m_shooter, 6500, Constants.kMaxShooterSlewRate));
         new JoystickButton(m_joystick, 7).whenHeld(new TransportPower(1.0, false, m_transport));
         new JoystickButton(m_joystick, 9).whenHeld(new TransportPower(1.0, true, m_transport));
         new JoystickButton(m_joystick, 8).whenHeld(new TransportPower(-0.25, false, m_transport));
@@ -145,7 +145,7 @@ public class RobotContainer {
     }
 
     public void drive() {
-        /*Command driveCommand = new Drive(m_drive,
+        Command driveCommand = new DriveClosedLoop(m_drive,
                 () -> (m_joystick.getRawAxis(Constants.kThrottleAxis) * (Constants.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTrimAxis) * (Constants.kTrimInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTurnAxis) * (Constants.kTurnInverted ? -1.0 : 1.0)),
@@ -154,7 +154,7 @@ public class RobotContainer {
                 Constants.kTrimRatio);
 
         driveCommand.schedule();
-    */}
+    }
 
     public void startDashboardCapture() {
         if(DriverStation.getInstance().isFMSAttached()) {

@@ -70,7 +70,7 @@ public class DriveClosedLoop extends CommandBase {
       powerL = m_maxPower + turningPower;
     }
 
-    m_driveSubsystem.driveClosedLoop((int)(powerL*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)), (int)(powerR*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)));
+    m_driveSubsystem.driveClosedLoop((powerL*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)), (powerR*Constants.kDriveFeedforward.maxAchievableVelocity(Constants.kMinBatteryVoltage, 0.0)));
   }
 
   // Called once the command ends or is interrupted.

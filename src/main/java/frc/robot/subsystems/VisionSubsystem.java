@@ -20,9 +20,7 @@ public class VisionSubsystem extends SubsystemBase {
     private final NetworkTableInstance m_instance;
     private final FOV m_fov;
     private final Resolution m_res;
-
-    // TODO: Turn LEDs on and off when vision is used
-
+    
     /**
      * Creates a new VisionSubsystem
      */

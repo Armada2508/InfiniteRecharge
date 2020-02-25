@@ -145,7 +145,7 @@ public class RobotContainer {
     }
 
     public void drive() {
-        Command driveCommand = new DriveClosedLoop(m_drive,
+        /*Command driveCommand = new DriveClosedLoop(m_drive,
                 () -> (m_joystick.getRawAxis(Constants.kThrottleAxis) * (Constants.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTrimAxis) * (Constants.kTrimInverted ? -1.0 : 1.0)),
                 () -> (m_joystick.getRawAxis(Constants.kTurnAxis) * (Constants.kTurnInverted ? -1.0 : 1.0)),
@@ -153,7 +153,7 @@ public class RobotContainer {
                 Constants.kTurnRatio,
                 Constants.kTrimRatio);
 
-        driveCommand.schedule();
+        driveCommand.schedule();*/
     }
 
     public void startDashboardCapture() {

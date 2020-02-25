@@ -17,10 +17,12 @@ import frc.lib.config.MotorConfig;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 
+//TODO: Put constants in sub-classes
+
 public final class Constants {
 
     // Button Board Constants
-    public class ButtonBoard {
+    public static class ButtonBoard {
         public static final int port = 1;
         public static final int kSpinUp = 0;
         public static final int kAim = 1;
@@ -95,8 +97,16 @@ public final class Constants {
     public static final double kUpdateRate = 0.5;  // TODO: Determine correct value
 
     // Vision Constants
-    public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
-    public static final Resolution kLimelighResolution = new Resolution(320, 240);
+    public static class Vision {
+        public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
+        public static final Resolution kLimelighResolution = new Resolution(320, 240);
+        public static final double kLimelightAngle = 15.0;  //TODO: Determine correct value
+        public static final double kLimelightHeight = .794;  //TODO: Determine final height
+        public static final double kTargetHeight = 2.5;
+        public static final double kTargetWidth = .997;
+        public static final double kTapeWidth = 4.0/Math.sqrt(3);
+
+    }
 
     // Shooter Constants
     public static final int kLeftShooterMotor = 11;

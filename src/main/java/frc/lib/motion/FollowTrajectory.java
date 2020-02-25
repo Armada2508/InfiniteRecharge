@@ -16,10 +16,10 @@ import frc.robot.subsystems.*;
  */
 public class FollowTrajectory {
 
-    private static SimpleMotorFeedforward m_feedforward;
-    private static DifferentialDriveKinematics m_kinematics;
-    private static RamseteController m_controller;
-    private static PIDController m_pidController;
+    private static SimpleMotorFeedforward mFeedforward;
+    private static DifferentialDriveKinematics mKinematics;
+    private static RamseteController mController;
+    private static PIDController mPidController;
 
     
     /**
@@ -34,10 +34,10 @@ public class FollowTrajectory {
      * @param trackWidth The width between the tracks of the robot
      */
     public static void config(double kS, double kV, double kA, double kP, double kI, double kD, double b, double zeta, double trackWidth) {
-        m_feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-        m_kinematics = new DifferentialDriveKinematics(trackWidth);
-        m_controller = new RamseteController(b, zeta);
-        m_pidController = new PIDController(kP, kI, kD);
+        mFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
+        mKinematics = new DifferentialDriveKinematics(trackWidth);
+        mController = new RamseteController(b, zeta);
+        mPidController = new PIDController(kP, kI, kD);
     }
 
     /**
@@ -51,14 +51,14 @@ public class FollowTrajectory {
         trajectory = trajectory.relativeTo(zeroPose);
         return new RamseteCommand(
                 trajectory,
-                driveSubsystem::getPose,          // Equivalent Statement: () -> m_driveSubsystem.getPose(),
-                m_controller,
-                m_feedforward,
-                m_kinematics,
-                driveSubsystem::getWheelSpeeds,   // Equivalent Statement: () -> m_driveSubsystem.getWheelSpeeds(),
-                m_pidController,
-                m_pidController,
-                driveSubsystem::setVoltage,       // Equivalent Statement: (voltsR, voltsL) -> m_driveSubsystem.setVoltage(voltsR, voltsL)
+                driveSubsystem::getPose,          // Equivalent Statement: () -> mdriveSubsystem.getPose(),
+                mController,
+                mFeedforward,
+                mKinematics,
+                driveSubsystem::getWheelSpeeds,   // Equivalent Statement: () -> mdriveSubsystem.getWheelSpeeds(),
+                mPidController,
+                mPidController,
+                driveSubsystem::setVoltage,       // Equivalent Statement: (voltsR, voltsL) -> mdriveSubsystem.setVoltage(voltsR, voltsL)
                 driveSubsystem);
     }
 

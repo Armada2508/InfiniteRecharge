@@ -13,27 +13,27 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class FollowTarget extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_driveSubsystem;
-  private final VisionSubsystem m_visionSubsystem;
-  private final double m_kTurn;
-  private final double m_kThrottle;
-  private final double m_maxOutput;
-  private final double m_targetWidth;
-  private final double m_targetDistance;
+  private final DriveSubsystem mDriveSubsystem;
+  private final VisionSubsystem mVisionSubsystem;
+  private final double mTurn;
+  private final double mThrottle;
+  private final double mMaxOutput;
+  private final double mTargetWidth;
+  private final double mTargetDistance;
 
   /**
    * Creates a new FollowTarget.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public FollowTarget(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, double kTurn, double kThrottle, double maxOutput, double targetWidth, double targetDistance, FOV fov, Resolution res) {
-    m_driveSubsystem = driveSubsystem;
-    m_visionSubsystem = visionSubsystem;
-    m_kTurn = kTurn;
-    m_kThrottle = kThrottle;
-    m_maxOutput = maxOutput;
-    m_targetWidth = targetWidth;
-    m_targetDistance = targetDistance;
+  public FollowTarget(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, double turn, double throttle, double maxOutput, double targetWidth, double targetDistance, FOV fov, Resolution res) {
+    mDriveSubsystem = driveSubsystem;
+    mVisionSubsystem = visionSubsystem;
+    mTurn = turn;
+    mThrottle = throttle;
+    mMaxOutput = maxOutput;
+    mTargetWidth = targetWidth;
+    mTargetDistance = targetDistance;
 
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -49,20 +49,20 @@ public class FollowTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_visionSubsystem.targetFound()) {
-      double x = m_visionSubsystem.getX();
-      double distance = m_visionSubsystem.getDistanceWidth(m_targetWidth);
-      double throttle = (distance - m_targetDistance) * m_kThrottle;
-      double turn = x * m_kTurn;
-      if(Math.abs(throttle) > m_maxOutput) {
-        throttle = m_maxOutput * Math.signum(throttle);
+    if(mVisionSubsystem.targetFound()) {
+      double x = mVisionSubsystem.getX();
+      double distance = mVisionSubsystem.getDistanceWidth(mTargetWidth);
+      double throttle = (distance - mTargetDistance) * mThrottle;
+      double turn = x * mTurn;
+      if(Math.abs(throttle) > mMaxOutput) {
+        throttle = mMaxOutput * Math.signum(throttle);
       }
-      if(Math.abs(turn) > m_maxOutput) {
-        turn = m_maxOutput * Math.signum(turn);
+      if(Math.abs(turn) > mMaxOutput) {
+        turn = mMaxOutput * Math.signum(turn);
       }
-      m_driveSubsystem.setArcade(throttle, turn);
+      mDriveSubsystem.setArcade(throttle, turn);
     } else {
-      m_driveSubsystem.setArcade(0, 0);
+      mDriveSubsystem.setArcade(0, 0);
     }
   }
 

@@ -11,16 +11,16 @@ import frc.robot.Constants;
 
 public class ColorWheelSubsystem extends SubsystemBase {
 
-    private final WPI_TalonSRX m_WOFTalon;
+    private final WPI_TalonSRX mWOFTalon;
 
     public ColorWheelSubsystem() {
-        m_WOFTalon = new WPI_TalonSRX(Constants.kWOFMotor);
-        MotorConfig.configTalon(m_WOFTalon, Constants.kWOFConfig, Constants.kWOFSlot);
-        MotionMagicConfig.configTalon(m_WOFTalon, Constants.kWOFMMConfig);
+        mWOFTalon = new WPI_TalonSRX(Constants.kWOFMotor);
+        MotorConfig.configTalon(mWOFTalon, Constants.kWOFConfig, Constants.kWOFSlot);
+        MotionMagicConfig.configTalon(mWOFTalon, Constants.kWOFMMConfig);
     }
 
     public void rotate(double rotations) {
-        m_WOFTalon.set(ControlMode.Position, EncoderUtil.fromDistance(rotations*Constants.kWOFDiameter*Math.PI, Constants.kWOFEncoderUnitsPerRev, Constants.kWOFGearRatio, Constants.kWOFWheelDiameter));
+        mWOFTalon.set(ControlMode.Position, EncoderUtil.fromDistance(rotations*Constants.kWOFDiameter*Math.PI, Constants.kWOFEncoderUnitsPerRev, Constants.kWOFGearRatio, Constants.kWOFWheelDiameter));
     }
 
 }

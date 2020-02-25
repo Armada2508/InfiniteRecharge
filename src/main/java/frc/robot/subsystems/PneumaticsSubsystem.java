@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PneumaticsSubsystem extends SubsystemBase {
 
-    private Compressor m_compressor;
+    private Compressor mCompressor;
 
     /**
      * Creates a new PneumaticsSubsystem
      */
     public PneumaticsSubsystem() {
-        m_compressor = new Compressor();
-        m_compressor.setClosedLoopControl(true);
+        mCompressor = new Compressor();
+        mCompressor.setClosedLoopControl(true);
     }
 
 

@@ -6,16 +6,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class MotorConfig {
-    private final double m_p;
-    private final double m_i;
-    private final double m_d;
-    private final double m_f;
-    private final double m_mia;
-    private final int m_maxContCurrent;
-    private final int m_maxPeakCurrent;
-    private final int m_peakCurrentDuration;
-    private final FeedbackDevice m_encoder;
-    private final double m_deadband;
+    private final double mP;
+    private final double mI;
+    private final double mD;
+    private final double mF;
+    private final double mMia;
+    private final int mMaxContCurrent;
+    private final int mMaxPeakCurrent;
+    private final int mPeakCurrentDuration;
+    private final FeedbackDevice mEncoder;
+    private final double mDeadband;
 
     /**
      * Creates a new MotorConfig object to store motor controller configuration settings
@@ -31,86 +31,86 @@ public class MotorConfig {
      * @param deadband The deadband(0.0-1.0) to be applied to the motor controller
      */
     public MotorConfig(double p, double i, double d, double f, double mia, int maxContCurrent, int maxPeakCurrent, int peakCurrentDuration, FeedbackDevice encoder, double deadband) {
-        m_p = p;
-        m_i = i;
-        m_d = d;
-        m_f = f;
-        m_mia = mia;
-        m_maxContCurrent = maxContCurrent;
-        m_maxPeakCurrent = maxPeakCurrent;
-        m_peakCurrentDuration = peakCurrentDuration;
-        m_encoder = encoder;
-        m_deadband = deadband;
+        mP = p;
+        mI = i;
+        mD = d;
+        mF = f;
+        mMia = mia;
+        mMaxContCurrent = maxContCurrent;
+        mMaxPeakCurrent = maxPeakCurrent;
+        mPeakCurrentDuration = peakCurrentDuration;
+        mEncoder = encoder;
+        mDeadband = deadband;
     }
 
     /**
      * @return The proportional constant
      */
     public double getP() {
-        return m_p;
+        return mP;
     }
 
     /**
      * @return The integral constant
      */
     public double getI() {
-        return m_i;
+        return mI;
     }
 
     /**
      * @return The derivitive constant
      */
     public double getD() {
-        return m_d;
+        return mD;
     }
 
     /**
      * @return The feed-forward constant
      */
     public double getF() {
-        return m_f;
+        return mF;
     }
 
     /**
      * @return The max integral accumulator constant
      */
     public double getMIA() {
-        return m_mia;
+        return mMia;
     }
 
     /**
      * @return The max current the motor will draw continuously
      */
     public int getContinuousCurrent() {
-        return m_maxContCurrent;
+        return mMaxContCurrent;
     }
 
     /**
      * @return The max current the motor will draw at peak
      */
     public int getPeakCurrent() {
-        return m_maxPeakCurrent;
+        return mMaxPeakCurrent;
     }
 
     /**
      * @return The maximum current the motor will draw at peak
      */
     public int getPeakDuration() {
-        return m_peakCurrentDuration;
+        return mPeakCurrentDuration;
     }
 
     /**
      * @return The encoder type
      */
     public FeedbackDevice getEncoder() {
-        return m_encoder;
+        return mEncoder;
     }
 
     /**
      * @return The size of the deadband
      */
     public double getDeadband() {
-        return m_deadband;
+        return mDeadband;
     }
     
     

@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.*;
  */
 public class Robot extends TimedRobot {
   
-  private RobotContainer m_robotContainer;
-  private Command m_autonomousCommand;
+  private RobotContainer mRobotContainer;
+  private Command mAutonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -28,9 +28,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
 
-    m_robotContainer.robotInit();
+    mRobotContainer.robotInit();
 
     
     
@@ -46,9 +46,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateDashboard();
-    m_robotContainer.updateLogger();
-    //m_robotContainer.printRPM();
+    mRobotContainer.updateDashboard();
+    mRobotContainer.updateLogger();
+    //mrobotContainer.printRPM();
   }
 
   /**
@@ -56,11 +56,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.printOdo();
+    mRobotContainer.printOdo();
     CommandScheduler.getInstance().cancelAll();
-    m_robotContainer.changeMode();
+    mRobotContainer.changeMode();
     if(isOperatorControl()) {
-      m_robotContainer.stopDashboardCapture();
+      mRobotContainer.stopDashboardCapture();
     }
   }
 
@@ -74,12 +74,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
-    m_robotContainer.changeMode();
-    m_robotContainer.startDashboardCapture();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    mRobotContainer.changeMode();
+    mRobotContainer.startDashboardCapture();
+    mAutonomousCommand = mRobotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (mAutonomousCommand != null) {
+      mAutonomousCommand.schedule();
     }
   }
 
@@ -92,8 +92,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.changeMode();
-    m_robotContainer.drive();
+    mRobotContainer.changeMode();
+    mRobotContainer.drive();
   }
 
   /**

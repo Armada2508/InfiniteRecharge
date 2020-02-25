@@ -11,18 +11,18 @@ import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private WPI_TalonFX m_leftMotor;
-    private WPI_TalonFX m_rightMotor;
+    private WPI_TalonFX mLeftMotor;
+    private WPI_TalonFX mRightMotor;
 
     public ShooterSubsystem() {
-        m_leftMotor = new WPI_TalonFX(Constants.kLeftShooterMotor);
-        m_rightMotor = new WPI_TalonFX(Constants.kRightShooterMotor);
+        mLeftMotor = new WPI_TalonFX(Constants.kLeftShooterMotor);
+        mRightMotor = new WPI_TalonFX(Constants.kRightShooterMotor);
 
-        MotorConfig.configTalon(m_leftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
-        MotorConfig.configTalon(m_rightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
+        MotorConfig.configTalon(mLeftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
+        MotorConfig.configTalon(mRightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
 
-        m_leftMotor.setNeutralMode(NeutralMode.Coast);
-        m_rightMotor.setNeutralMode(NeutralMode.Coast);
+        mLeftMotor.setNeutralMode(NeutralMode.Coast);
+        mRightMotor.setNeutralMode(NeutralMode.Coast);
     }
 
     @Override
@@ -30,25 +30,25 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void leftInverted(boolean inverted) {
-        m_leftMotor.setInverted(inverted);
+        mLeftMotor.setInverted(inverted);
     }
 
     public void rightInverted(boolean inverted) {
-        m_rightMotor.setInverted(inverted);
+        mRightMotor.setInverted(inverted);
     }
 
     public void spin(double rpm) {
         double velocity = EncoderUtil.fromRPM(rpm, Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
-        m_leftMotor.set(ControlMode.Velocity, velocity);
-        m_rightMotor.set(ControlMode.Velocity, velocity);
+        mLeftMotor.set(ControlMode.Velocity, velocity);
+        mRightMotor.set(ControlMode.Velocity, velocity);
     }
 
     public void coast() {
-        m_leftMotor.set(ControlMode.PercentOutput, 0.0);
-        m_rightMotor.set(ControlMode.PercentOutput, 0.0);
+        mLeftMotor.set(ControlMode.PercentOutput, 0.0);
+        mRightMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(m_rightMotor.getSelectedSensorVelocity(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
+        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
     }
 }

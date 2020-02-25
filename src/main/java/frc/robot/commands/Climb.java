@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class Climb extends CommandBase {
-    private ClimbSubsystem m_climbSubsystem;
-    private int m_state;
+    private ClimbSubsystem mClimbSubsystem;
+    private int mState;
 
 
     /**
@@ -14,23 +14,23 @@ public class Climb extends CommandBase {
      * @param state The state of the system(0=retract, 1=vent, 2=extend)
      */
     public Climb(ClimbSubsystem climbSubsystem, int state) {
-        m_climbSubsystem = climbSubsystem;
-        m_state = state;
+        mClimbSubsystem = climbSubsystem;
+        mState = state;
 
-        addRequirements(m_climbSubsystem);
+        addRequirements(mClimbSubsystem);
     }
 
     @Override
     public void initialize() {
-        switch (m_state) {
+        switch (mState) {
             case 0:
-                m_climbSubsystem.retract();
+                mClimbSubsystem.retract();
                 break;
             case 1:
-                m_climbSubsystem.vent();
+                mClimbSubsystem.vent();
                 break;
             case 2:
-                m_climbSubsystem.extend();
+                mClimbSubsystem.extend();
                 break;
         }
     }

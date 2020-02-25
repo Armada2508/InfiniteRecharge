@@ -6,29 +6,29 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class SpinRoller extends CommandBase {
 
-    private ShooterSubsystem m_shooterSubsystem;
-    private SlewRateLimiter m_limiter;
-    private double m_rpm;
+    private ShooterSubsystem mShooterSubsystem;
+    private SlewRateLimiter mLimiter;
+    private double mRpm;
 
     public SpinRoller(ShooterSubsystem shooterSubsystem, double rpm, int maxSlewRate) {
-        m_shooterSubsystem = shooterSubsystem;
-        m_rpm = rpm;
-        m_limiter = new SlewRateLimiter(maxSlewRate);
+        mShooterSubsystem = shooterSubsystem;
+        mRpm = rpm;
+        mLimiter = new SlewRateLimiter(maxSlewRate);
     }
 
     @Override
     public void initialize() {
-        m_shooterSubsystem.spin(m_limiter.calculate(m_shooterSubsystem.getRPM()));
+        mShooterSubsystem.spin(mLimiter.calculate(mShooterSubsystem.getRPM()));
     }
 
     @Override
     public void execute() {
-        m_shooterSubsystem.spin(m_limiter.calculate(m_rpm));
+        mShooterSubsystem.spin(mLimiter.calculate(mRpm));
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_shooterSubsystem.coast();
+        mShooterSubsystem.coast();
     }
 
     @Override

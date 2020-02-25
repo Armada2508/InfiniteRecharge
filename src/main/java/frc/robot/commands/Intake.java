@@ -5,17 +5,17 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class Intake extends CommandBase {
     
-    IntakeSubsystem m_intakeSubsystem;
-    private double m_power;
+    private IntakeSubsystem mIntakeSubsystem;
+    private double mPower;
 
     public Intake(IntakeSubsystem intakeSubsystem, double power, boolean reversed) {
-        m_intakeSubsystem = intakeSubsystem;
-        m_power = power * (reversed ? -1.0 : 1.0);
+        mIntakeSubsystem = intakeSubsystem;
+        mPower = power * (reversed ? -1.0 : 1.0);
     }
 
     @Override
     public void initialize() {
-        m_intakeSubsystem.set(m_power);
+        mIntakeSubsystem.set(mPower);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Intake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_intakeSubsystem.set(0.0);
+        mIntakeSubsystem.set(0.0);
     }
 
     @Override

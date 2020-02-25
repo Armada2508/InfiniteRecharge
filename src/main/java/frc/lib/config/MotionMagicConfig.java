@@ -7,9 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 
 public class MotionMagicConfig {
-    private final int m_cruiseVel;
-    private final int m_accel;
-    private final int m_smoothing;
+    private final int mCruiseVel;
+    private final int mAccel;
+    private final int mSmoothing;
 
     /**
      * Creates a new MotionMagicConfig object
@@ -18,30 +18,30 @@ public class MotionMagicConfig {
      * @param smoothing The desired smoothing or S-Curve strength
      */
     public MotionMagicConfig(int cruiseVelocity, int acceleration, int smoothing) {
-        m_cruiseVel = cruiseVelocity;
-        m_accel = acceleration;
-        m_smoothing = smoothing;
+        mCruiseVel = cruiseVelocity;
+        mAccel = acceleration;
+        mSmoothing = smoothing;
     }
 
     /**
      * @return The desired cruise velocity
      */
     public int getCruiseVelocity() {
-        return m_cruiseVel;
+        return mCruiseVel;
     }
 
     /**
      * @return The desired maximum acceleration
      */
     public int getAcceleration() {
-        return m_accel;
+        return mAccel;
     }
 
     /**
      * @return The desired smoothing or S-Curve strength
      */
     public int getSmoothing() {
-        return m_smoothing;
+        return mSmoothing;
     }
 
     /**

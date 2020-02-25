@@ -23,101 +23,101 @@ import frc.robot.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private final WPI_TalonFX m_right = new WPI_TalonFX(Constants.kRightDriveMotorPort);
-    private final WPI_TalonFX m_rightFollower = new WPI_TalonFX(Constants.kRightDriveMotorFollowerPort);
-    private final WPI_TalonFX m_left = new WPI_TalonFX(Constants.kLeftDriveMotorPort);
-    private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.kLeftDriveMotorFollowerPort);
+    private final WPI_TalonFX mRight = new WPI_TalonFX(Constants.kRightDriveMotorPort);
+    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(Constants.kRightDriveMotorFollowerPort);
+    private final WPI_TalonFX mLeft = new WPI_TalonFX(Constants.kLeftDriveMotorPort);
+    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(Constants.kLeftDriveMotorFollowerPort);
 
-    private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(m_right, m_rightFollower);
-    private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(m_left, m_leftFollower);
+    private final SpeedControllerGroup mRightMotors = new SpeedControllerGroup(mRight, mRightFollower);
+    private final SpeedControllerGroup mLeftMotors = new SpeedControllerGroup(mLeft, mLeftFollower);
 
-    private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-    private final DifferentialDriveOdometry m_odometry;
+    private final DifferentialDrive mDrive = new DifferentialDrive(mLeftMotors, mRightMotors);
+    private final DifferentialDriveOdometry mOdometry;
 
-    private final PigeonIMU m_imu = new PigeonIMU(0);
+    private final PigeonIMU mImu = new PigeonIMU(0);
 
-    private final Solenoid m_cooling = new Solenoid(Constants.kCoolingSolenoid);
-    private final Timer m_coolingTimer = new Timer();
+    private final Solenoid mCooling = new Solenoid(Constants.kCoolingSolenoid);
+    private final Timer mCoolingTimer = new Timer();
 
-    private ShuffleboardTab m_robotTab = Shuffleboard.getTab("Robot");
+    private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
     
     public DriveSubsystem() {
-        m_right.setSensorPhase(Constants.kRightSensorInverted);
-        m_left.setSensorPhase(Constants.kLeftSensorInverted);
+        mRight.setSensorPhase(Constants.kRightSensorInverted);
+        mLeft.setSensorPhase(Constants.kLeftSensorInverted);
 
-        m_drive.setRightSideInverted(Constants.kRightInverted);
+        mDrive.setRightSideInverted(Constants.kRightInverted);
 
-        m_drive.setSafetyEnabled(false);
+        mDrive.setSafetyEnabled(false);
 
-        m_robotTab.add("Drive", m_drive).withWidget(BuiltInWidgets.kDifferentialDrive);
+        mRobotTab.add("Drive", mDrive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
         coast();
 
         configTalons();
         resetHeading();
         resetEncoders();
-        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        m_coolingTimer.start();
+        mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        mCoolingTimer.start();
     }
 
 
     @Override
     public void periodic() {
-        m_odometry.update(Rotation2d.fromDegrees(getHeading()), getPositionLeft(), getPositionRight());
+        mOdometry.update(Rotation2d.fromDegrees(getHeading()), getPositionLeft(), getPositionRight());
         double[] temps = getTemps();
-        if(m_coolingTimer.hasPeriodPassed(Constants.kCoolingDelay)) {
-            m_cooling.set(false);
+        if(mCoolingTimer.hasPeriodPassed(Constants.kCoolingDelay)) {
+            mCooling.set(false);
         }
         for (int i = 0; i < temps.length; i++) {
             if(temps[i] >= Constants.kCoolingTemp) {
-                m_cooling.set(true);
-                m_coolingTimer.reset();
+                mCooling.set(true);
+                mCoolingTimer.reset();
                 break;
             }
         }
     }
 
     public void setPowers(double powerL, double powerR) {
-        m_rightMotors.set(-powerR);
-        m_leftMotors.set(powerL);
+        mRightMotors.set(-powerR);
+        mLeftMotors.set(powerL);
     }
 
     public void setVoltage(double voltsL, double voltsR) {
-        m_rightMotors.setVoltage(voltsR);
-        m_leftMotors.setVoltage(voltsL);
+        mRightMotors.setVoltage(voltsR);
+        mLeftMotors.setVoltage(voltsL);
     }
 
     public void setArcade(double throttle, double turn) {
-        m_rightMotors.set(throttle - turn);
-        m_leftMotors.set(throttle + turn);
+        mRightMotors.set(throttle - turn);
+        mLeftMotors.set(throttle + turn);
     }
 
     public void driveClosedLoop(int left, int right) {
-        m_right.set(ControlMode.Velocity, toVelocity(right));
-        m_left.set(ControlMode.Velocity, toVelocity(left));
+        mRight.set(ControlMode.Velocity, toVelocity(right));
+        mLeft.set(ControlMode.Velocity, toVelocity(left));
     }
 
     public void brake() {
-        m_left.setNeutralMode(NeutralMode.Brake);
-        m_right.setNeutralMode(NeutralMode.Brake);
+        mLeft.setNeutralMode(NeutralMode.Brake);
+        mRight.setNeutralMode(NeutralMode.Brake);
     }
 
     public void coast() {
-        m_left.setNeutralMode(NeutralMode.Coast);
-        m_right.setNeutralMode(NeutralMode.Coast);
+        mLeft.setNeutralMode(NeutralMode.Coast);
+        mRight.setNeutralMode(NeutralMode.Coast);
     }
 
     public void hold() {
-        m_left.set(ControlMode.Position, 0.0);
-        m_right.set(ControlMode.Position, 0.0);
+        mLeft.set(ControlMode.Position, 0.0);
+        mRight.set(ControlMode.Position, 0.0);
     }
 
     public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
+        return mOdometry.getPoseMeters();
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(m_imu.getFusedHeading(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
+        return Math.IEEEremainder(mImu.getFusedHeading(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -131,24 +131,24 @@ public class DriveSubsystem extends SubsystemBase {
         resetGyro();
 
         
-        m_right.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_left.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
-        m_right.configVelocityMeasurementWindow(1);
-        m_left.configVelocityMeasurementWindow(1);
+        mRight.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
+        mLeft.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_1Ms);
+        mRight.configVelocityMeasurementWindow(1);
+        mLeft.configVelocityMeasurementWindow(1);
     }
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        mOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     }
 
     public void resetGyro() {
-        m_imu.setFusedHeading(0);
+        mImu.setFusedHeading(0);
     }
 
     public void resetEncoders() {
-        resetEncoder(m_right);
-        resetEncoder(m_left);
+        resetEncoder(mRight);
+        resetEncoder(mLeft);
     }
 
     private void resetEncoder(TalonFX talon) {
@@ -156,36 +156,36 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     private void resetHeading() {
-        m_imu.setFusedHeading(0);
+        mImu.setFusedHeading(0);
     }
 
     public void resetTalons() {
-        m_right.configFactoryDefault();
-        m_rightFollower.configFactoryDefault();
-        m_left.configFactoryDefault();
-        m_leftFollower.configFactoryDefault();
-        m_right.set(ControlMode.PercentOutput, 0.0);
-        m_left.set(ControlMode.PercentOutput, 0.0);
+        mRight.configFactoryDefault();
+        mRightFollower.configFactoryDefault();
+        mLeft.configFactoryDefault();
+        mLeftFollower.configFactoryDefault();
+        mRight.set(ControlMode.PercentOutput, 0.0);
+        mLeft.set(ControlMode.PercentOutput, 0.0);
     }
 
     public void configTalons() {
         resetTalons();
-        m_rightFollower.follow(m_right);
-        m_leftFollower.follow(m_left);
-        m_right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        m_left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        m_right.configMotionProfileTrajectoryPeriod(0);
-        m_left.configMotionProfileTrajectoryPeriod(0);
-        MotorConfig.configTalon(m_right, Constants.kDriveConfig, Constants.kDriveSlot);
-        MotorConfig.configTalon(m_left, Constants.kDriveConfig, Constants.kDriveSlot);
+        mRightFollower.follow(mRight);
+        mLeftFollower.follow(mLeft);
+        mRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        mLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        mRight.configMotionProfileTrajectoryPeriod(0);
+        mLeft.configMotionProfileTrajectoryPeriod(0);
+        MotorConfig.configTalon(mRight, Constants.kDriveConfig, Constants.kDriveSlot);
+        MotorConfig.configTalon(mLeft, Constants.kDriveConfig, Constants.kDriveSlot);
     }
 
     public double getPositionLeft() {
-        return toDistance(m_left.getSelectedSensorPosition());
+        return toDistance(mLeft.getSelectedSensorPosition());
     }
 
     public double getPositionRight() {
-        return toDistance(m_right.getSelectedSensorPosition());
+        return toDistance(mRight.getSelectedSensorPosition());
     }
 
     public double getAverageDistance() {
@@ -197,11 +197,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getVelocityRight() {
-        return toVelocity(m_right.getSelectedSensorVelocity());
+        return toVelocity(mRight.getSelectedSensorVelocity());
     }
 
     public double getVelocityLeft() {
-        return toVelocity(m_left.getSelectedSensorVelocity());
+        return toVelocity(mLeft.getSelectedSensorVelocity());
     }
 
     public double toVelocity(int velocity) {
@@ -209,23 +209,23 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setMaxOutput(double maxOutput) {
-        m_drive.setMaxOutput(maxOutput);
+        mDrive.setMaxOutput(maxOutput);
     }
 
     public WPI_TalonFX[] getAllTalons() {
-        return new WPI_TalonFX[]{ m_right, m_rightFollower, m_left, m_leftFollower };
+        return new WPI_TalonFX[]{ mRight, mRightFollower, mLeft, mLeftFollower };
     }
 
     public DifferentialDriveOdometry getOdometry() {
-        return m_odometry;
+        return mOdometry;
     }
 
     public PigeonIMU getGyro() {
-        return m_imu;
+        return mImu;
     }
 
     public double[] getTemps() {
-        double[] temperatures = { m_right.getTemperature(), m_rightFollower.getTemperature(), m_left.getTemperature(), m_leftFollower.getTemperature() };
+        double[] temperatures = { mRight.getTemperature(), mRightFollower.getTemperature(), mLeft.getTemperature(), mLeftFollower.getTemperature() };
         return temperatures;
     }
 

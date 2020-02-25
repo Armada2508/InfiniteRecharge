@@ -153,8 +153,8 @@ public class RobotContainer {
                 Constants.kTurnRatio,
                 Constants.kTrimRatio);
 
-        driveCommand.schedule();
-    */}
+        driveCommand.schedule();*/
+    }
 
     public void startDashboardCapture() {
         if(DriverStation.getInstance().isFMSAttached()) {

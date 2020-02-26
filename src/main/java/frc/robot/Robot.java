@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
     mRobotContainer = new RobotContainer();
 
     mRobotContainer.robotInit();
-
     
     
   }
@@ -56,7 +55,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    mRobotContainer.printOdo();
     CommandScheduler.getInstance().cancelAll();
     mRobotContainer.changeMode();
     if(isOperatorControl()) {

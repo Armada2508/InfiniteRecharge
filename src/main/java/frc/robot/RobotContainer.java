@@ -18,11 +18,10 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 import java.util.*;
 
@@ -44,7 +43,6 @@ public class RobotContainer {
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick mJoystick = new Joystick(Constants.kJoystickPort);
     private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.port);
-    private ShuffleboardTab mSensorLoggerTab = Shuffleboard.getTab("Logger");
     private NetworkTableEntry mGyroEntry;
     private NetworkTableEntry mOdometer;
 
@@ -58,7 +56,6 @@ public class RobotContainer {
     }
 
     public void robotInit() {
-        Logger.configureLoggingAndConfig(this, false);
         initDashboard();
         mShooter.leftInverted(Constants.kShooterLeftInveted);
         mShooter.rightInverted(Constants.kShooterRightInverted);
@@ -73,8 +70,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //new JoystickButton(mjoystick, 1).whenPressed(new Climb(mclimb, true));
         //new JoystickButton(mjoystick, 1).whenReleased(new Climb(mclimb, false));
-        new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(1.0, true, mTransport));
-        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 6000, Constants.kMaxShooterSlewRate));
+        new JoystickButton(mJoystick, 1).whenHeld(new Intake(mBackIntake, 0.5, false));
+        new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, true, mTransport));
+        new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, false, mTransport));
+        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 4000, Constants.kMaxShooterSlewRate));
         new JoystickButton(mJoystick, 7).whenHeld(new TransportPower(1.0, false, mTransport));
         new JoystickButton(mJoystick, 9).whenHeld(new TransportPower(1.0, true, mTransport));
         new JoystickButton(mJoystick, 8).whenHeld(new TransportPower(-0.25, false, mTransport));
@@ -107,7 +106,7 @@ public class RobotContainer {
     public void initDashboard() {
         WPI_TalonFX[] allTalons = mDrive.getAllTalons();
 
-        for (WPI_TalonFX talon : allTalons) {
+     /*   for (WPI_TalonFX talon : allTalons) {
             talonEntries.add(mSensorLoggerTab.add("Talon " + (talon.getDeviceID()),
                     talon.getMotorOutputVoltage())
                     .withWidget(BuiltInWidgets.kGraph)
@@ -122,26 +121,25 @@ public class RobotContainer {
         mOdometer = mSensorLoggerTab.add("Odometer", mDrive.getAverageDistance())
                 .withWidget(BuiltInWidgets.kGraph)
                 .getEntry();
-    }
+    */}
 
     public void updateLogger() {
-        Logger.updateEntries();
+//        Logger.log(Timer.getFPGATimestamp(), "Time");
     }
 
     public void updateDashboard() {
 
-        if ((Timer.getFPGATimestamp() % Constants.kUpdateRate) / 0.02 < 1) {
+  /*      if ((Timer.getFPGATimestamp() % Constants.kUpdateRate) / 0.02 < 1) {
+            
+            Logger.newNoise();
+            Logger.logHistory(Logger.addNoise(mDrive.getGyro().getFusedHeading()), "Gyro");
+            Logger.logHistory(Logger.addNoise(mDrive.getAverageDistance()), "Odometer");
 
-            Random noise = new Random();
-            mGyroEntry.setDouble(mDrive.getGyro().getFusedHeading() + (noise.nextDouble() / 10000));
-            mOdometer.setDouble(mDrive.getAverageDistance() + (noise.nextDouble() / 10000));
-
-            int count = 0;
-            for (NetworkTableEntry t : talonEntries) {  
-                t.setDouble(mDrive.getAllTalons()[count].getMotorOutputVoltage() + (noise.nextDouble() / 10000));
-                count++;
+            for (int i = 0; i < mDrive.getAllTalons().length; i++) {
+                Logger.logHistory(Logger.addNoise(mDrive.getAllTalons()[i].getMotorOutputVoltage()), "Talon " + mDrive.getAllTalons()[i].getDeviceID()); 
             }
         }
+        */
     }
 
     public void drive() {

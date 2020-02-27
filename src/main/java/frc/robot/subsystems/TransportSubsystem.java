@@ -7,6 +7,7 @@ import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
 import frc.robot.Constants;
@@ -27,6 +28,8 @@ public class TransportSubsystem extends SubsystemBase {
         mElevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         MotorConfig.configTalon(mDiagTalon, Constants.kTransportConfig, Constants.kTransportSlot);
         MotorConfig.configTalon(mElevTalon, Constants.kTransportConfig, Constants.kTransportSlot);
+        MotionMagicConfig.configTalon(mDiagTalon, Constants.kTransportMMConfig);
+        MotionMagicConfig.configTalon(mElevTalon, Constants.kTransportMMConfig);
 
         mFIntake = new TimeOfFlight(Constants.kFIntakeTofID);
         mBIntake = new TimeOfFlight(Constants.kBIntakeTofID);
@@ -65,19 +68,19 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public void setRawElevPosition(double position) {
-        mElevTalon.set(ControlMode.Position, position);
+        mElevTalon.set(ControlMode.MotionMagic, position);
     }
 
     public void setRawDiagPosition(double position) {
-        mDiagTalon.set(ControlMode.Position, position);
+        mDiagTalon.set(ControlMode.MotionMagic, position);
     }
 
     public void setElevPosition(double position) {
-        mElevTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getElevPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mElevTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getElevPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
     }
 
     public void setDiagPosition(double position) {
-        mDiagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mDiagTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
     }
     
     public void zeroElevPosition() {

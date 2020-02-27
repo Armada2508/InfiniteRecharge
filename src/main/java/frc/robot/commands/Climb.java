@@ -17,6 +17,7 @@ public class Climb extends CommandBase {
         mClimbSubsystem = climbSubsystem;
         mState = state;
 
+        // Require ClimbSubsystem
         addRequirements(mClimbSubsystem);
     }
 

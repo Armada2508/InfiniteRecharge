@@ -26,16 +26,17 @@ public class DriveClosedLoop extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveClosedLoop(DriveSubsystem subsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn, double maxPower, double turnRatio, double trimRatio) {
-    mDriveSubsystem = subsystem;
+  public DriveClosedLoop(DriveSubsystem driveSubsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn) {
+    mDriveSubsystem = driveSubsystem;
     mThrottle = throttle;
     mTrim = trim;
     mTurn = turn;
-    mMaxPower = maxPower;
-    mTurnRatio = turnRatio;
-    mTrimRatio = trimRatio;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    mMaxPower = Constants.kMaxPower;
+    mTurnRatio = Constants.kTurnRatio;
+    mTrimRatio = Constants.kTrimRatio;
+
+    // Require DriveSubsystem
+    addRequirements(mDriveSubsystem);
   }
 
   // Called when the command is initially scheduled.

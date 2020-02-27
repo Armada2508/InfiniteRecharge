@@ -47,7 +47,7 @@ public class FollowTrajectory {
      * @param zeroPose The position to start relative to
      * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
      */
-    public Command getCommand(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
+    public static Command getCommand(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
         trajectory = trajectory.relativeTo(zeroPose);
         return new RamseteCommand(
                 trajectory,
@@ -71,7 +71,7 @@ public class FollowTrajectory {
      * @param maxAcceleration The maximum acceleration of the robot
      * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
      */
-    public Command getCommand(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration) {
+    public static Command getCommand(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration) {
         TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, new ArrayList<Translation2d>(), end,config);
         trajectory = trajectory.relativeTo(trajectory.getInitialPose());

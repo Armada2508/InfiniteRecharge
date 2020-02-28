@@ -40,6 +40,9 @@ public class VisionSubsystem extends SubsystemBase {
 
         setLED(false);
         setYOffset(Constants.Vision.kLimelightAngle);
+        setPipeline(0);
+        camMode(true);
+        setPIP(true);
     }
 
     @Override

@@ -111,10 +111,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double getTargetAngle() {
-        CameraPoint2d[] topPoints = getCorners();
+        CameraPoint2d[] topPoints = getTopCorners();
         double targetWidth = topPoints[1].getX() - topPoints[0].getX();
         double maxTargetWidth = Math.toDegrees(Math.atan(Constants.Vision.kTargetWidth / (2.0 * getDistanceHeight())));
-        return Math.acos(targetWidth/maxTargetWidth);
+        int directionMultiplier = (topPoints[0].getY() > topPoints[1].getY()) ? -1 : 1;
+        return Math.acos(targetWidth/maxTargetWidth) * directionMultiplier;
     }
     
     public void setPipeline(int pipeline) {

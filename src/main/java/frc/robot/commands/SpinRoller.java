@@ -14,6 +14,9 @@ public class SpinRoller extends CommandBase {
         mShooterSubsystem = shooterSubsystem;
         mRpm = rpm;
         mLimiter = new SlewRateLimiter(maxSlewRate);
+
+        // Require ShooterSubsystem
+        addRequirements(shooterSubsystem);
     }
 
     @Override

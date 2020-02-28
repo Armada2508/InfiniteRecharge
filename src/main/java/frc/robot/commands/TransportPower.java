@@ -12,6 +12,9 @@ public class TransportPower extends CommandBase {
         mPower = power;
         mElevator = elevator;
         mTransportSubsystem = transportSubsystem;
+
+        // Require TransportSubsystem
+        addRequirements(mTransportSubsystem);
     }
 
     @Override

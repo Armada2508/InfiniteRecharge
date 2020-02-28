@@ -36,9 +36,8 @@ public class FollowTarget extends CommandBase {
     mTargetDistance = targetDistance;
 
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveSubsystem);
-    addRequirements(visionSubsystem);
+    // Reqire DriveSubsystem and VisionSubsystem
+    addRequirements(driveSubsystem, visionSubsystem);
   }
 
   // Called when the command is initially scheduled.

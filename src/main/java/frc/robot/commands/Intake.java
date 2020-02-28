@@ -11,6 +11,9 @@ public class Intake extends CommandBase {
     public Intake(IntakeSubsystem intakeSubsystem, double power, boolean reversed) {
         mIntakeSubsystem = intakeSubsystem;
         mPower = power * (reversed ? -1.0 : 1.0);
+
+        // Required Subsystems
+        addRequirements(mIntakeSubsystem);
     }
 
     @Override

@@ -130,6 +130,7 @@ public final class Constants {
         public static final double kTargetWidth = .997;
         public static final double kTapeWidth = 4.0/Math.sqrt(3);
 
+        public static final double kPAim = 0.025;
     }
 
     public static class Shooter {

@@ -7,9 +7,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.vision.CameraPoint2d;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 import frc.lib.vision.VisionUtil;
@@ -115,5 +118,38 @@ public class VisionSubsystem extends SubsystemBase {
         } else {
             mLimelight.getEntry("ledMode").setNumber(3);
         }
+    }
+
+    public CameraPoint2d[] getCorners() {
+        double[] x = mLimelight.getEntry("tcornx").getDoubleArray(new double[0]);
+        double[] y = mLimelight.getEntry("tcorny").getDoubleArray(new double[0]);
+        CameraPoint2d[] corners = new CameraPoint2d[x.length];
+        for (int i = 0; i < x.length; i++) {
+            corners[i] = new CameraPoint2d(x[i], y[i], true);
+        }
+        return corners;
+    }
+
+    public CameraPoint2d[] getTopCorners() {
+        CameraPoint2d[] corners = getCorners();
+        if(corners.length < 2) {
+            return new CameraPoint2d[0];
+        }
+        CameraPoint2d[] topCorners = new CameraPoint2d[2];
+        for (int i = 0; i < corners.length; i++) {
+            if(corners[i].getY() > topCorners[1].getY()) {
+                topCorners[i] = corners[i];
+            }
+            if(topCorners[1].getY() > topCorners[0].getY()) {
+                CameraPoint2d upperPoint = topCorners[1];
+                topCorners[1] = topCorners[0];
+                topCorners[0] = upperPoint;
+            }
+        }
+        return topCorners;
+    }
+
+    public CameraPoint2d getTargetCenter() {
+        return new CameraPoint2d((getTopCorners()[0].getX()+getTopCorners()[1].getX())/2.0, (getTopCorners()[0].getY()+getTopCorners()[1].getY())/2.0, true);
     }
 }

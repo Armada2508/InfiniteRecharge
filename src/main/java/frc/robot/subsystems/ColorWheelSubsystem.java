@@ -20,7 +20,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
     }
 
     public void rotate(double rotations) {
-        mWOFTalon.set(ControlMode.Position, EncoderUtil.fromDistance(rotations*Constants.WOF.kWOFDiameter*Math.PI, Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter));
+        mWOFTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(rotations*Constants.WOF.kWOFDiameter*Math.PI, Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter));
     }
 
 }

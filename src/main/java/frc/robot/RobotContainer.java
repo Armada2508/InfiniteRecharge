@@ -174,9 +174,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
-        FollowTrajectory followTrajectory = new FollowTrajectory();
-
-        return followTrajectory.getCommand(mDrive,
+        return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
             new Pose2d(5, 0, new Rotation2d()),
             Constants.Drive.kMaxVelocity,

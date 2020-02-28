@@ -123,10 +123,11 @@ public final class Constants {
 
         // Vision Constants
         public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
-        public static final Resolution kLimelighResolution = new Resolution(320, 240);
+        public static final Resolution kLimelightResolution = new Resolution(320, 240);
         public static final double kLimelightAngle = 15.0;  //TODO: Determine correct value
         public static final double kLimelightHeight = .794;  //TODO: Determine final height
         public static final double kTargetHeight = 2.5;
+        public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
         public static final double kTargetWidth = .997;
         public static final double kTapeWidth = 4.0/Math.sqrt(3);
 

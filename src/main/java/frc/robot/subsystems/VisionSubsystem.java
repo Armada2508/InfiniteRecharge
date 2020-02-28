@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Arrays;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.*;
@@ -16,6 +14,7 @@ import frc.lib.vision.CameraPoint2d;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 import frc.lib.vision.VisionUtil;
+import frc.robot.Constants;
 
 public class VisionSubsystem extends SubsystemBase {
     
@@ -23,6 +22,8 @@ public class VisionSubsystem extends SubsystemBase {
     private final NetworkTableInstance mInstance;
     private final FOV mFov;
     private final Resolution mRes;
+    private double mXOffset;
+    private double mYOffset;
 
     // TODO: Turn LEDs on and off when vision is used
 
@@ -38,6 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
         mRes = res;
 
         setLED(false);
+        setYOffset(Constants.Vision.kLimelightAngle);
     }
 
     @Override
@@ -46,11 +48,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void setYOffset(double offset) {
-
+        mYOffset = offset;
     }
 
     public void setXOffset(double offset) {
-        
+        mXOffset = offset;
     }
 
     /**
@@ -66,7 +68,7 @@ public class VisionSubsystem extends SubsystemBase {
      * @return The x location of the target in degrees
      */
     public double getX() {
-        return mLimelight.getEntry("tx").getDouble(0.0);
+        return mLimelight.getEntry("tx").getDouble(0.0) + mXOffset;
     }
 
     /**
@@ -74,14 +76,14 @@ public class VisionSubsystem extends SubsystemBase {
      * @return The y location of the target in degrees
      */
     public double getY() {
-        return mLimelight.getEntry("ty").getDouble(0.0);
+        return mLimelight.getEntry("ty").getDouble(0.0) + mYOffset;
     }
 
     /**
      * 
      * @return The width of the target in pixels
      */
-    public double getWidth() {
+    public double getTargetWidth() {
         return mLimelight.getEntry("thor").getDouble(0.0);
     }
 
@@ -89,19 +91,33 @@ public class VisionSubsystem extends SubsystemBase {
      * 
      * @return The height of the target in pixels
      */
-    public double getHeight() {
+    public double getTargetHeight() {
         return mLimelight.getEntry("tvert").getDouble(0.0);
     }
 
     public double getDistanceWidth(double targetWidth) {
       double x = getX();
-      double width = getWidth();
+      double width = getTargetWidth();
       double angleLeft = VisionUtil.pixelsToAngles(VisionUtil.anglesToPixels(x, mFov.getX(), mRes.getX())-width/2.0, mFov.getX(), mRes.getX());
       double angleRight = VisionUtil.pixelsToAngles(VisionUtil.anglesToPixels(x, mFov.getX(), mRes.getX())+width/2.0, mFov.getX(), mRes.getX());
       double widthAngle = angleRight-angleLeft;
       double distance = (targetWidth / 2.0) / (Math.tan(Math.toRadians((widthAngle / 2.0))));
 
       return distance;
+    }
+
+    public double getDistanceHeight() {
+        return Constants.Vision.kVerticalOffset / Math.tan(Math.toRadians(getTargetCenter().getY()));
+    }
+
+    public double getTargetAngle() {
+        double targetWidth = VisionUtil.pixelsToAngles(getTargetWidth(), Constants.Vision.kLimelightFOV.getX(), Constants.Vision.kLimelightResolution.getX());
+        double maxTargetWidth = Math.toDegrees(Math.atan(Constants.Vision.kTargetWidth / (2.0 * getDistanceHeight())));
+        return Math.acos(targetWidth/maxTargetWidth);
+    }
+    
+    public void setPipeline(int pipeline) {
+        mLimelight.getEntry("pipeline").setNumber(pipeline);
     }
 
     public void defaultLED() {
@@ -118,6 +134,14 @@ public class VisionSubsystem extends SubsystemBase {
         } else {
             mLimelight.getEntry("ledMode").setNumber(3);
         }
+    }
+
+    public void camMode(boolean driverCam) {
+        mLimelight.getEntry("camMode").setNumber(driverCam ? 1 : 0);
+    }
+
+    public void setPIP(boolean driverCam) {
+        mLimelight.getEntry("stream").setNumber(driverCam ? 2 : 1);
     }
 
     public CameraPoint2d[] getCorners() {

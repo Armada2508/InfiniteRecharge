@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -9,10 +10,14 @@ public class Aim extends CommandBase {
 
     private DriveSubsystem mDriveSubsystem;
     private VisionSubsystem mVisionSubsystem;
-    
+    private PIDController mPidController;
+
     public Aim(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem) {
         mDriveSubsystem = driveSubsystem;
         mVisionSubsystem = visionSubsystem;
+        mPidController = new PIDController(Constants.Vision.kPAim, Constants.Vision.kIAim, Constants.Vision.kDAim);
+
+        mPidController.setSetpoint(0.0);
 
         // Require DriveSubsystem and VisionSubsystem
         addRequirements(mDriveSubsystem, mVisionSubsystem);
@@ -20,19 +25,20 @@ public class Aim extends CommandBase {
 
     @Override
     public void initialize() {
-        
+        mVisionSubsystem.setLED(true);
     }
 
 
     @Override
     public void execute() {
         double offset = mVisionSubsystem.getTargetCenter().getX();
-        mDriveSubsystem.setPowers(offset*Constants.Vision.kPAim, -offset*Constants.Vision.kPAim);
+        double power = mPidController.calculate(offset);
+        mDriveSubsystem.setPowers(power, -power);
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        mVisionSubsystem.setLED(false);
     }
 
     @Override

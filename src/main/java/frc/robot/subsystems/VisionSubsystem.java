@@ -111,7 +111,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double getTargetAngle() {
-        double targetWidth = VisionUtil.pixelsToAngles(getTargetWidth(), Constants.Vision.kLimelightFOV.getX(), Constants.Vision.kLimelightResolution.getX());
+        CameraPoint2d[] topPoints = getCorners();
+        double targetWidth = topPoints[1].getX() - topPoints[0].getX();
         double maxTargetWidth = Math.toDegrees(Math.atan(Constants.Vision.kTargetWidth / (2.0 * getDistanceHeight())));
         return Math.acos(targetWidth/maxTargetWidth);
     }
@@ -149,7 +150,9 @@ public class VisionSubsystem extends SubsystemBase {
         double[] y = mLimelight.getEntry("tcorny").getDoubleArray(new double[0]);
         CameraPoint2d[] corners = new CameraPoint2d[x.length];
         for (int i = 0; i < x.length; i++) {
-            corners[i] = new CameraPoint2d(x[i], y[i], true);
+            corners[i] = new CameraPoint2d(x[i], y[i], false);
+            corners[i].center(Constants.Vision.kLimelightResolution, false, true);
+            corners[i].toAngle();
         }
         return corners;
     }
@@ -169,6 +172,11 @@ public class VisionSubsystem extends SubsystemBase {
                 topCorners[1] = topCorners[0];
                 topCorners[0] = upperPoint;
             }
+        }
+        if(topCorners[0].getX() > topCorners[1].getX()) {
+            CameraPoint2d leftPoint = topCorners[1];
+            topCorners[1] = topCorners[0];
+            topCorners[0] = leftPoint;
         }
         return topCorners;
     }

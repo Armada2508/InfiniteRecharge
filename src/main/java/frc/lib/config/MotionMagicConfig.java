@@ -53,8 +53,8 @@ public class MotionMagicConfig {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.kMotionMagicPeriod);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.Config.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.Config.kMotionMagicPeriod);
     }
 
     /**
@@ -66,7 +66,7 @@ public class MotionMagicConfig {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.kMotionMagicPeriod);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.Config.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.Config.kMotionMagicPeriod);
     }
 }

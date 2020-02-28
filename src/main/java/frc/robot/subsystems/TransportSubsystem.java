@@ -21,19 +21,19 @@ public class TransportSubsystem extends SubsystemBase {
     private TimeOfFlight mShooter;
 
     public TransportSubsystem() {
-        mDiagTalon = new WPI_TalonSRX(Constants.kDiagonalTalon);
-        mElevTalon = new WPI_TalonSRX(Constants.kElevatorTalon);
+        mDiagTalon = new WPI_TalonSRX(Constants.Transport.kDiagonalTalon);
+        mElevTalon = new WPI_TalonSRX(Constants.Transport.kElevatorTalon);
         mDiagTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         mElevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        MotorConfig.configTalon(mDiagTalon, Constants.kTransportConfig, Constants.kTransportSlot);
-        MotorConfig.configTalon(mElevTalon, Constants.kTransportConfig, Constants.kTransportSlot);
+        MotorConfig.configTalon(mDiagTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
+        MotorConfig.configTalon(mElevTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
 
-        mFIntake = new TimeOfFlight(Constants.kFIntakeTofID);
-        mBIntake = new TimeOfFlight(Constants.kBIntakeTofID);
-        mInterface = new TimeOfFlight(Constants.kInterfaceTofID);
-        mShooter = new TimeOfFlight(Constants.kShooterTofID);
+        mFIntake = new TimeOfFlight(Constants.Transport.kFIntakeTofID);
+        mBIntake = new TimeOfFlight(Constants.Transport.kBIntakeTofID);
+        mInterface = new TimeOfFlight(Constants.Transport.kInterfaceTofID);
+        mShooter = new TimeOfFlight(Constants.Transport.kShooterTofID);
 
-        setTOFMode(Constants.kRangingMode, Constants.kTOFSampleTime);
+        setTOFMode(Constants.Transport.kRangingMode, Constants.Transport.kTOFSampleTime);
     }
 
     @Override
@@ -49,11 +49,11 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double getElevPosition() {
-        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
+        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
     }
 
     public double getDiagPosition() {
-        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter);
+        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
     }
 
     public void setElevPower(double power) {
@@ -73,11 +73,11 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public void setElevPosition(double position) {
-        mElevTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getElevPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mElevTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getElevPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
     }
 
     public void setDiagPosition(double position) {
-        mDiagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.kTransportEncoderUnitsPerRev, 1.0, Constants.kPulleyDiameter));
+        mDiagTalon.set(ControlMode.Position, EncoderUtil.fromDistance(getDiagPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
     }
     
     public void zeroElevPosition() {
@@ -117,7 +117,7 @@ public class TransportSubsystem extends SubsystemBase {
         boolean[] isValid = isValid();
         boolean[] isBall = new boolean[distance.length];
         for (int i = 0; i < isBall.length; i++) {
-            isBall[i] = (distance[i] < Constants.kMaxDistance) && (deviation[i] < Constants.kMaxDeviation) && isValid[i];
+            isBall[i] = (distance[i] < Constants.Transport.kMaxDistance) && (deviation[i] < Constants.Transport.kMaxDeviation) && isValid[i];
         }
         return isBall;
     }

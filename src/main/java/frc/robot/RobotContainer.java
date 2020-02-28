@@ -36,12 +36,12 @@ public class RobotContainer {
     private final DriveSubsystem mDrive = new DriveSubsystem();
     private final TransportSubsystem mTransport = new TransportSubsystem();
     private final ShooterSubsystem mShooter = new ShooterSubsystem();
-    private final IntakeSubsystem mFrontIntake = new IntakeSubsystem(Constants.kFrontIntakeTalon, Constants.kFrontIntakeInverted);
-    private final IntakeSubsystem mBackIntake = new IntakeSubsystem(Constants.kBackIntakeTalon, Constants.kBackIntakeInverted);
+    private final IntakeSubsystem mFrontIntake = new IntakeSubsystem(Constants.Intake.kFrontIntakeTalon, Constants.Intake.kFrontIntakeInverted);
+    private final IntakeSubsystem mBackIntake = new IntakeSubsystem(Constants.Intake.kBackIntakeTalon, Constants.Intake.kBackIntakeInverted);
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
-    private Joystick mJoystick = new Joystick(Constants.kJoystickPort);
+    private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.port);
     private NetworkTableEntry mGyroEntry;
     private NetworkTableEntry mOdometer;
@@ -57,8 +57,8 @@ public class RobotContainer {
 
     public void robotInit() {
         initDashboard();
-        mShooter.leftInverted(Constants.kShooterLeftInveted);
-        mShooter.rightInverted(Constants.kShooterRightInverted);
+        mShooter.leftInverted(Constants.Shooter.kShooterLeftInveted);
+        mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
     }
 
     /**
@@ -73,7 +73,7 @@ public class RobotContainer {
         new JoystickButton(mJoystick, 1).whenHeld(new Intake(mBackIntake, 0.5, false));
         new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, true, mTransport));
         new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, false, mTransport));
-        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 4000, Constants.kMaxShooterSlewRate));
+        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 4000, Constants.Shooter.kMaxShooterSlewRate));
         new JoystickButton(mJoystick, 7).whenHeld(new TransportPower(1.0, false, mTransport));
         new JoystickButton(mJoystick, 9).whenHeld(new TransportPower(1.0, true, mTransport));
         new JoystickButton(mJoystick, 8).whenHeld(new TransportPower(-0.25, false, mTransport));
@@ -179,8 +179,8 @@ public class RobotContainer {
         return followTrajectory.getCommand(mDrive,
             new Pose2d(),
             new Pose2d(5, 0, new Rotation2d()),
-            Constants.kMaxVelocity,
-            Constants.kMaxAcceleration);
+            Constants.Drive.kMaxVelocity,
+            Constants.Drive.kMaxAcceleration);
 
         /*
         try {

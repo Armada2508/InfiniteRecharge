@@ -13,10 +13,10 @@ public class ClimbSubsystem extends SubsystemBase {
 
 
     public ClimbSubsystem() {
-        mLTop = new Solenoid(Constants.kLeftClimbTop);
-        mLBottom = new Solenoid(Constants.kLeftClimbBottom);
-        mRTop = new Solenoid(Constants.kRightClimbTop);
-        mRBottom = new Solenoid(Constants.kRightClimbBottom);
+        mLTop = new Solenoid(Constants.Climb.kLeftClimbTop);
+        mLBottom = new Solenoid(Constants.Climb.kLeftClimbBottom);
+        mRTop = new Solenoid(Constants.Climb.kRightClimbTop);
+        mRBottom = new Solenoid(Constants.Climb.kRightClimbBottom);
     }
 
     @Override

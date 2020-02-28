@@ -33,6 +33,8 @@ public class VisionSubsystem extends SubsystemBase {
 
         mFov = fov;
         mRes = res;
+
+        setLED(false);
     }
 
     @Override

@@ -15,11 +15,11 @@ public class ShooterSubsystem extends SubsystemBase {
     private WPI_TalonFX mRightMotor;
 
     public ShooterSubsystem() {
-        mLeftMotor = new WPI_TalonFX(Constants.kLeftShooterMotor);
-        mRightMotor = new WPI_TalonFX(Constants.kRightShooterMotor);
+        mLeftMotor = new WPI_TalonFX(Constants.Shooter.kLeftShooterMotor);
+        mRightMotor = new WPI_TalonFX(Constants.Shooter.kRightShooterMotor);
 
-        MotorConfig.configTalon(mLeftMotor, Constants.kShooterConfig, Constants.kShooterSlot);
-        MotorConfig.configTalon(mRightMotor, Constants.kShooterConfig, Constants.kShooterSlot);
+        MotorConfig.configTalon(mLeftMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
+        MotorConfig.configTalon(mRightMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
 
         mLeftMotor.setNeutralMode(NeutralMode.Coast);
         mRightMotor.setNeutralMode(NeutralMode.Coast);
@@ -38,7 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spin(double rpm) {
-        double velocity = EncoderUtil.fromRPM(rpm, Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
+        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kShooterEncoderUnitsPerRev, Constants.Shooter.kShooterGearRatio, Constants.Shooter.kShooterVelocitySampleTime);
         mLeftMotor.set(ControlMode.Velocity, velocity);
         mRightMotor.set(ControlMode.Velocity, velocity);
     }
@@ -49,6 +49,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.kShooterEncoderUnitsPerRev, Constants.kShooterGearRatio, Constants.kShooterVelocitySampleTime);
+        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kShooterEncoderUnitsPerRev, Constants.Shooter.kShooterGearRatio, Constants.Shooter.kShooterVelocitySampleTime);
     }
 }

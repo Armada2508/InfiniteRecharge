@@ -23,4 +23,12 @@ public class ColorWheelSubsystem extends SubsystemBase {
         mWOFTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(rotations*Constants.WOF.kWOFDiameter*Math.PI, Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter));
     }
 
+    public void reset() {
+        mWOFTalon.setSelectedSensorPosition(0);
+    }
+
+    public double getRotations() {
+        return EncoderUtil.toDistance(mWOFTalon.getSelectedSensorPosition(), Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter)/(Constants.WOF.kWOFDiameter*Math.PI);
+    }
+
 }

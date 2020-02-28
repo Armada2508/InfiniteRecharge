@@ -73,7 +73,7 @@ public class RobotContainer {
         new JoystickButton(mJoystick, 1).whenHeld(new Intake(mBackIntake, 0.5, false));
         new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, true, mTransport));
         new JoystickButton(mJoystick, 1).whenHeld(new TransportPower(0.7, false, mTransport));
-        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 4000, Constants.Shooter.kMaxShooterSlewRate));
+        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 4000));
         new JoystickButton(mJoystick, 7).whenHeld(new TransportPower(1.0, false, mTransport));
         new JoystickButton(mJoystick, 9).whenHeld(new TransportPower(1.0, true, mTransport));
         new JoystickButton(mJoystick, 8).whenHeld(new TransportPower(-0.25, false, mTransport));

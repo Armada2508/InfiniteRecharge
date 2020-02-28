@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class SpinRoller extends CommandBase {
@@ -10,10 +11,10 @@ public class SpinRoller extends CommandBase {
     private SlewRateLimiter mLimiter;
     private double mRpm;
 
-    public SpinRoller(ShooterSubsystem shooterSubsystem, double rpm, int maxSlewRate) {
+    public SpinRoller(ShooterSubsystem shooterSubsystem, double rpm) {
         mShooterSubsystem = shooterSubsystem;
         mRpm = rpm;
-        mLimiter = new SlewRateLimiter(maxSlewRate);
+        mLimiter = new SlewRateLimiter(Constants.Shooter.kMaxShooterSlewRate);
 
         // Require ShooterSubsystem
         addRequirements(shooterSubsystem);

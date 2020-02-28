@@ -161,6 +161,8 @@ public final class Constants {
         public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
         public static final int kWOFSlot = 0;
         public static final int kWOFMotor = 5;
+        public static final double kWOFThreshold = 0.02;
+        public static final double kWOFRotations = 3.5;
 
     }
 

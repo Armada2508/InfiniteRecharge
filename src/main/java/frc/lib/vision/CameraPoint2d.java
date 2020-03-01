@@ -25,11 +25,9 @@ public class CameraPoint2d {
      * @param angle If these CameraPoint2d values are angles
      */
     public CameraPoint2d(double x, double y, boolean angle) {
-        if(angle) {
-            mIsAngle = angle;
-            mX = x;
-            mY = y;
-        }
+        mIsAngle = angle;
+        mX = x;
+        mY = y;
     }
 
     /**
@@ -41,6 +39,22 @@ public class CameraPoint2d {
     }
 
     /**
+     * Set the y coordinate
+     * @param y The value to set the y coordinate to
+     */
+    public void setY(double y) {
+        mY = y;
+    }
+
+    /**
+     * Set the x coordinate
+     * @param x The value to set the x coordinate to
+     */
+    public void setX(double x) {
+        mX = x;
+    }
+
+    /**
      * Get the y coordinate
      * @return The y coordinate
      */
@@ -48,6 +62,9 @@ public class CameraPoint2d {
     public double getY() {
         return mY;
     }
+
+    
+    
 
     /**
      * Check if the CameraPoint2d is an angle

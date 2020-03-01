@@ -30,24 +30,24 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * Creates a new VisionSubsystem
      */
-    public VisionSubsystem(FOV fov, Resolution res) {
+    public VisionSubsystem() {
         mInstance = NetworkTableInstance.getDefault();
         
         mLimelight = mInstance.getTable("limelight");
 
-        mFov = fov;
-        mRes = res;
+        mFov = Constants.Vision.kLimelightFOV;
+        mRes = Constants.Vision.kLimelightResolution;
 
-        setLED(false);
+        setLED(true);
         setYOffset(Constants.Vision.kLimelightAngle);
         setPipeline(0);
-        camMode(true);
+        camMode(false);
         setPIP(true);
     }
 
     @Override
     public void periodic() {
-        
+        System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
     }
 
     public void setYOffset(double offset) {
@@ -99,24 +99,27 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double getDistanceWidth(double targetWidth) {
+      if(!targetFound()) return 0.0;
+
       double x = getX();
       double width = getTargetWidth();
       double angleLeft = VisionUtil.pixelsToAngles(VisionUtil.anglesToPixels(x, mFov.getX(), mRes.getX())-width/2.0, mFov.getX(), mRes.getX());
       double angleRight = VisionUtil.pixelsToAngles(VisionUtil.anglesToPixels(x, mFov.getX(), mRes.getX())+width/2.0, mFov.getX(), mRes.getX());
-      double widthAngle = angleRight-angleLeft;
+      double widthAngle = angleRight-angleLeft; 
       double distance = (targetWidth / 2.0) / (Math.tan(Math.toRadians((widthAngle / 2.0))));
 
       return distance;
     }
 
     public double getDistanceHeight() {
+        if(!targetFound()) return 0.0;
         return Constants.Vision.kVerticalOffset / Math.tan(Math.toRadians(getTargetCenter().getY()));
     }
 
     public double getTargetAngle() {
         CameraPoint2d[] topPoints = getTopCorners();
         double targetWidth = topPoints[1].getX() - topPoints[0].getX();
-        double maxTargetWidth = Math.toDegrees(Math.atan(Constants.Vision.kTargetWidth / (2.0 * getDistanceHeight())));
+        double maxTargetWidth = Math.toDegrees(Math.atan((Constants.Vision.kTargetWidth - Constants.Vision.kTapeWidth ) / (2.0 * getDistanceHeight())));
         int directionMultiplier = (topPoints[0].getY() > topPoints[1].getY()) ? -1 : 1;
         return Math.acos(targetWidth/maxTargetWidth) * directionMultiplier;
     }
@@ -134,7 +137,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void setLED(boolean on) {
-        if (on) {
+        if (!on) {
             mLimelight.getEntry("ledMode").setNumber(1);
         } else {
             mLimelight.getEntry("ledMode").setNumber(3);
@@ -150,13 +153,15 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public CameraPoint2d[] getCorners() {
-        double[] x = mLimelight.getEntry("tcornx").getDoubleArray(new double[0]);
-        double[] y = mLimelight.getEntry("tcorny").getDoubleArray(new double[0]);
-        CameraPoint2d[] corners = new CameraPoint2d[x.length];
-        for (int i = 0; i < x.length; i++) {
-            corners[i] = new CameraPoint2d(x[i], y[i], false);
-            corners[i].center(Constants.Vision.kLimelightResolution, false, true);
-            corners[i].toAngle();
+        double[] xy = mLimelight.getEntry("tcornxy").getDoubleArray(new double[0]);
+        CameraPoint2d[] corners = new CameraPoint2d[xy.length/2];
+        for (int i = 0; i < xy.length; i+=2) {
+            corners[i/2] = new CameraPoint2d(xy[i], xy[i+1], false);
+            corners[i/2].center(Constants.Vision.kLimelightResolution, false, true);
+            corners[i/2].config(Constants.Vision.kLimelightFOV, Constants.Vision.kLimelightResolution);
+            corners[i/2].toAngle();
+            corners[i/2].setY(corners[i/2].getY() + mYOffset*Math.cos(Math.toRadians(corners[i/2].getX())));
+            corners[i/2].setX(corners[i/2].getX() + mXOffset);
         }
         return corners;
     }
@@ -167,9 +172,12 @@ public class VisionSubsystem extends SubsystemBase {
             return new CameraPoint2d[0];
         }
         CameraPoint2d[] topCorners = new CameraPoint2d[2];
+        for (int i = 0; i < 2; i++) {
+            topCorners[i] = corners[i];
+        }
         for (int i = 0; i < corners.length; i++) {
             if(corners[i].getY() > topCorners[1].getY()) {
-                topCorners[i] = corners[i];
+                topCorners[1] = corners[i];
             }
             if(topCorners[1].getY() > topCorners[0].getY()) {
                 CameraPoint2d upperPoint = topCorners[1];
@@ -186,6 +194,9 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public CameraPoint2d getTargetCenter() {
+        if(getTopCorners().length < 2) {
+            return new CameraPoint2d(0, 0);
+        }
         return new CameraPoint2d((getTopCorners()[0].getX()+getTopCorners()[1].getX())/2.0, (getTopCorners()[0].getY()+getTopCorners()[1].getY())/2.0, true);
     }
 }

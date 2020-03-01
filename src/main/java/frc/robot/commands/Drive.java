@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import frc.lib.drive.JoystickUtil;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
@@ -51,6 +52,10 @@ public class Drive extends CommandBase {
     double throttle = mThrottle.getAsDouble();
     double trim = mTrim.getAsDouble();
     double turn = mTurn.getAsDouble();
+
+    throttle = JoystickUtil.deadband(throttle, Constants.Drive.kDeadbandThreshold);
+    trim = JoystickUtil.deadband(trim, Constants.Drive.kDeadbandThreshold);
+    turn = JoystickUtil.deadband(turn, Constants.Drive.kDeadbandThreshold);
     
     turn *= mTurnRatio;
     trim *= mTrimRatio;

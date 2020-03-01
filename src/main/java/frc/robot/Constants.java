@@ -50,12 +50,12 @@ public final class Constants {
         public static final int kRightDriveMotorFollowerPort = 3;
 
         // Driving Constants
-        public static final double kDeadbandThreshold = 0.06;  // TODO: Determine correct value
+        public static final double kDeadbandThreshold = 0.02;  // TODO: Determine correct value
         public static final int kJoystickPort = 0;
         public static final int kThrottleAxis = 1;
         public static final int kTurnAxis = 2;
         public static final int kTrimAxis = 0;
-        public static final double kMaxPower = 0.2;
+        public static final double kMaxPower = 0.4;
         public static final double kTurnRatio = 0.5;
         public static final double kTrimRatio = 0.5;
         public static final boolean kThrottleInverted = true;
@@ -123,13 +123,13 @@ public final class Constants {
 
         // Vision Constants
         public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
-        public static final Resolution kLimelightResolution = new Resolution(320, 240);
-        public static final double kLimelightAngle = 15.0;  //TODO: Determine correct value
+        public static final Resolution kLimelightResolution = new Resolution(960, 720);
+        public static final double kLimelightAngle = 17.86;  //TODO: Determine correct value
         public static final double kLimelightHeight = .794;  //TODO: Determine final height
         public static final double kTargetHeight = 2.5;
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
         public static final double kTargetWidth = .997;
-        public static final double kTapeWidth = 4.0/Math.sqrt(3);
+        public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254;
 
         public static final double kPAim = 0.025;
         public static final double kIAim = 0.0;
@@ -144,8 +144,8 @@ public final class Constants {
         public static final int kShooterEncoderUnitsPerRev = 2048;
         public static final double kShooterGearRatio = 1.0;
         public static final double kShooterVelocitySampleTime = 0.1;
-        public static final MotorConfig kShooterConfig = new MotorConfig(0.25, 0.001, 0.0, 0.05, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
-        public static final int kMaxShooterSlewRate = 2000;  // TODO: Determine correct value
+        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
+        public static final int kMaxShooterSlewRate = 4000;  // TODO: Determine correct value
         public static final int kShooterSlot = 0;
         public static final boolean kShooterLeftInveted = true;
         public static final boolean kShooterRightInverted = false;

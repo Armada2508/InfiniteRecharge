@@ -14,7 +14,7 @@ public class TransportPower extends CommandBase {
         mTransportSubsystem = transportSubsystem;
 
         // Require TransportSubsystem
-        addRequirements(mTransportSubsystem);
+        //addRequirements(mTransportSubsystem);
     }
 
     @Override

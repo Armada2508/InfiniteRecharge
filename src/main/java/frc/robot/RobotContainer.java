@@ -39,7 +39,6 @@ public class RobotContainer {
     private final IntakeSubsystem mFrontIntake = new IntakeSubsystem(Constants.Intake.kFrontIntakeTalon, Constants.Intake.kFrontIntakeInverted);
     private final IntakeSubsystem mBackIntake = new IntakeSubsystem(Constants.Intake.kBackIntakeTalon, Constants.Intake.kBackIntakeInverted);
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
-    private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.port);

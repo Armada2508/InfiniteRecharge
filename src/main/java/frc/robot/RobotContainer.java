@@ -9,6 +9,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.*;
 
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -60,6 +63,7 @@ public class RobotContainer {
         initDashboard();
         mShooter.leftInverted(Constants.Shooter.kShooterLeftInveted);
         mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
+        initCam();
     }
 
     /**
@@ -151,6 +155,14 @@ public class RobotContainer {
                 () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0)));
 
         driveCommand.schedule();
+    }
+
+    public void initCam() {
+        UsbCamera backCamera = new UsbCamera("Back Camera", 0);
+        MjpegServer backCameraStream = CameraServer.getInstance().startAutomaticCapture(backCamera);
+        backCameraStream.setCompression(Constants.Camera.kCameraCompression);
+        backCamera.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
+        backCamera.setFPS(Constants.Camera.kCameraFPS);
     }
 
     public void startDashboardCapture() {

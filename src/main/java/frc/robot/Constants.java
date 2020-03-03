@@ -55,7 +55,7 @@ public final class Constants {
         public static final int kThrottleAxis = 1;
         public static final int kTurnAxis = 2;
         public static final int kTrimAxis = 0;
-        public static final double kMaxPower = 0.4;
+        public static final double kMaxPower = 0.3;
         public static final double kTurnRatio = 0.5;
         public static final double kTrimRatio = 0.5;
         public static final boolean kThrottleInverted = true;

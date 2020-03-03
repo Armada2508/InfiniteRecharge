@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
@@ -29,6 +30,26 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
     public double getRotations() {
         return EncoderUtil.toDistance(mWOFTalon.getSelectedSensorPosition(), Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter)/(Constants.WOF.kWOFDiameter*Math.PI);
+    }
+
+    public char getColor() {
+        return DriverStation.getInstance().getGameSpecificMessage().charAt(0);
+    }
+
+    public String getColorString() {
+        switch(DriverStation.getInstance().getGameSpecificMessage().charAt(0))
+        {
+            case 'B' :
+                return "blue";
+            case 'G' :
+                return "green";
+            case 'R' :
+                return "red";
+            case 'Y' :
+                return "yellow";
+            default :
+                return "";
+        }
     }
 
 }

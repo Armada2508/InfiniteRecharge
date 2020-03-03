@@ -136,6 +136,14 @@ public final class Constants {
         public static final double kDAim = 0.0;
     }
 
+    public static class Camera {
+        
+        // Camera Constants
+        public static final Resolution kCameraResolution = new Resolution(160, 120);
+        public static final int kCameraFPS = 15;
+        public static final int kCameraCompression = 30;
+    }
+
     public static class Shooter {
         
         // Shooter Constants

@@ -36,6 +36,9 @@ public class Aim extends CommandBase {
         power = Math.min(Constants.Drive.kMaxAimPower, power);
         mDriveSubsystem.setPowers(-power, power);
         System.out.println(power);
+        double dampening = Math.abs(((mDriveSubsystem.getVelocityLeft()-mDriveSubsystem.getVelocityRight())/2)*offset*Constants.Vision.kDampening);
+        power -= dampening;
+        mDriveSubsystem.setPowers(power, -power);
     }
 
     @Override

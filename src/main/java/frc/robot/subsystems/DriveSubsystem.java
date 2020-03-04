@@ -36,9 +36,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final PigeonIMU mImu = new PigeonIMU(0);
 
-    private final Solenoid mCooling = new Solenoid(Constants.Drive.kCoolingSolenoid);
-    private final Timer mCoolingTimer = new Timer();
-
     private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
     
     public DriveSubsystem() {
@@ -57,24 +54,12 @@ public class DriveSubsystem extends SubsystemBase {
         resetHeading();
         resetEncoders();
         mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        mCoolingTimer.start();
     }
 
 
     @Override
     public void periodic() {
         mOdometry.update(Rotation2d.fromDegrees(getHeading()), getPositionLeft(), getPositionRight());
-        double[] temps = getTemps();
-        if(mCoolingTimer.hasPeriodPassed(Constants.Drive.kCoolingDelay)) {
-            mCooling.set(false);
-        }
-        for (int i = 0; i < temps.length; i++) {
-            if(temps[i] >= Constants.Drive.kCoolingTemp) {
-                mCooling.set(true);
-                mCoolingTimer.reset();
-                break;
-            }
-        }
     }
 
     public void setPowers(double powerL, double powerR) {

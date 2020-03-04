@@ -33,6 +33,8 @@ public class Aim extends CommandBase {
     public void execute() {
         double offset = mVisionSubsystem.getTargetCenter().getX();
         double power = mPidController.calculate(offset);
+        double dampening = Math.abs(((mDriveSubsystem.getVelocityLeft()-mDriveSubsystem.getVelocityRight())/2)*offset*Constants.Vision.kDampening);
+        power -= dampening;
         mDriveSubsystem.setPowers(power, -power);
     }
 

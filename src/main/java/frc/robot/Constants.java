@@ -134,6 +134,7 @@ public final class Constants {
         public static final double kPAim = 0.025;
         public static final double kIAim = 0.0;
         public static final double kDAim = 0.0;
+        public static final double kDampening = 0.0;
     }
 
     public static class Shooter {

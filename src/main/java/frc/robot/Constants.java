@@ -55,8 +55,8 @@ public final class Constants {
         public static final int kThrottleAxis = 1;
         public static final int kTurnAxis = 2;
         public static final int kTrimAxis = 0;
-        public static final double kMaxPower = 0.3;
-        public static final double kTurnRatio = 0.5;
+        public static final double kMaxPower = 1.0;
+        public static final double kTurnRatio = 1.0;
         public static final double kTrimRatio = 0.5;
         public static final boolean kThrottleInverted = true;
         public static final boolean kTurnInverted = false;
@@ -65,17 +65,13 @@ public final class Constants {
         // Drive System Constants
         public static final boolean kRightInverted = false;
         public static final boolean kDriveInverted = false;
-        public static final boolean kRightSensorInverted = false;
-        public static final boolean kLeftSensorInverted = true;
+        public static final boolean kRightSensorInverted = true;
+        public static final boolean kLeftSensorInverted = false;
         public static final int kDriveSlot = 0;
         public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0, 200, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
-        public static final PIDController kDrivePositionPID = new PIDController(0, 0, 0);  // TODO: Tune PID
-        public static final double kCoolingTemp = 60.0;
-        public static final double kCoolingDelay = 5.0;
-        public static final int kCoolingSolenoid = 4;
 
         // Trajectory Following Constants
-        public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.129, 1.35, 3.52);  // TODO: Redo drive characterization
+        public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.21, 0.163, 0.0299);  // TODO: Redo drive characterization
         public static final double kTrackWidth = 0.5612243747769792;  // TODO: Find track width
         public static final double kB = 2.0;
         public static final double kZeta = 0.7;

@@ -32,6 +32,10 @@ public class ColorWheelSubsystem extends SubsystemBase {
         return EncoderUtil.toDistance(mWOFTalon.getSelectedSensorPosition(), Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.WOF.kWOFWheelDiameter)/(Constants.WOF.kWOFDiameter*Math.PI);
     }
 
+    public double getRPM() {
+        return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kWOFEncoderUnitsPerRev, Constants.WOF.kWOFGearRatio, Constants.Drive.kVelSampleTime);
+    }
+
     public char getColor() {
         return DriverStation.getInstance().getGameSpecificMessage().charAt(0);
     }

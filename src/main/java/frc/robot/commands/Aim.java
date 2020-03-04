@@ -33,12 +33,15 @@ public class Aim extends CommandBase {
     public void execute() {
         double offset = mVisionSubsystem.getTargetCenter().getX();
         double power = mPidController.calculate(offset);
-        mDriveSubsystem.setPowers(power, -power);
+        power = Math.min(Constants.Drive.kMaxAimPower, power);
+        mDriveSubsystem.setPowers(-power, power);
+        System.out.println(power);
     }
 
     @Override
     public void end(boolean interrupted) {
         mVisionSubsystem.setLED(false);
+        mDriveSubsystem.setPowers(0, 0);
     }
 
     @Override

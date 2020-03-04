@@ -13,6 +13,8 @@ public class SpinColorWheel extends CommandBase {
         mColorWheelSubsystem = colorWheelSubsystem;
         mRotations = rotations;
 
+        mColorWheelSubsystem.reset();
+
         // Require ColorWheelSubsystem
         addRequirements(colorWheelSubsystem);
     }
@@ -24,11 +26,12 @@ public class SpinColorWheel extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println(mColorWheelSubsystem.getRPM());
     }
 
     @Override
     public void end(boolean interrupted) {
-        mColorWheelSubsystem.reset();
+        System.out.println("End");
     }
 
     @Override

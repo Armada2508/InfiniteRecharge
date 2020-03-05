@@ -96,8 +96,8 @@ public class RobotContainer {
         new POVButton(mJoystick, 180).whenPressed(new Climb(mClimb, 0));
         new POVButton(mJoystick, 0).whenPressed(new Climb(mClimb, 1));
         new JoystickButton(mJoystick, 12).whenPressed(new Climb(mClimb, 2));
-        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 1));
-        new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -1));
+        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 0.125));
+        new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -0.125));
 
         /*new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(mshooter, 4500, Constants.kMaxShooterSlewRate));
       //  new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kAim).whenPressed();
@@ -234,10 +234,6 @@ public class RobotContainer {
         System.out.println(mDrive.getWheelSpeeds());
     }
 
-    public void printRPM() {
-        System.out.println(mShooter.getRPM());
-    }
-    
     public void updateRPM() {
         mRPM.setDouble(mShooter.getRPM());
     }

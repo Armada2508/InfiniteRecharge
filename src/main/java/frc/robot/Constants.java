@@ -163,12 +163,13 @@ public final class Constants {
     public static class WOF {
 
         // Color Wheel Constants
-        public static final double kWOFDiameter = 13;
-        public static final int kWOFEncoderUnitsPerRev = 1024;
+        public static final double kWOFDiameter = 32;
+        public static final int kWOFEncoderUnitsPerRev = 4096;
         public static final double kWOFGearRatio = 20.0;
         public static final double kWOFWheelDiameter = 4.0;
-        public static final MotorConfig kWOFConfig = new MotorConfig(0.0, 0, 0, 0.1, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
-        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(60, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(60, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
+        public static final MotorConfig kWOFConfig = new MotorConfig(0.01, 0, 0.01, 0.008, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
+        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(400, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(240, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
+        public static final double kRamp = 0.1;
         public static final int kWOFSlot = 0;
         public static final int kWOFMotor = 5;
         public static final double kWOFThreshold = 0.02;
@@ -182,7 +183,7 @@ public final class Constants {
         public static final int kElevatorTalon = 9;
         public static final int kDiagonalTalon = 6;
         public static final double kPulleyDiameter = 2.75;
-        public static final int kTransportEncoderUnitsPerRev = 1024;
+        public static final int kTransportEncoderUnitsPerRev = 4096;
         public static final double kTransportGearRatio = 20.0;
         public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
         public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values

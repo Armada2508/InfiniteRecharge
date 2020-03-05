@@ -46,7 +46,7 @@ public class RobotContainer {
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
-    private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.port);
+    private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
     private NetworkTableEntry mGyroEntry;
     private NetworkTableEntry mOdometer;
     private NetworkTableEntry mRPM;

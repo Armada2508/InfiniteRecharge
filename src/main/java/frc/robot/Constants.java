@@ -24,22 +24,23 @@ public final class Constants {
 
     // Button Board Constants
     public static class ButtonBoard {
-        public static final int port = 1;
+        public static final int kPort = 1;
         public static final int kSpinUp = 0;
         public static final int kAim = 1;
         public static final int kFeedShooter = 2;
         public static final int kShootSequence = 3;
         public static final int kFrontIntake = 4;
         public static final int kBackIntake = 5;
-        public static final int kBothIntake = 6;
-        public static final int kFrontOutput = 7;
-        public static final int kBackOutput = 8;
-        public static final int kSpinWOF = 9;
-        public static final int kIncrementWOF = 10;
-        public static final int kClimbExtend = 11;
-        public static final int kClimbRetract = 12;
-        public static final int kStop = 13;
-        
+        public static final int kFrontOutput = 6;
+        public static final int kBackOutput = 7;
+        public static final int kSpinWOF = 8;
+        public static final int kClimbExtend = 9;
+        public static final int kClimbVent = 10;
+        public static final int kClimbRetract = 11;
+        public static final int kWOFLeft = 12;
+        public static final int kWOFLeftSmall = 13;
+        public static final int kWOFRight = 14;
+        public static final int kWOFRightSmall = 15;
     }
 
     public static class Drive {
@@ -124,7 +125,7 @@ public final class Constants {
         // Vision Constants
         public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
         public static final Resolution kLimelightResolution = new Resolution(960, 720);
-        public static final double kLimelightAngle = 17.86;  //TODO: Determine correct value
+        public static final double kLimelightAngle = 16.5;  //TODO: Determine correct value
         public static final double kLimelightHeight = .794;  //TODO: Determine final height
         public static final double kTargetHeight = 2.5;
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;

@@ -37,17 +37,13 @@ public class VisionSubsystem extends SubsystemBase {
 
         mFov = Constants.Vision.kLimelightFOV;
         mRes = Constants.Vision.kLimelightResolution;
-
-        setLED(true);
-        setYOffset(Constants.Vision.kLimelightAngle);
-        setPipeline(0);
-        camMode(false);
-        setPIP(true);
+        
+        setup();
     }
 
     @Override
     public void periodic() {
-        System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
+    //    System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
     }
 
     public void setYOffset(double offset) {
@@ -56,6 +52,14 @@ public class VisionSubsystem extends SubsystemBase {
 
     public void setXOffset(double offset) {
         mXOffset = offset;
+    }
+
+    public void setup() {
+        setLED(true);
+        setYOffset(Constants.Vision.kLimelightAngle);
+        setPipeline(0);
+        camMode(false);
+        setPIP(true);
     }
 
     /**

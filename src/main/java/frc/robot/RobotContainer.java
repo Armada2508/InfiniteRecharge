@@ -42,11 +42,15 @@ public class RobotContainer {
     private final IntakeSubsystem mFrontIntake = new IntakeSubsystem(Constants.Intake.kFrontIntakeTalon, Constants.Intake.kFrontIntakeInverted);
     private final IntakeSubsystem mBackIntake = new IntakeSubsystem(Constants.Intake.kBackIntakeTalon, Constants.Intake.kBackIntakeInverted);
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
+    private final VisionSubsystem mVisionSubsystem = new VisionSubsystem();
+    private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.port);
     private NetworkTableEntry mGyroEntry;
     private NetworkTableEntry mOdometer;
+    private NetworkTableEntry mRPM;
+    private ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,8 +59,7 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         new PneumaticsSubsystem();
-
-        new VisionSubsystem();
+        mRPM = mShooterTable.add("RPM", 0).getEntry();
     }
 
     public void robotInit() {
@@ -64,6 +67,7 @@ public class RobotContainer {
         mShooter.leftInverted(Constants.Shooter.kShooterLeftInveted);
         mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
         initCam();
+        mVisionSubsystem.setup();
     }
 
     /**
@@ -88,9 +92,12 @@ public class RobotContainer {
         new JoystickButton(mJoystick, 4).whenHeld(new Intake(mBackIntake, 0.5, false));
         new JoystickButton(mJoystick, 5).whenHeld(new Intake(mFrontIntake, 0.5, true));
         new JoystickButton(mJoystick, 6).whenHeld(new Intake(mBackIntake, 0.5, true));
+        new JoystickButton(mJoystick, 2).whileHeld(aim());
         new POVButton(mJoystick, 180).whenPressed(new Climb(mClimb, 0));
         new POVButton(mJoystick, 0).whenPressed(new Climb(mClimb, 1));
         new JoystickButton(mJoystick, 12).whenPressed(new Climb(mClimb, 2));
+        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 0.125));
+        new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -0.125));
 
         /*new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(mshooter, 4500, Constants.kMaxShooterSlewRate));
       //  new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kAim).whenPressed();
@@ -149,20 +156,19 @@ public class RobotContainer {
     }
 
     public void drive() {
-        Command driveCommand = new Drive(mDrive,
-                () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
+        /*        () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
                 () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0)));
 
         driveCommand.schedule();
-    }
+    */}
 
     public void initCam() {
-        UsbCamera backCamera = new UsbCamera("Back Camera", 0);
+        UsbCamera backCamera = CameraServer.getInstance().startAutomaticCapture(0);
         MjpegServer backCameraStream = CameraServer.getInstance().startAutomaticCapture(backCamera);
         backCameraStream.setCompression(Constants.Camera.kCameraCompression);
         backCamera.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
-        backCamera.setFPS(Constants.Camera.kCameraFPS);
+        backCamera.setFPS(Constants.Camera.kCameraFPS);        
     }
 
     public void startDashboardCapture() {
@@ -176,6 +182,7 @@ public class RobotContainer {
     }
 
     public void changeMode() {
+        mVisionSubsystem.setup();
         mDrive.reset();
     }
 
@@ -211,6 +218,10 @@ public class RobotContainer {
     */
     }
 
+    public Command aim() {
+        return new Aim(mDrive, mVisionSubsystem);
+    }
+
     public void printOdo() {
         System.out.println(mDrive.getPose());
     }
@@ -223,7 +234,7 @@ public class RobotContainer {
         System.out.println(mDrive.getWheelSpeeds());
     }
 
-    public void printRPM() {
-        System.out.println(mShooter.getRPM());
+    public void updateRPM() {
+        mRPM.setDouble(mShooter.getRPM());
     }
 }

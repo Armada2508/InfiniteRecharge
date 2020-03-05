@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
+import frc.lib.motion.EncoderUtil;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 
@@ -84,6 +85,9 @@ public final class Constants {
         public static final double kMaxVelocity = 0.75;  // TODO: Determine correct value
         public static final double kMaxAcceleration = 0.75;  // TODO: Determine correct value
 
+        // Aiming Constants
+        public static final double kMaxAimPower = 0.1;
+
     }
 
     public static class Robot {
@@ -126,8 +130,7 @@ public final class Constants {
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
         public static final double kTargetWidth = .997;
         public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254;
-
-        public static final double kPAim = 0.025;
+        public static final double kPAim = 0.035;
         public static final double kIAim = 0.0;
         public static final double kDAim = 0.0;
         public static final double kDampening = 0.0;
@@ -137,8 +140,8 @@ public final class Constants {
         
         // Camera Constants
         public static final Resolution kCameraResolution = new Resolution(160, 120);
-        public static final int kCameraFPS = 15;
-        public static final int kCameraCompression = 30;
+        public static final int kCameraFPS = 20;
+        public static final int kCameraCompression = 80;
     }
 
     public static class Shooter {
@@ -149,8 +152,8 @@ public final class Constants {
         public static final int kShooterEncoderUnitsPerRev = 2048;
         public static final double kShooterGearRatio = 1.0;
         public static final double kShooterVelocitySampleTime = 0.1;
-        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
-        public static final int kMaxShooterSlewRate = 4000;  // TODO: Determine correct value
+        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 10, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
+        public static final int kMaxShooterSlewRate = 800;  // TODO: Determine correct value
         public static final int kShooterSlot = 0;
         public static final boolean kShooterLeftInveted = true;
         public static final boolean kShooterRightInverted = false;
@@ -160,12 +163,13 @@ public final class Constants {
     public static class WOF {
 
         // Color Wheel Constants
-        public static final double kWOFDiameter = 13;
-        public static final int kWOFEncoderUnitsPerRev = 1024;
+        public static final double kWOFDiameter = 32;
+        public static final int kWOFEncoderUnitsPerRev = 4096;
         public static final double kWOFGearRatio = 20.0;
         public static final double kWOFWheelDiameter = 4.0;
-        public static final MotorConfig kWOFConfig = new MotorConfig(0, 0, 0, 0, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
-        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
+        public static final MotorConfig kWOFConfig = new MotorConfig(0.01, 0, 0.01, 0.008, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
+        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(400, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(240, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
+        public static final double kRamp = 0.1;
         public static final int kWOFSlot = 0;
         public static final int kWOFMotor = 5;
         public static final double kWOFThreshold = 0.02;
@@ -179,7 +183,7 @@ public final class Constants {
         public static final int kElevatorTalon = 9;
         public static final int kDiagonalTalon = 6;
         public static final double kPulleyDiameter = 2.75;
-        public static final int kTransportEncoderUnitsPerRev = 1024;
+        public static final int kTransportEncoderUnitsPerRev = 4096;
         public static final double kTransportGearRatio = 20.0;
         public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
         public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values

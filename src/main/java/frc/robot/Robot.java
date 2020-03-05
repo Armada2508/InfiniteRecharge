@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Aim;
 import edu.wpi.first.wpilibj2.command.*;
 
 /**
@@ -47,7 +48,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     mRobotContainer.updateDashboard();
     mRobotContainer.updateLogger();
-    //mRobotContainer.printRPM();
+    mRobotContainer.updateRPM();
   }
 
   /**

@@ -8,9 +8,8 @@ public class Intake extends CommandBase {
     private IntakeSubsystem mIntakeSubsystem;
     private double mPower;
 
-    public Intake(IntakeSubsystem intakeSubsystem, double power, boolean reversed) {
+    public Intake(IntakeSubsystem intakeSubsystem, double power) {
         mIntakeSubsystem = intakeSubsystem;
-        mPower = power * (reversed ? -1.0 : 1.0);
 
         // Required Subsystems
         addRequirements(mIntakeSubsystem);

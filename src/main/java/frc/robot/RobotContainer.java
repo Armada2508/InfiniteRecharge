@@ -107,13 +107,12 @@ public class RobotContainer {
 */
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinUp).whileHeld(new SpinRoller(mShooter, 6400));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kAim).whileHeld(new Aim(mDrive, mVision));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(0.8, false, mTransport));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(0.8, true, mTransport));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(mTransport, 0.8, true, true));
        // new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower, false));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower, false));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontOutput).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower, true));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackOutput).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower, true));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontOutput).whileHeld(new Intake(mFrontIntake, -Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackOutput).whileHeld(new Intake(mBackIntake, -Constants.Intake.kIntakePower));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed(new SpinColorWheel(mWOF, 3.75));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeft).whenPressed(new SpinColorWheel(mWOF, -0.125));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRight).whenPressed(new SpinColorWheel(mWOF, 0.125));
@@ -214,8 +213,10 @@ public class RobotContainer {
 
         FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kDriveConfig.getP(), Constants.Drive.kDriveConfig.getI(), Constants.Drive.kDriveConfig.getD(), Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth);
         try {
-            Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
-            return new Auto(mDrive, trajectory);
+            Trajectory intake1 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake1.wpilib.json"));
+            Trajectory intake2 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake2.wpilib.json"));
+            Trajectory[] paths = { intake1, intake2 };
+            return new Auto(mDrive, mTransport, mShooter, mFrontIntake, mBackIntake, mVision, paths);
         } catch (IOException e) {
             System.out.println(e);
             return new InstantCommand();

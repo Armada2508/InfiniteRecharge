@@ -18,8 +18,6 @@ import frc.lib.motion.EncoderUtil;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 
-//TODO: Put constants in sub-classes
-
 public final class Constants {
 
     // Button Board Constants
@@ -52,7 +50,7 @@ public final class Constants {
         public static final int kRightDriveMotorFollowerPort = 3;
 
         // Driving Constants
-        public static final double kDeadbandThreshold = 0.02;  // TODO: Determine correct value
+        public static final double kDeadbandThreshold = 0.02;
         public static final int kJoystickPort = 0;
         public static final int kThrottleAxis = 1;
         public static final int kTurnAxis = 2;
@@ -73,13 +71,13 @@ public final class Constants {
         public static final MotorConfig kDriveConfig = new MotorConfig(0, 0, 0, 0.1, 200, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
 
         // Trajectory Following Constants
-        public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361);  // TODO: Redo drive characterization
-        public static final double kTrackWidth = 0.511;  // TODO: Find track width
+        public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361);
+        public static final double kTrackWidth = 0.511;
         public static final double kB = 2.0;
         public static final double kZeta = 0.7;
         public static final int kDriveEncoderUnitsPerRev = 2048;
         public static final double kDriveWheelDiameter = 0.2032;
-        public static final double kDriveGearRatio = 12.75*(48.0/42.0);  // TODO: Determine correct value
+        public static final double kDriveGearRatio = 12.75*(48.0/42.0);
         public static final double kVelSampleTime = 0.1;
 
         // Trajectory Generation Constants
@@ -152,8 +150,10 @@ public final class Constants {
         public static final int kRightShooterMotor = 10;
         public static final int kShooterEncoderUnitsPerRev = 2048;
         public static final double kShooterGearRatio = 1.0;
+        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo current on shooter
+        public static final double kStableRPMThreshold = 100;
         public static final double kShooterVelocitySampleTime = 0.1;
-        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo PID on shooter
+        public static final double kShooterStableCurrentLimit = 10;
         public static final int kMaxShooterSlewRate = 4000;  // TODO: Determine correct value
         public static final int kShooterSlot = 0;
         public static final boolean kShooterLeftInveted = true;

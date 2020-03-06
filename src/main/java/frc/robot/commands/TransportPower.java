@@ -6,22 +6,25 @@ import frc.robot.subsystems.TransportSubsystem;
 public class TransportPower extends CommandBase {
     private double mPower;
     private boolean mElevator;
+    private boolean mDiagonal;
     private TransportSubsystem mTransportSubsystem;
 
-    public TransportPower(double power, boolean elevator, TransportSubsystem transportSubsystem) {
+    public TransportPower(TransportSubsystem transportSubsystem, double power, boolean elevator, boolean diagonal) {
         mPower = power;
         mElevator = elevator;
+        mDiagonal = diagonal;
         mTransportSubsystem = transportSubsystem;
 
         // Require TransportSubsystem
-        //addRequirements(mTransportSubsystem);
+        addRequirements(mTransportSubsystem);
     }
 
     @Override
     public void initialize() {
         if(mElevator) {
             mTransportSubsystem.setElevPower(mPower);
-        } else {
+        } 
+        if(mDiagonal) {
             mTransportSubsystem.setDiagPower(mPower);
         }
     }
@@ -41,6 +44,6 @@ public class TransportPower extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !mElevator && !mDiagonal;
     }
 }

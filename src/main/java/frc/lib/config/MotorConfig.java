@@ -2,6 +2,7 @@ package frc.lib.config;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -150,7 +151,7 @@ public class MotorConfig {
         talon.config_kD(slot, config.getD());
         talon.config_kF(slot, config.getF());
         talon.configMaxIntegralAccumulator(slot, config.getMIA());
-        talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, config.getContinuousCurrent(), config.getPeakCurrent(), config.getPeakDuration()));
+        talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, config.getContinuousCurrent(), config.getPeakCurrent(), config.getPeakDuration()));
         talon.configSelectedFeedbackSensor(config.getEncoder());
         talon.configNeutralDeadband(config.getDeadband());
     }

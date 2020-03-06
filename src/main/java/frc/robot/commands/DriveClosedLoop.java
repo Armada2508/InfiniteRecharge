@@ -42,11 +42,14 @@ public class DriveClosedLoop extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println(Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    System.out.println(mDriveSubsystem.getVelocityLeft());
 
     double throttle = mThrottle.getAsDouble();
     double trim = mTrim.getAsDouble();
@@ -70,6 +73,8 @@ public class DriveClosedLoop extends CommandBase {
       powerR = mMaxPower;
       powerL = mMaxPower + turningPower;
     }
+
+    //System.out.println((powerL*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)) + ", " + (powerR*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
 
     mDriveSubsystem.driveClosedLoop((powerL*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)), (powerR*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
   }

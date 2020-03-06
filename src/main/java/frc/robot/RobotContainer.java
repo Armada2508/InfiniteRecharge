@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
+import frc.robot.routines.SimpleAuto;
 import frc.robot.subsystems.*;
 
 import java.util.*;
@@ -42,7 +43,7 @@ public class RobotContainer {
     private final IntakeSubsystem mFrontIntake = new IntakeSubsystem(Constants.Intake.kFrontIntakeTalon, Constants.Intake.kFrontIntakeInverted);
     private final IntakeSubsystem mBackIntake = new IntakeSubsystem(Constants.Intake.kBackIntakeTalon, Constants.Intake.kBackIntakeInverted);
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
-    private final VisionSubsystem mVisionSubsystem = new VisionSubsystem();
+    private final VisionSubsystem mVision = new VisionSubsystem();
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
@@ -67,7 +68,7 @@ public class RobotContainer {
         mShooter.leftInverted(Constants.Shooter.kShooterLeftInveted);
         mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
         initCam();
-        mVisionSubsystem.setup();
+        mVision.setup();
     }
 
     /**
@@ -79,7 +80,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //new JoystickButton(mjoystick, 1).whenPressed(new Climb(mclimb, true));
         //new JoystickButton(mjoystick, 1).whenReleased(new Climb(mclimb, false));
-        new JoystickButton(mJoystick, 11).whenHeld(new Intake(mBackIntake, 0.5, false));
+   /*     new JoystickButton(mJoystick, 11).whenHeld(new Intake(mBackIntake, 0.5, false));
         new JoystickButton(mJoystick, 11).whenHeld(new Intake(mFrontIntake, 0.5, false));
         new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(0.7, true, mTransport));
         new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(0.7, false, mTransport));
@@ -96,22 +97,27 @@ public class RobotContainer {
         new POVButton(mJoystick, 180).whenPressed(new Climb(mClimb, 0));
         new POVButton(mJoystick, 0).whenPressed(new Climb(mClimb, 1));
         new JoystickButton(mJoystick, 12).whenPressed(new Climb(mClimb, 2));
-        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 0.125));
+        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 3.75));
         new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -0.125));
-
-        /*new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kSpinUp).whenPressed(new SpinRoller(mshooter, 4500, Constants.kMaxShooterSlewRate));
-      //  new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kAim).whenPressed();
-       // new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kFeedShooter).whenPressed();
-       // new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kFrontIntake).whenPressed(new Intake(mfrontIntake, Constants.kIntakePower, false));
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kBackIntake).whenPressed(new Intake(mbackIntake, Constants.kIntakePower, false));
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kBothIntake).whenPressed(new ParallelCommandGroup(new Intake(mfrontIntake, Constants.kIntakePower, false), new Intake(mbackIntake, Constants.kIntakePower, false)));
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kFrontOutput).whenPressed(new Intake(mfrontIntake, Constants.kIntakePower, true));
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kBackOutput).whenPressed(new Intake(mbackIntake, Constants.kIntakePower, true));
-        //new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed();
-        //new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kIncrementWOF).whenPressed();
-        new JoystickButton(mbuttonBoard, Constants.ButtonBoard.kStop).whenPressed(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
-     */
+*/
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinUp).whileHeld(new SpinRoller(mShooter, 6400));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kAim).whileHeld(new Aim(mDrive, mVision));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(0.8, false, mTransport));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(0.8, true, mTransport));
+       // new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower, false));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower, false));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontOutput).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower, true));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackOutput).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower, true));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed(new SpinColorWheel(mWOF, 3.75));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeft).whenPressed(new SpinColorWheel(mWOF, -0.125));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRight).whenPressed(new SpinColorWheel(mWOF, 0.125));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeftSmall).whenPressed(new SpinColorWheel(mWOF, -0.025));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRightSmall).whenPressed(new SpinColorWheel(mWOF, 0.025));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbExtend).whenPressed(new Climb(mClimb, 2));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbVent).whenPressed(new Climb(mClimb, 1));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbRetract).whenPressed(new Climb(mClimb, 0));
+        
     
     }
     
@@ -156,19 +162,21 @@ public class RobotContainer {
     }
 
     public void drive() {
-        /*        () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
+        Command driveCommand = new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
                 () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
                 () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0)));
 
         driveCommand.schedule();
-    */}
+    }
 
     public void initCam() {
         UsbCamera backCamera = CameraServer.getInstance().startAutomaticCapture(0);
         MjpegServer backCameraStream = CameraServer.getInstance().startAutomaticCapture(backCamera);
         backCameraStream.setCompression(Constants.Camera.kCameraCompression);
         backCamera.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
-        backCamera.setFPS(Constants.Camera.kCameraFPS);        
+        backCamera.setFPS(Constants.Camera.kCameraFPS);
+        backCameraStream.setFPS(Constants.Camera.kCameraFPS);
+        
     }
 
     public void startDashboardCapture() {
@@ -182,7 +190,7 @@ public class RobotContainer {
     }
 
     public void changeMode() {
-        mVisionSubsystem.setup();
+        mVision.setup();
         mDrive.reset();
     }
 
@@ -190,14 +198,15 @@ public class RobotContainer {
         mDrive.setVoltage(0.0, 0.0);
     }
 
-    public Command getAutonomousCommand() {
+    public SequentialCommandGroup getAutonomousCommand() {
+        return new SimpleAuto(mDrive);
 
-        return FollowTrajectory.getCommand(mDrive,
+  /*      return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
             new Pose2d(5, 0, new Rotation2d()),
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration);
-
+*/
         /*
         try {
             Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
@@ -219,7 +228,7 @@ public class RobotContainer {
     }
 
     public Command aim() {
-        return new Aim(mDrive, mVisionSubsystem);
+        return new Aim(mDrive, mVision);
     }
 
     public void printOdo() {

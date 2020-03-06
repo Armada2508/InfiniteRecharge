@@ -39,8 +39,10 @@ public class DriveSubsystem extends SubsystemBase {
     private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
     
     public DriveSubsystem() {
-        mRight.setSensorPhase(Constants.Drive.kRightSensorInverted);
-        mLeft.setSensorPhase(Constants.Drive.kLeftSensorInverted);
+        mRight.setInverted(Constants.Drive.kRightInverted);
+        mLeft.setInverted(Constants.Drive.kLeftInverted);
+        mRightFollower.setInverted(Constants.Drive.kRightInverted);
+        mLeftFollower.setInverted(Constants.Drive.kLeftInverted);
 
         mDrive.setRightSideInverted(Constants.Drive.kRightInverted);
 
@@ -72,6 +74,11 @@ public class DriveSubsystem extends SubsystemBase {
         mLeftMotors.setVoltage(voltsL);
     }
 
+    public void setVoltageReverse(double voltsR, double voltsL) {
+        mRightMotors.setVoltage(-voltsR);
+        mLeftMotors.setVoltage(-voltsL);
+    }
+
     public void setArcade(double throttle, double turn) {
         mRightMotors.set(throttle - turn);
         mLeftMotors.set(throttle + turn);
@@ -101,12 +108,20 @@ public class DriveSubsystem extends SubsystemBase {
         return mOdometry.getPoseMeters();
     }
 
+    public Pose2d getPoseReversed() {
+        return new Pose2d(mOdometry.getPoseMeters().getTranslation(), mOdometry.getPoseMeters().getRotation().rotateBy(new Rotation2d(Math.toRadians(180))));
+    }
+
     public double getHeading() {
         return Math.IEEEremainder(mImu.getFusedHeading(), 360) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getVelocityLeft(), getVelocityRight());
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeedsReverse() {
+        return new DifferentialDriveWheelSpeeds(-getVelocityRight(), -getVelocityLeft());
     }
 
     public void reset() {

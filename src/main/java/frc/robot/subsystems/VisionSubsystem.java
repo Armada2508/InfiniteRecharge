@@ -43,7 +43,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
+    //    System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
     }
 
     public void setYOffset(double offset) {

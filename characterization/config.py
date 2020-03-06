@@ -15,7 +15,7 @@
     # Inversions for the left-side motors
     "leftMotorsInverted": [False, False],
     # Inversions for the right side motors
-    "rightMotorsInverted": [False, False],
+    "rightMotorsInverted": [True, True],
     # Wheel diameter (in units of your choice - will dictate units of analysis)
     "wheelDiameter": 0.2032,
     # If your robot has only one encoder, set all right encoder fields to `None`
@@ -26,7 +26,7 @@
     # Whether the left encoder is inverted
     "leftEncoderInverted": False,
     # Whether the right encoder is inverted:
-    "rightEncoderInverted": True,
+    "rightEncoderInverted": False,
     # Your gyro type (one of "NavX", "Pigeon", "ADXRS450", "AnalogGyro", or "None")
     "gyroType": "Pigeon",
     # Whatever you put into the constructor of your gyro

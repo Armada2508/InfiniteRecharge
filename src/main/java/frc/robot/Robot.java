@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.*;
 public class Robot extends TimedRobot {
   
   private RobotContainer mRobotContainer;
-  private SequentialCommandGroup mAutonomousCommand;
+  private Command mAutonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be used for any

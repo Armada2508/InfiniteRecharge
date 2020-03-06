@@ -8,7 +8,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class Auto extends SequentialCommandGroup {
 
-    public Auto(DriveSubsystem driveSubsystem, Trajectory[] paths) {
-        addCommands(FollowTrajectory.getCommand(driveSubsystem, paths[0], paths[0].getInitialPose()));
+    public Auto(DriveSubsystem driveSubsystem, Trajectory path) {
+        addCommands(FollowTrajectory.getCommand(driveSubsystem, path, path.getInitialPose()));
     }
 }

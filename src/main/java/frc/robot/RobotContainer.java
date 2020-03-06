@@ -18,15 +18,20 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
+import frc.robot.routines.Auto;
 import frc.robot.routines.SimpleAuto;
 import frc.robot.subsystems.*;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -198,8 +203,7 @@ public class RobotContainer {
         mDrive.setVoltage(0.0, 0.0);
     }
 
-    public SequentialCommandGroup getAutonomousCommand() {
-        return new SimpleAuto(mDrive);
+    public Command getAutonomousCommand() {
 
   /*      return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
@@ -207,15 +211,18 @@ public class RobotContainer {
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration);
 */
-        /*
+
+        FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kDriveConfig.getP(), Constants.Drive.kDriveConfig.getI(), Constants.Drive.kDriveConfig.getD(), Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth);
         try {
             Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
-            return followTrajectory.getCommand(mdriveSubsystem, trajectory, trajectory.getInitialPose());
+            return new Auto(mDrive, trajectory);
         } catch (IOException e) {
             System.out.println(e);
             return new InstantCommand();
         }
 
+
+        /*
         return new FollowTarget(mdriveSubsystem,
             Constants.kTurn,
             Constants.kThrottle,
@@ -224,7 +231,9 @@ public class RobotContainer {
             Constants.kTargetDistance,
             Constants.kLimelightFOV,
             Constants.kLimelighResolution);
-    */
+*/
+
+    
     }
 
     public Command aim() {

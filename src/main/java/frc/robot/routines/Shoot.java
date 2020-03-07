@@ -17,7 +17,7 @@ import frc.robot.subsystems.TransportSubsystem;
 public class Shoot extends SequentialCommandGroup {
 
     public Shoot(ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem frontIntake, IntakeSubsystem backIntake) {
-        addCommands(new ParallelCommandGroup(
+        addCommands(new ParallelRaceGroup(
             new SpinRoller(shooterSubsystem, 6400),
             new SequentialCommandGroup(
                 new ParallelRaceGroup(

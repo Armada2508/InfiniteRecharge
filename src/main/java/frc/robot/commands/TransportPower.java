@@ -37,7 +37,8 @@ public class TransportPower extends CommandBase {
     public void end(boolean interrupted) {
         if(mElevator) {
             mTransportSubsystem.setElevPower(0);
-        } else {
+        }
+        if(mDiagonal) {
             mTransportSubsystem.setDiagPower(0);
         }
     }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -10,6 +11,7 @@ public class Intake extends CommandBase {
 
     public Intake(IntakeSubsystem intakeSubsystem, double power) {
         mIntakeSubsystem = intakeSubsystem;
+        mPower = power;
 
         // Required Subsystems
         addRequirements(mIntakeSubsystem);
@@ -22,6 +24,7 @@ public class Intake extends CommandBase {
 
     @Override
     public void execute() {
+
     }
 
     @Override

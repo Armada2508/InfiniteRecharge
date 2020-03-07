@@ -92,7 +92,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     mRobotContainer.changeMode();
-    mRobotContainer.drive();
   }
 
   /**

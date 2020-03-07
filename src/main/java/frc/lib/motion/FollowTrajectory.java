@@ -33,11 +33,11 @@ public class FollowTrajectory {
      * @param zeta The Zeta constant
      * @param trackWidth The width between the tracks of the robot
      */
-    public static void config(double kS, double kV, double kA, double kP, double kI, double kD, double b, double zeta, double trackWidth) {
+    public static void config(double kS, double kV, double kA, double b, double zeta, double trackWidth, PIDController pidController) {
         mFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
         mKinematics = new DifferentialDriveKinematics(trackWidth);
         mController = new RamseteController(b, zeta);
-        mPidController = new PIDController(kP, kI, kD);
+        mPidController = pidController;
     }
 
     /**

@@ -54,6 +54,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setCurrent(double amps) {
-        mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
+        //mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
     }
 }

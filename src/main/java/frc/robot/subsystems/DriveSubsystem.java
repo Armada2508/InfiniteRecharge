@@ -65,17 +65,18 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setPowers(double powerL, double powerR) {
-        mRightMotors.set(-powerR);
+        mRightMotors.set(powerR);
         mLeftMotors.set(powerL);
     }
 
     public void setVoltage(double voltsL, double voltsR) {
-        mRightMotors.setVoltage(voltsR);
+        mRightMotors.setVoltage(-voltsR);
         mLeftMotors.setVoltage(voltsL);
     }
 
     public void setVoltageReverse(double voltsR, double voltsL) {
-        mRightMotors.setVoltage(-voltsR);
+        System.out.println(voltsR + ", " + -voltsL);
+        mRightMotors.setVoltage(voltsR);
         mLeftMotors.setVoltage(-voltsL);
     }
 
@@ -109,7 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPoseReversed() {
-        return new Pose2d(mOdometry.getPoseMeters().getTranslation(), mOdometry.getPoseMeters().getRotation().rotateBy(new Rotation2d(Math.toRadians(180))));
+        return new Pose2d(mOdometry.getPoseMeters().getTranslation(), mOdometry.getPoseMeters().getRotation().rotateBy(new Rotation2d(Math.toRadians(-180))));
     }
 
     public double getHeading() {
@@ -128,12 +129,11 @@ public class DriveSubsystem extends SubsystemBase {
         resetOdometry(new Pose2d());
         configTalons();
         resetHeading();
-        resetGyro();
     }
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        mOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        mOdometry.resetPosition(pose, pose.getRotation());
     }
 
     public void resetGyro() {

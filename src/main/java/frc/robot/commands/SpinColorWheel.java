@@ -25,12 +25,10 @@ public class SpinColorWheel extends CommandBase {
 
     @Override
     public void execute() {
-        System.out.println(mColorWheelSubsystem.getRPM() + ", " + mColorWheelSubsystem.getRotations());
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("End");
     }
 
     @Override

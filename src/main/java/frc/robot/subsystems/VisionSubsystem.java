@@ -59,7 +59,7 @@ public class VisionSubsystem extends SubsystemBase {
         setYOffset(Constants.Vision.kLimelightAngle);
         setPipeline(0);
         camMode(false);
-        setPIP(true);
+        setPIP(false);
     }
 
     /**
@@ -179,7 +179,7 @@ public class VisionSubsystem extends SubsystemBase {
         for (int i = 0; i < 2; i++) {
             topCorners[i] = corners[i];
         }
-        for (int i = 0; i < corners.length; i++) {
+        for (int i = 2; i < corners.length; i++) {
             if(corners[i].getY() > topCorners[1].getY()) {
                 topCorners[1] = corners[i];
             }

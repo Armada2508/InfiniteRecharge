@@ -26,8 +26,8 @@ public class SimpleAuto extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
                 new DrivePower(driveSubsystem, -0.3, -0.3),
-                //new WaitCommand(1.1),
-                new WaitCommand(0.8),
+                new WaitCommand(1.1),
+                //new WaitCommand(0.8),
                 new DrivePower(driveSubsystem, 0.0, 0.0),
                 new WaitCommand(1.75),
                 new ParallelRaceGroup(
@@ -37,8 +37,8 @@ public class SimpleAuto extends SequentialCommandGroup {
                 new ParallelRaceGroup(
                     new TransportPower(transportSubsystem, 0.75, true, true),
                     new WaitCommand(2.0)
-                ),
-                new ParallelRaceGroup(
+                )
+                /*new ParallelRaceGroup(
                     new DrivePower(driveSubsystem, -0.3, -0.3),
                     new WaitCommand(0.8),
                     new Intake(backIntake, 1.0),
@@ -49,7 +49,7 @@ public class SimpleAuto extends SequentialCommandGroup {
                     new Aim(driveSubsystem, visionSubsystem),
                     new WaitCommand(2.0)
                 ),
-                new TransportPower(transportSubsystem, 0.75, true, true)
+                new TransportPower(transportSubsystem, 0.75, true, true)*/
             )
         ));
         addCommands(new SpinRoller(shooterSubsystem, 0));

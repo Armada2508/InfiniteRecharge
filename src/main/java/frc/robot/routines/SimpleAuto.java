@@ -1,15 +1,10 @@
 package frc.robot.routines;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.lib.motion.FollowTrajectory;
 import frc.robot.commands.Aim;
 import frc.robot.commands.DrivePower;
-import frc.robot.commands.Intake;
 import frc.robot.commands.SpinRoller;
 import frc.robot.commands.TransportPower;
 import frc.robot.subsystems.DriveSubsystem;
@@ -35,7 +30,7 @@ public class SimpleAuto extends SequentialCommandGroup {
                     new WaitCommand(1.5)
                 ),
                 new ParallelRaceGroup(
-                    new TransportPower(transportSubsystem, 0.75, true, true),
+                    new TransportPower(transportSubsystem, 0.75),
                     new WaitCommand(2.0)
                 )
                 /*new ParallelRaceGroup(

@@ -113,15 +113,19 @@ public class RobotContainer {
 
         new JoystickButton(mJoystick, 11).whenHeld(new Intake(mFrontIntake, -Constants.Intake.kIntakePower));
         new JoystickButton(mJoystick, 11).whenHeld(new Intake(mBackIntake, -Constants.Intake.kIntakePower));
-        new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(mTransport, -Constants.Intake.kIntakePower, true, true));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinUp).whileHeld(new SpinRoller(mShooter, 6400));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whileHeld(new Aim(mDrive, mVision));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whileHeld(new TransportPower(mTransport, 0.8, true, true));
+        new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(mTransport, -Constants.Intake.kIntakePower));
+        new POVButton(mJoystick, 0).whenHeld(new DrivePower(mDrive, Constants.Drive.kCrawlSpeed, Constants.Drive.kCrawlSpeed));
+        new POVButton(mJoystick, 90).whenHeld(new DrivePower(mDrive, Constants.Drive.kCrawlSpeed, -Constants.Drive.kCrawlSpeed));
+        new POVButton(mJoystick, 180).whenHeld(new DrivePower(mDrive, -Constants.Drive.kCrawlSpeed, -Constants.Drive.kCrawlSpeed));
+        new POVButton(mJoystick, 270).whenHeld(new DrivePower(mDrive, -Constants.Drive.kCrawlSpeed, Constants.Drive.kCrawlSpeed));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinUp).whenHeld(new SpinRoller(mShooter, 6400));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenHeld(new Aim(mDrive, mVision));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whenHeld(new TransportPower(mTransport, 0.8));
        // new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whileHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whileHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontOutput).whileHeld(new Intake(mFrontIntake, -Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackOutput).whileHeld(new Intake(mBackIntake, -Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whenHeld(new Intake(mFrontIntake, Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whenHeld(new Intake(mBackIntake, Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontOutput).whenHeld(new Intake(mFrontIntake, -Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackOutput).whenHeld(new Intake(mBackIntake, -Constants.Intake.kIntakePower));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed(new SpinColorWheel(mWOF, 3.75));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeft).whenPressed(new SpinColorWheel(mWOF, -0.125));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRight).whenPressed(new SpinColorWheel(mWOF, 0.125));
@@ -214,33 +218,6 @@ public class RobotContainer {
 */  
         return new SimpleAuto(mDrive, mShooter, mTransport, mFrontIntake, mBackIntake, mVision);
         //return new Aim(mDrive, mVision);
-/*
-        FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
-        try {
-            Trajectory line = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
-            Trajectory intake1 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake1.wpilib.json"));
-            Trajectory intake2 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake2.wpilib.json"));
-            Trajectory[] paths = { intake1, intake2 };
-            //return new SimpleAuto(mDrive);
-            //return new Auto(mDrive, mTransport, mShooter, mFrontIntake, mBackIntake, mVision, paths);
-            //return new MoveForward(mDrive, line);
-        } catch (IOException e) {
-            System.out.println(e);
-            return new InstantCommand();
-        }
-
-
-        /*
-        return new FollowTarget(mdriveSubsystem,
-            Constants.kTurn,
-            Constants.kThrottle,
-            Constants.kMaxFollowOutput,
-            Constants.kTargetWidth,
-            Constants.kTargetDistance,
-            Constants.kLimelightFOV,
-            Constants.kLimelighResolution);
-*/
-
     
     }
 

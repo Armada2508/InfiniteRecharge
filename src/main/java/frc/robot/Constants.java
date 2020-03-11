@@ -61,6 +61,7 @@ public final class Constants {
         public static final boolean kThrottleInverted = true;
         public static final boolean kTurnInverted = false;
         public static final boolean kTrimInverted = false;
+        public static final double kCrawlSpeed = 0.05;
 
         // Drive System Constants
         public static final boolean kRightDriveInverted = false;
@@ -184,8 +185,7 @@ public final class Constants {
     public static class Transport {
 
         // Transport Constants
-        public static final int kElevatorTalon = 9;
-        public static final int kDiagonalTalon = 6;
+        public static final int kTransportTalon = 9;
         public static final double kPulleyDiameter = 2.75;
         public static final int kTransportEncoderUnitsPerRev = 4096;
         public static final double kTransportGearRatio = 20.0;
@@ -194,10 +194,8 @@ public final class Constants {
         public static final int kTransportSlot = 0;
 
         // TOF Sensors
-        public static final int kFIntakeTofID = 0;  // TODO: Determine correct value
-        public static final int kBIntakeTofID = 1;  // TODO: Determine correct value
-        public static final int kInterfaceTofID = 2;  // TODO: Determine correct value
-        public static final int kShooterTofID = 3;  // TODO: Determine correct value
+        public static final int kIntakeTOF = 0;  // TODO: Determine correct value
+        public static final int kShotoerTOF = 1;  // TODO: Determine correct value
         public static final double kMaxDistance = 2.0;  // TODO: Determine correct value
         public static final double kMaxDeviation = 1000000.0;  // TODO: Determine correct value
         public static final RangingMode kRangingMode = RangingMode.Short;  // TODO: Determine best value

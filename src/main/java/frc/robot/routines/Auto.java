@@ -1,14 +1,10 @@
 package frc.robot.routines;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.motion.FollowTrajectory;
-import frc.robot.commands.Aim;
 import frc.robot.commands.DrivePower;
 import frc.robot.commands.Intake;
 import frc.robot.commands.SpinRoller;
@@ -45,7 +41,7 @@ public class Auto extends SequentialCommandGroup {
         new ParallelRaceGroup(
             new SpinRoller(shooterSubsystem, 6400),
             new Intake(backIntake, 1),
-            new TransportPower(transportSubsystem, 0.5, true, true),
+            new TransportPower(transportSubsystem, 0.5),
             FollowTrajectory.getCommand(driveSubsystem, paths[1], paths[1].getInitialPose())
         ),
         new DrivePower(driveSubsystem, 0.0, 0.0),

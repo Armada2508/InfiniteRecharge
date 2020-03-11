@@ -14,27 +14,18 @@ import frc.robot.Constants;
 
 public class TransportSubsystem extends SubsystemBase {
 
-    private WPI_TalonSRX mDiagTalon;
-    private WPI_TalonSRX mElevTalon;
-    private TimeOfFlight mFIntake;
-    private TimeOfFlight mBIntake;
-    private TimeOfFlight mInterface;
+    private WPI_TalonSRX mTransportTalon;
+    private TimeOfFlight mIntake;
     private TimeOfFlight mShooter;
 
     public TransportSubsystem() {
-        mDiagTalon = new WPI_TalonSRX(Constants.Transport.kDiagonalTalon);
-        mElevTalon = new WPI_TalonSRX(Constants.Transport.kElevatorTalon);
-        mDiagTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        mElevTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        MotorConfig.configTalon(mDiagTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
-        MotorConfig.configTalon(mElevTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
-        MotionMagicConfig.configTalon(mDiagTalon, Constants.Transport.kTransportMMConfig);
-        MotionMagicConfig.configTalon(mElevTalon, Constants.Transport.kTransportMMConfig);
+        mTransportTalon = new WPI_TalonSRX(Constants.Transport.kTransportTalon);
+        mTransportTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
+        MotionMagicConfig.configTalon(mTransportTalon, Constants.Transport.kTransportMMConfig);
 
-        mFIntake = new TimeOfFlight(Constants.Transport.kFIntakeTofID);
-        mBIntake = new TimeOfFlight(Constants.Transport.kBIntakeTofID);
-        mInterface = new TimeOfFlight(Constants.Transport.kInterfaceTofID);
-        mShooter = new TimeOfFlight(Constants.Transport.kShooterTofID);
+        mIntake = new TimeOfFlight(Constants.Transport.kIntakeTOF);
+        mShooter = new TimeOfFlight(Constants.Transport.kShotoerTOF);
 
         setTOFMode(Constants.Transport.kRangingMode, Constants.Transport.kTOFSampleTime);
     }
@@ -43,74 +34,46 @@ public class TransportSubsystem extends SubsystemBase {
     public void periodic() {
     }
 
-    public double getRawElevPosition() {
-        return mDiagTalon.getSelectedSensorPosition();
+    public double getRawPosition() {
+        return mTransportTalon.getSelectedSensorPosition();
     }
 
-    public double getRawDiagPosition() {
-        return mDiagTalon.getSelectedSensorPosition();
+    public double getPosition() {
+        return EncoderUtil.toDistance(mTransportTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
     }
 
-    public double getElevPosition() {
-        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
+    public void setPower(double power) {
+        mTransportTalon.set(ControlMode.PercentOutput, power);
     }
 
-    public double getDiagPosition() {
-        return EncoderUtil.toDistance(mElevTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
+    public void setRawPosition(double position) {
+        mTransportTalon.set(ControlMode.MotionMagic, position);
     }
 
-    public void setElevPower(double power) {
-        mElevTalon.set(ControlMode.PercentOutput, power);
-    }
-
-    public void setDiagPower(double power) {
-        mDiagTalon.set(ControlMode.PercentOutput, power);
-    }
-
-    public void setRawElevPosition(double position) {
-        mElevTalon.set(ControlMode.MotionMagic, position);
-    }
-
-    public void setRawDiagPosition(double position) {
-        mDiagTalon.set(ControlMode.MotionMagic, position);
-    }
-
-    public void setElevPosition(double position) {
-        mElevTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getElevPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
-    }
-
-    public void setDiagPosition(double position) {
-        mDiagTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getDiagPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
+    public void setPosition(double position) {
+        mTransportTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
     }
     
-    public void zeroElevPosition() {
-        mElevTalon.setSelectedSensorPosition(0);   
+    public void zeroPosition() {
+        mTransportTalon.setSelectedSensorPosition(0);   
     }
     
-    public void zeroDiagPosition() {
-        mDiagTalon.setSelectedSensorPosition(0);
-    }
-
-    public void incrementElevPosition(double increment) {
-        setElevPosition(getElevPosition()+increment);
-    }
-    
-    public void incrementDiagPosition(double increment) {
-       setDiagPosition(getDiagPosition()+increment);
+    public void incrementPosition(double increment) {
+        setPosition(getPosition()+increment);
     }
 
     public double[] sense() {
-        double[] distance =  { mFIntake.getRange(), mBIntake.getRange(), mInterface.getRange(), mShooter.getRange() };
+        double[] distance =  { mIntake.getRange(), mShooter.getRange() };
         return distance;
     }
 
     public double[] deviation() {
-        double[] deviation =  { mFIntake.getRangeSigma(), mBIntake.getRangeSigma(), mInterface.getRangeSigma(), mShooter.getRangeSigma() };
+        double[] deviation =  { mIntake.getRangeSigma(), mShooter.getRangeSigma() };
         return deviation;
     }
 
     public boolean[] isValid() {
-        boolean[] isValid =  { mFIntake.isRangeValid(), mBIntake.isRangeValid(), mInterface.isRangeValid(), mShooter.isRangeValid() };
+        boolean[] isValid =  { mIntake.isRangeValid(), mShooter.isRangeValid() };
         return isValid;
     }
 
@@ -137,9 +100,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public void setTOFMode(RangingMode rangingMode, double sampleTime) {
-        mFIntake.setRangingMode(rangingMode, sampleTime);
-        mBIntake.setRangingMode(rangingMode, sampleTime);
-        mInterface.setRangingMode(rangingMode, sampleTime);
+        mIntake.setRangingMode(rangingMode, sampleTime);
         mShooter.setRangingMode(rangingMode, sampleTime);
     }
 }

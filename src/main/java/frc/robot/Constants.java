@@ -56,7 +56,7 @@ public final class Constants {
         public static final int kTurnAxis = 2;
         public static final int kTrimAxis = 0;
         public static final double kMaxPower = 1.0;
-        public static final double kTurnRatio = 0.5;
+        public static final double kTurnRatio = 0.25;
         public static final double kTrimRatio = 0.5;
         public static final boolean kThrottleInverted = true;
         public static final boolean kTurnInverted = false;
@@ -130,20 +130,20 @@ public final class Constants {
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
         public static final double kTargetWidth = .997;
         public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254;
-        public static final double kPAim = 0.025;
+        public static final double kPAim = 0.02;
         public static final double kIAim = 0.0;
        // public static final double kIAim = 0.0025;
-        public static final double kDAim = 0.01;
+        public static final double kDAim = 0.0065;
         public static final double kDampening = 0.0;
         public static final double kAimThreshold = 15;
     }
 
     public static class Camera {
-        
+         
         // Camera Constants
-        public static final Resolution kCameraResolution = new Resolution(160, 120);
-        public static final int kCameraFPS = 10;
-        public static final int kCameraCompression = 40;
+        public static final Resolution kCameraResolution = new Resolution(120, 80);
+        public static final int kCameraFPS = 14;
+        public static final int kCameraCompression = 30;
     }   
 
     public static class Shooter {

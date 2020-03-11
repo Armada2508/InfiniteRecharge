@@ -25,7 +25,7 @@ public class Auto extends SequentialCommandGroup {
         addCommands(new ParallelRaceGroup(
             // ===================
             //    Start of Auto
-            // ==================
+            // ===================
 
             // Spin Up Shooter
             new SpinRoller(shooterSubsystem, 2000),

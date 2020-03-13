@@ -65,18 +65,18 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setPowers(double powerL, double powerR) {
-        mRightMotors.set(powerR);
-        mLeftMotors.set(powerL);
+        mRight.set(powerR);
+        mLeft.set(powerL);
     }
 
     public void setVoltage(double voltsL, double voltsR) {
-        mRightMotors.setVoltage(-voltsR);
-        mLeftMotors.setVoltage(voltsL);
+        mRight.setVoltage(voltsR);
+        mLeft.setVoltage(voltsL);
     }
 
     public void setVoltageReverse(double voltsR, double voltsL) {
-        System.out.println(voltsR + ", " + -voltsL);
-        mRightMotors.setVoltage(voltsR);
+        System.out.println(voltsR + ", " + voltsL);
+        mRightMotors.setVoltage(-voltsR);
         mLeftMotors.setVoltage(-voltsL);
     }
 

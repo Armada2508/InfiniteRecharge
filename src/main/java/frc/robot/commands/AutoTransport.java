@@ -16,11 +16,13 @@ public class AutoTransport extends CommandBase {
 
     @Override
     public void initialize() {
+
     }
 
     @Override
     public void execute() {
-        
+        boolean[] ball = mTransportSubsystem.isBall();
+        mTransportSubsystem.setPower(ball[0] ? 0.85 : 0.0);
     }
 
     @Override

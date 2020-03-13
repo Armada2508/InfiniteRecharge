@@ -21,6 +21,7 @@ public class TransportSubsystem extends SubsystemBase {
     public TransportSubsystem() {
         mTransportTalon = new WPI_TalonSRX(Constants.Transport.kTransportTalon);
         mTransportTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportVelocityConfig, Constants.Transport.kTransportVelocitySlot);
         MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
         MotionMagicConfig.configTalon(mTransportTalon, Constants.Transport.kTransportMMConfig);
 
@@ -46,11 +47,31 @@ public class TransportSubsystem extends SubsystemBase {
         mTransportTalon.set(ControlMode.PercentOutput, power);
     }
 
+    public void setVelocity(int velocity) {
+        mTransportTalon.selectProfileSlot(Constants.Transport.kTransportVelocitySlot, 0);
+        mTransportTalon.set(ControlMode.Velocity, toVelocity(velocity));
+    }
+
+    public void setRawVelocity(int velocity) {
+        mTransportTalon.selectProfileSlot(Constants.Transport.kTransportVelocitySlot, 0);
+        mTransportTalon.set(ControlMode.Velocity, velocity);
+    }
+
+    public double toVelocity(int velocity) {
+        return EncoderUtil.toVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+    }
+
+    public double fromVelocity(int velocity) {
+        return EncoderUtil.fromVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+    }
+
     public void setRawPosition(double position) {
+        mTransportTalon.selectProfileSlot(Constants.Transport.kTransportSlot, 0);
         mTransportTalon.set(ControlMode.MotionMagic, position);
     }
 
     public void setPosition(double position) {
+        mTransportTalon.selectProfileSlot(Constants.Transport.kTransportSlot, 0);
         mTransportTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
     }
     
@@ -102,5 +123,17 @@ public class TransportSubsystem extends SubsystemBase {
     public void setTOFMode(RangingMode rangingMode, double sampleTime) {
         mIntake.setRangingMode(rangingMode, sampleTime);
         mShooter.setRangingMode(rangingMode, sampleTime);
+    }
+
+    public double getRange() {
+        return mIntake.getRange();
+    }
+    
+    public double getDeviation() {
+        return mIntake.getRangeSigma();
+    }
+
+    public boolean getValid() {
+        return mIntake.isRangeValid();
     }
 }

@@ -15,7 +15,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class SimpleAuto extends SequentialCommandGroup {
 
-    public SimpleAuto(DriveSubsystem driveSubsystem, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem frontIntake, IntakeSubsystem backIntake, VisionSubsystem visionSubsystem) {
+    public SimpleAuto(DriveSubsystem driveSubsystem, ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem intakeSubsystem, VisionSubsystem visionSubsystem) {
         addCommands(new ParallelRaceGroup(
             new SpinRoller(shooterSubsystem, 6400),
             new SequentialCommandGroup(
@@ -36,7 +36,7 @@ public class SimpleAuto extends SequentialCommandGroup {
                 /*new ParallelRaceGroup(
                     new DrivePower(driveSubsystem, -0.3, -0.3),
                     new WaitCommand(0.8),
-                    new Intake(backIntake, 1.0),
+                    new Intake(intakeSubsystem, 1.0),
                     new WaitCommand(1.5)
                 ),
                 new DrivePower(driveSubsystem, 0.0, 0.0),

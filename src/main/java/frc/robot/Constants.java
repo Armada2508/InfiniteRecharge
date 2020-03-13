@@ -12,6 +12,7 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
@@ -61,13 +62,13 @@ public final class Constants {
         public static final boolean kThrottleInverted = true;
         public static final boolean kTurnInverted = false;
         public static final boolean kTrimInverted = false;
-        public static final double kCrawlSpeed = 0.05;
+        public static final double kCreepSpeed = 0.15;
 
         // Drive System Constants
         public static final boolean kRightDriveInverted = false;
         public static final boolean kDriveInverted = false;
-        public static final boolean kRightInverted = true;
-        public static final boolean kLeftInverted = false;
+        public static final boolean kRightInverted = false;
+        public static final boolean kLeftInverted = true;
         public static final int kDriveSlot = 0;
         public static final MotorConfig kDriveConfig = new MotorConfig(0.02, 0, 0.02, 0.05, 200, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
 
@@ -78,7 +79,7 @@ public final class Constants {
         public static final double kB = 2.0;
         public static final double kZeta = 0.7;
         public static final int kDriveEncoderUnitsPerRev = 2048;
-        public static final double kDriveWheelDiameter = 0.2032;
+        public static final double kDriveWheelDiameter = Units.inchesToMeters(8);
         public static final double kDriveGearRatio = 12.75*(48.0/42.0);
         public static final double kVelSampleTime = 0.1;
 
@@ -129,7 +130,7 @@ public final class Constants {
         public static final double kLimelightHeight = .794;  //TODO: Determine final height
         public static final double kTargetHeight = 2.5;
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
-        public static final double kTargetWidth = .997;
+        public static final double kTargetWidth = 1.0;
         public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254;
         public static final double kPAim = 0.02;
         public static final double kIAim = 0.0;
@@ -142,9 +143,9 @@ public final class Constants {
     public static class Camera {
          
         // Camera Constants
-        public static final Resolution kCameraResolution = new Resolution(120, 80);
+        public static final Resolution kCameraResolution = new Resolution(160, 120);
         public static final int kCameraFPS = 14;
-        public static final int kCameraCompression = 30;
+        public static final int kCameraCompression = 75;
     }   
 
     public static class Shooter {
@@ -185,21 +186,29 @@ public final class Constants {
     public static class Transport {
 
         // Transport Constants
-        public static final int kTransportTalon = 9;
-        public static final double kPulleyDiameter = 2.75;
+        public static final int kTransportTalon = 6;
+        public static final double kPulleyDiameter = Units.inchesToMeters(2.75);
         public static final int kTransportEncoderUnitsPerRev = 4096;
         public static final double kTransportGearRatio = 20.0;
         public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
+        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0, 0, 0, 0, 0,
+            kTransportConfig.getContinuousCurrent(),
+            kTransportConfig.getPeakCurrent(),
+            kTransportConfig.getPeakDuration(),
+            kTransportConfig.getEncoder(),
+            kTransportConfig.getDeadband());
         public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
         public static final int kTransportSlot = 0;
+        public static final int kTransportVelocitySlot = 1;
+        public static final double kVelocitySampleTime = 0.1;
 
         // TOF Sensors
-        public static final int kIntakeTOF = 0;  // TODO: Determine correct value
-        public static final int kShotoerTOF = 1;  // TODO: Determine correct value
-        public static final double kMaxDistance = 2.0;  // TODO: Determine correct value
-        public static final double kMaxDeviation = 1000000.0;  // TODO: Determine correct value
-        public static final RangingMode kRangingMode = RangingMode.Short;  // TODO: Determine best value
-        public static final double kTOFSampleTime = 50;  // TODO: Determine best value
+        public static final int kIntakeTOF = 1;  // TODO: Determine correct value
+        public static final int kShotoerTOF = 0;  // TODO: Determine correct value
+        public static final double kMaxDistance = 130.0;  // TODO: Determine correct value
+        public static final double kMaxDeviation = 5.0;
+        public static final RangingMode kRangingMode = RangingMode.Short;
+        public static final double kTOFSampleTime = 20;
 
     }
 
@@ -207,11 +216,9 @@ public final class Constants {
     public static class Intake {
 
         // Intake Constants
-        public static final int kFrontIntakeTalon = 8;
-        public static final int kBackIntakeTalon = 4;
+        public static final int kIntakeTalon = 4;
         public static final double kIntakePower = 0.75;
-        public static final boolean kFrontIntakeInverted = true;
-        public static final boolean kBackIntakeInverted = false;
+        public static final boolean kIntakeInverted = false;
 
     }
 

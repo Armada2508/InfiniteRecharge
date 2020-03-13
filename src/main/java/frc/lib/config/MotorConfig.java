@@ -122,8 +122,6 @@ public class MotorConfig {
      * @param slot The PID slot to use
      */
     public static void configTalon(TalonSRX talon, MotorConfig config, int slot) {
-        talon.configFactoryDefault();
-        talon.selectProfileSlot(slot, 0);
         talon.config_kP(slot, config.getP());
         talon.config_kI(slot, config.getI());
         talon.config_kD(slot, config.getD());
@@ -144,8 +142,6 @@ public class MotorConfig {
      * @param slot The PID slot to use
      */
     public static void configTalon(TalonFX talon, MotorConfig config, int slot) {
-        talon.configFactoryDefault();
-        talon.selectProfileSlot(slot, 0);
         talon.config_kP(slot, config.getP());
         talon.config_kI(slot, config.getI());
         talon.config_kD(slot, config.getD());
@@ -154,5 +150,21 @@ public class MotorConfig {
         talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, config.getContinuousCurrent(), config.getPeakCurrent(), config.getPeakDuration()));
         talon.configSelectedFeedbackSensor(config.getEncoder());
         talon.configNeutralDeadband(config.getDeadband());
+    }
+
+    /**
+     * Resets a Talon SRX's constants
+     * @param talon The Talon SRX to be reset
+     */
+    public static void resetTalon(TalonSRX talon) {
+        talon.configFactoryDefault();
+    }
+
+    /**
+     * Resets a Talon FX's constants
+     * @param talon The Talon FX to be reset
+     */
+    public static void resetTalon(TalonFX talon) {
+        talon.configFactoryDefault();
     }
 }

@@ -187,20 +187,24 @@ public final class Constants {
 
         // Transport Constants
         public static final int kTransportTalon = 6;
-        public static final double kPulleyDiameter = Units.inchesToMeters(2.75);
+        public static final double kPulleyDiameter = 2.75;  //TODO: Get correct diameter
         public static final int kTransportEncoderUnitsPerRev = 4096;
         public static final double kTransportGearRatio = 20.0;
-        public static final MotorConfig kTransportConfig = new MotorConfig(0, 0, 0, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
-        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0, 0, 0, 0, 0,
+        public static final double kVelocitySampleTime = 0.1;
+        public static final MotorConfig kTransportConfig = new MotorConfig(0.15, 0, 0.05, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
+        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0.01, 0, 1.0, 0.010536, 0,
             kTransportConfig.getContinuousCurrent(),
             kTransportConfig.getPeakCurrent(),
             kTransportConfig.getPeakDuration(),
             kTransportConfig.getEncoder(),
             kTransportConfig.getDeadband());
-        public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig(0, 0, 0);  // TODO: Determine correct values
+        public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig((int)EncoderUtil.fromVelocity(40.0, kTransportEncoderUnitsPerRev, kTransportGearRatio, kPulleyDiameter, kVelocitySampleTime),
+            (int)EncoderUtil.fromVelocity(160.0, kTransportEncoderUnitsPerRev, kTransportGearRatio, kPulleyDiameter, kVelocitySampleTime),
+            0);
         public static final int kTransportSlot = 0;
         public static final int kTransportVelocitySlot = 1;
-        public static final double kVelocitySampleTime = 0.1;
+        public static final double kTransportVelocity = 25;
+        public static final double kTransportThreshold = 0.125;
 
         // TOF Sensors
         public static final int kIntakeTOF = 1;  // TODO: Determine correct value

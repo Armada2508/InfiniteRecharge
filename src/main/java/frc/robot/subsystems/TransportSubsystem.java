@@ -17,13 +17,16 @@ public class TransportSubsystem extends SubsystemBase {
     private WPI_TalonSRX mTransportTalon;
     private TimeOfFlight mIntake;
     private TimeOfFlight mShooter;
+    private double mSetpoint;
 
     public TransportSubsystem() {
         mTransportTalon = new WPI_TalonSRX(Constants.Transport.kTransportTalon);
         mTransportTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        MotorConfig.resetTalon(mTransportTalon);
         MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportVelocityConfig, Constants.Transport.kTransportVelocitySlot);
         MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
         MotionMagicConfig.configTalon(mTransportTalon, Constants.Transport.kTransportMMConfig);
+        System.out.println(Constants.Transport.kTransportMMConfig.getCruiseVelocity());
 
         mIntake = new TimeOfFlight(Constants.Transport.kIntakeTOF);
         mShooter = new TimeOfFlight(Constants.Transport.kShotoerTOF);
@@ -33,23 +36,32 @@ public class TransportSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println(getPosition());
     }
 
-    public double getRawPosition() {
+    public int getRawPosition() {
         return mTransportTalon.getSelectedSensorPosition();
     }
 
     public double getPosition() {
-        return EncoderUtil.toDistance(mTransportTalon.getSelectedSensorPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter);
+        return EncoderUtil.toDistance(getRawPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
+    }
+
+    public int getRawVelocity() {
+        return mTransportTalon.getSelectedSensorVelocity();
+    }
+
+    public double getVelocity() {
+        return EncoderUtil.toVelocity(getRawVelocity(), Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
     }
 
     public void setPower(double power) {
         mTransportTalon.set(ControlMode.PercentOutput, power);
     }
 
-    public void setVelocity(int velocity) {
+    public void setVelocity(double velocity) {
         mTransportTalon.selectProfileSlot(Constants.Transport.kTransportVelocitySlot, 0);
-        mTransportTalon.set(ControlMode.Velocity, toVelocity(velocity));
+        mTransportTalon.set(ControlMode.Velocity, fromVelocity(velocity));
     }
 
     public void setRawVelocity(int velocity) {
@@ -61,8 +73,16 @@ public class TransportSubsystem extends SubsystemBase {
         return EncoderUtil.toVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
     }
 
-    public double fromVelocity(int velocity) {
-        return EncoderUtil.fromVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+    public int fromVelocity(double velocity) {
+        return (int)EncoderUtil.fromVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+    }
+
+    public double toDistance(int distance) {
+        return EncoderUtil.toDistance(distance, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
+    }
+
+    public int fromDistance(double distance) {
+        return (int)EncoderUtil.fromDistance(distance, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
     }
 
     public void setRawPosition(double position) {
@@ -72,11 +92,12 @@ public class TransportSubsystem extends SubsystemBase {
 
     public void setPosition(double position) {
         mTransportTalon.selectProfileSlot(Constants.Transport.kTransportSlot, 0);
-        mTransportTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(getPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, 1.0, Constants.Transport.kPulleyDiameter));
+        mTransportTalon.set(ControlMode.MotionMagic, fromDistance(position));
+        mSetpoint = position;
     }
     
     public void zeroPosition() {
-        mTransportTalon.setSelectedSensorPosition(0);   
+        mTransportTalon.setSelectedSensorPosition(0);
     }
     
     public void incrementPosition(double increment) {
@@ -101,10 +122,9 @@ public class TransportSubsystem extends SubsystemBase {
     public boolean[] isBall() {
         double[] distance = sense();
         double[] deviation = deviation();
-        boolean[] isValid = isValid();
         boolean[] isBall = new boolean[distance.length];
         for (int i = 0; i < isBall.length; i++) {
-            isBall[i] = (distance[i] < Constants.Transport.kMaxDistance) && (deviation[i] < Constants.Transport.kMaxDeviation) && isValid[i];
+            isBall[i] = (distance[i] < Constants.Transport.kMaxDistance) && (deviation[i] < Constants.Transport.kMaxDeviation);
         }
         return isBall;
     }
@@ -135,5 +155,9 @@ public class TransportSubsystem extends SubsystemBase {
 
     public boolean getValid() {
         return mIntake.isRangeValid();
+    }
+
+    public boolean motionMagicDone() {
+        return Math.abs(getPosition() - mSetpoint) < Constants.Transport.kTransportThreshold;
     }
 }

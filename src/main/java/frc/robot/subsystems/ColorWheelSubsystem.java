@@ -16,6 +16,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
     public ColorWheelSubsystem() {
         mWOFTalon = new WPI_TalonSRX(Constants.WOF.kWOFMotor);
+        MotorConfig.resetTalon(mWOFTalon);
         MotorConfig.configTalon(mWOFTalon, Constants.WOF.kWOFConfig, Constants.WOF.kWOFSlot);
         MotionMagicConfig.configTalon(mWOFTalon, Constants.WOF.kWOFMMConfig);
     }

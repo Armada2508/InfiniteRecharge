@@ -170,6 +170,8 @@ public class DriveSubsystem extends SubsystemBase {
         mLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         mRight.configMotionProfileTrajectoryPeriod(0);
         mLeft.configMotionProfileTrajectoryPeriod(0);
+        MotorConfig.resetTalon(mRight);
+        MotorConfig.resetTalon(mLeft);
         MotorConfig.configTalon(mRight, Constants.Drive.kDriveConfig, Constants.Drive.kDriveSlot);
         MotorConfig.configTalon(mLeft, Constants.Drive.kDriveConfig, Constants.Drive.kDriveSlot);
     }

@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
     mRobotContainer.updateDashboard();
     mRobotContainer.updateLogger();
     mRobotContainer.updateRPM();
-    mRobotContainer.printOdo();
   }
 
   /**

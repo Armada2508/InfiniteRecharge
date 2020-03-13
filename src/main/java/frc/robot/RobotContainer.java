@@ -109,9 +109,9 @@ public class RobotContainer {
         new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 3.75));
         new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -0.125));
 */
-
         new JoystickButton(mJoystick, 3).whenHeld(new Intake(mIntake,  Constants.Intake.kIntakePower));
-        new JoystickButton(mJoystick, 11).whenHeld(new Intake(mIntake, -Constants.Intake.kIntakePower));
+  
+/*      new JoystickButton(mJoystick, 11).whenHeld(new Intake(mIntake, -Constants.Intake.kIntakePower));
         new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(mTransport, -Constants.Intake.kIntakePower));
         new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
         new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
@@ -132,7 +132,7 @@ public class RobotContainer {
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbVent).whenPressed(new Climb(mClimb, 1));
         new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbRetract).whenPressed(new Climb(mClimb, 0));
         
-    
+  */
     }
     
 

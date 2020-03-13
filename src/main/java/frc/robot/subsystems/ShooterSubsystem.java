@@ -18,6 +18,9 @@ public class ShooterSubsystem extends SubsystemBase {
         mLeftMotor = new WPI_TalonFX(Constants.Shooter.kLeftShooterMotor);
         mRightMotor = new WPI_TalonFX(Constants.Shooter.kRightShooterMotor);
 
+        MotorConfig.resetTalon(mLeftMotor);
+        MotorConfig.resetTalon(mRightMotor);
+
         MotorConfig.configTalon(mLeftMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
         MotorConfig.configTalon(mRightMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
 

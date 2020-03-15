@@ -17,7 +17,7 @@ public class Aim extends CommandBase {
         mVisionSubsystem = visionSubsystem;
         mPidController = new PIDController(Constants.Vision.kPAim, Constants.Vision.kIAim, Constants.Vision.kDAim);
 
-        mPidController.setSetpoint(0.0);
+        mPidController.setSetpoint(Constants.Vision.kAimOffset);
 
         // Require DriveSubsystem and VisionSubsystem
         addRequirements(mDriveSubsystem, mVisionSubsystem);

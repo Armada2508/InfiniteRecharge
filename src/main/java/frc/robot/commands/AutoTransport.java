@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.TransportSubsystem;
@@ -9,13 +11,15 @@ public class AutoTransport extends CommandBase {
     private TransportSubsystem mTransportSubsystem;
     private boolean[] mWasBall;
     private boolean mWasNoBall;
+    private BooleanSupplier mOverride;
 
-    public AutoTransport(TransportSubsystem transportSubsystem) {
+    public AutoTransport(TransportSubsystem transportSubsystem, BooleanSupplier override) {
         mTransportSubsystem = transportSubsystem;
+        mOverride = override;
 
         // Require TransportSubsystem
         addRequirements(mTransportSubsystem);
-        mWasBall = new boolean[5];
+        mWasBall = new boolean[Constants.Transport.kTransportDebounceSize];
     }
 
     @Override
@@ -23,26 +27,49 @@ public class AutoTransport extends CommandBase {
         for (int i = 0; i < mWasBall.length; i++) {
             mWasBall[i] = false;
         }
+        mWasNoBall = true;
     }
 
     @Override
     public void execute() {
+        /*
+            noBall - There was no ball in the past debounce cycles(for sure no ball)
+            mWasNoBall - The value of noBall the past loop
+            ball[] - An array of the detection of balls for the past debounce cycles
+            mWasBall[] - An array of the detection of balls for the past debounce cycles in the past loop
+        */
         boolean noBall = true;
         boolean[] ball = mTransportSubsystem.isBall();
-        if(mTransportSubsystem.motionMagicDone()) {
+        boolean shooterBall = ball[1];
+        // If the override is pressed, pretend there is no ball in front of the shooter
+        if(mOverride.getAsBoolean()) {
+            shooterBall = false;
+        }
+        // If the motion magic profile running on the transport is finished run the transport
+        if(mTransportSubsystem.motionMagicDone() && !shooterBall) {
+            // If there is a ball and there is no ball by the shooter, run the transport
             mTransportSubsystem.setVelocity(ball[0] ? Constants.Transport.kTransportVelocity : 0);
         }
+        if(shooterBall) {
+            mTransportSubsystem.setVelocity(0);
+        }
+        // Move the ball detections one slot down and replace the first slot with the newest detection
         for (int i = mWasBall.length - 1; i > 0; i--) {
             mWasBall[i] = mWasBall[i - 1];
         }
         mWasBall[0] = ball[0];
+        // Checks if there was a ball detected in past loops
         for (int i = 0; i < mWasBall.length; i++) {
             if (mWasBall[i]) {
                 noBall = false;
             }
         }
-        if(noBall && !mWasNoBall) {
-            mTransportSubsystem.incrementPosition(5);
+        // Checks if there was a ball last loop but there is no longer a ball
+        boolean ballGone = noBall && !mWasNoBall;
+        // If the ball is gone and there is no ball by the shooter
+        if(ballGone && !shooterBall) {
+            // Move the transport to reduce jamming
+            mTransportSubsystem.incrementPosition(Constants.Transport.kTransportMargin);
         }
         mWasNoBall = noBall;
     }

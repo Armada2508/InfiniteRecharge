@@ -36,7 +36,6 @@ public class TransportSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(getPosition());
     }
 
     public int getRawPosition() {
@@ -101,6 +100,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
     
     public void incrementPosition(double increment) {
+        System.out.println(getPosition() + ", " + increment);
         setPosition(getPosition()+increment);
     }
 
@@ -132,10 +132,9 @@ public class TransportSubsystem extends SubsystemBase {
     public boolean[] isBall(double maxDistance, double maxDeviation) {
         double[] distance = sense();
         double[] deviation = deviation();
-        boolean[] isValid = isValid();
         boolean[] isBall = new boolean[distance.length];
         for (int i = 0; i < isBall.length; i++) {
-            isBall[i] = (distance[i] < maxDistance) && (deviation[i] < maxDeviation) && isValid[i];
+            isBall[i] = (distance[i] < maxDistance) && (deviation[i] < maxDeviation);
         }
         return isBall;
     }
@@ -158,6 +157,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public boolean motionMagicDone() {
-        return Math.abs(getPosition() - mSetpoint) < Constants.Transport.kTransportThreshold;
+        boolean usingMotionMagic = mTransportTalon.getControlMode() == ControlMode.MotionMagic;
+        return !usingMotionMagic || (Math.abs(getPosition() - mSetpoint) < Constants.Transport.kTransportThreshold);
     }
 }

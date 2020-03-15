@@ -137,7 +137,7 @@ public final class Constants {
        // public static final double kIAim = 0.0025;
         public static final double kDAim = 0.0065;
         public static final double kDampening = 0.0;
-        public static final double kAimThreshold = 15;
+        public static final double kAimOffset = 0.0;
     }
 
     public static class Camera {
@@ -172,7 +172,7 @@ public final class Constants {
         public static final double kWOFDiameter = 32;
         public static final int kWOFEncoderUnitsPerRev = 4096;
         public static final double kWOFGearRatio = 20.0;
-        public static final double kWOFWheelDiameter = 4.0;
+        public static final double kWOFWheelDiameter = 7.5;
         public static final MotorConfig kWOFConfig = new MotorConfig(0.01, 0, 0.01, 0.008, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
         public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(300, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(600, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
         public static final double kRamp = 0.1;
@@ -192,7 +192,7 @@ public final class Constants {
         public static final double kTransportGearRatio = 20.0;
         public static final double kVelocitySampleTime = 0.1;
         public static final MotorConfig kTransportConfig = new MotorConfig(0.15, 0, 0.05, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
-        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0.01, 0, 1.0, 0.010536, 0,
+        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0.01, 0, 1.0, 0.030536, 0,
             kTransportConfig.getContinuousCurrent(),
             kTransportConfig.getPeakCurrent(),
             kTransportConfig.getPeakDuration(),
@@ -205,6 +205,8 @@ public final class Constants {
         public static final int kTransportVelocitySlot = 1;
         public static final double kTransportVelocity = 25;
         public static final double kTransportThreshold = 0.125;
+        public static final int kTransportDebounceSize = 5;
+        public static final double kTransportMargin = 5.0;
 
         // TOF Sensors
         public static final int kIntakeTOF = 1;  // TODO: Determine correct value

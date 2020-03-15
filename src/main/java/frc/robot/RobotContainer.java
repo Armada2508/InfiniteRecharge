@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
+import frc.robot.enums.ClimbState;
 import frc.robot.routines.Auto;
 import frc.robot.routines.MoveForward;
 import frc.robot.routines.SimpleAuto;
@@ -74,10 +75,10 @@ public class RobotContainer {
         mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
         initCam();
         mVision.setup();
-        mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
+        /*mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0))));
-        mTransport.setDefaultCommand(new AutoTransport(mTransport));
+        */mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
     }
 
     /**
@@ -87,52 +88,24 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        //new JoystickButton(mjoystick, 1).whenPressed(new Climb(mclimb, true));
-        //new JoystickButton(mjoystick, 1).whenReleased(new Climb(mclimb, false));
-   /*     new JoystickButton(mJoystick, 11).whenHeld(new Intake(mBackIntake, 0.5, false));
-        new JoystickButton(mJoystick, 11).whenHeld(new Intake(mFrontIntake, 0.5, false));
-        new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(0.7, true, mTransport));
-        new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(0.7, false, mTransport));
-        new JoystickButton(mJoystick, 1).whenHeld(new SpinRoller(mShooter, 5750));
-        new JoystickButton(mJoystick, 7).whenHeld(new TransportPower(0.5, false, mTransport));
-        new JoystickButton(mJoystick, 9).whenHeld(new TransportPower(0.5, true, mTransport));
-        new JoystickButton(mJoystick, 8).whenHeld(new TransportPower(-0.375, false, mTransport));
-        new JoystickButton(mJoystick, 10).whenHeld(new TransportPower(-0.375, true, mTransport));
-        new JoystickButton(mJoystick, 3).whenHeld(new Intake(mFrontIntake, 0.5, false));
-        new JoystickButton(mJoystick, 4).whenHeld(new Intake(mBackIntake, 0.5, false));
-        new JoystickButton(mJoystick, 5).whenHeld(new Intake(mFrontIntake, 0.5, true));
-        new JoystickButton(mJoystick, 6).whenHeld(new Intake(mBackIntake, 0.5, true));
-        new JoystickButton(mJoystick, 2).whileHeld(aim());
-        new POVButton(mJoystick, 180).whenPressed(new Climb(mClimb, 0));
-        new POVButton(mJoystick, 0).whenPressed(new Climb(mClimb, 1));
-        new JoystickButton(mJoystick, 12).whenPressed(new Climb(mClimb, 2));
-        new POVButton(mJoystick, 90).whenPressed(new SpinColorWheel(mWOF, 3.75));
-        new POVButton(mJoystick, 270).whenPressed(new SpinColorWheel(mWOF, -0.125));
-*/
-        new JoystickButton(mJoystick, 3).whenHeld(new Intake(mIntake,  Constants.Intake.kIntakePower));
-  
-/*      new JoystickButton(mJoystick, 11).whenHeld(new Intake(mIntake, -Constants.Intake.kIntakePower));
-        new JoystickButton(mJoystick, 11).whenHeld(new TransportPower(mTransport, -Constants.Intake.kIntakePower));
-        new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
-        new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
-        new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
-        new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinUp).whenHeld(new SpinRoller(mShooter, 6400));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenHeld(new Aim(mDrive, mVision));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFeedShooter).whenHeld(new TransportPower(mTransport, 0.8));
-       // new JoystickButton(mButtonBoard, Constants.ButtonBoard.kShootSequence).whenPressed();
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kFrontIntake).whenHeld(new Intake(mIntake, Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kBackIntake).whenHeld(new Intake(mIntake, Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kSpinWOF).whenPressed(new SpinColorWheel(mWOF, 3.75));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeft).whenPressed(new SpinColorWheel(mWOF, -0.125));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRight).whenPressed(new SpinColorWheel(mWOF, 0.125));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFLeftSmall).whenPressed(new SpinColorWheel(mWOF, -0.025));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kWOFRightSmall).whenPressed(new SpinColorWheel(mWOF, 0.025));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbExtend).whenPressed(new Climb(mClimb, 2));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbVent).whenPressed(new Climb(mClimb, 1));
-        new JoystickButton(mButtonBoard, Constants.ButtonBoard.kClimbRetract).whenPressed(new Climb(mClimb, 0));
-        
-  */
+
+        //new JoystickButton(mJoystick, 3).whenHeld(new Intake(mIntake,  Constants.Intake.kIntakePower));
+        //new JoystickButton(mJoystick, 1).whileHeld(new TransportPower(mTransport, 1.0));
+        //new JoystickButton(mJoystick, 2).whenHeld(new SpinRoller(mShooter, 2000));
+        //new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
+        //new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
+        //new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
+        //new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
+        new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 2000));
+        new JoystickButton(mButtonBoard, 4).whileHeld(new TransportPower(mTransport, 1.0));
+        new JoystickButton(mButtonBoard, 12).whenHeld(new Climb(mClimb, ClimbState.EXTENDED));
+        new JoystickButton(mButtonBoard, 13).whenHeld(new Climb(mClimb, ClimbState.VENTED));
+        new JoystickButton(mButtonBoard, 14).whenHeld(new Climb(mClimb, ClimbState.RETRACTED));
+        new JoystickButton(mButtonBoard, 3).whileHeld(new TransportPower(mTransport, -1.0));
+        new JoystickButton(mButtonBoard, 6).whileHeld(new Aim(mDrive, mVision));
+
     }
     
 

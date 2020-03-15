@@ -1,11 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.enums.ClimbState;
 import frc.robot.subsystems.ClimbSubsystem;
+
 
 public class Climb extends CommandBase {
     private ClimbSubsystem mClimbSubsystem;
-    private int mState;
+    private ClimbState mState;
 
 
     /**
@@ -13,7 +15,7 @@ public class Climb extends CommandBase {
      * @param climbSubsystem The climbSubsystem to use
      * @param state The state of the system(0=retract, 1=vent, 2=extend)
      */
-    public Climb(ClimbSubsystem climbSubsystem, int state) {
+    public Climb(ClimbSubsystem climbSubsystem, ClimbState state) {
         mClimbSubsystem = climbSubsystem;
         mState = state;
 
@@ -24,13 +26,13 @@ public class Climb extends CommandBase {
     @Override
     public void initialize() {
         switch (mState) {
-            case 0:
+            case RETRACTED:
                 mClimbSubsystem.retract();
                 break;
-            case 1:
+            case VENTED:
                 mClimbSubsystem.vent();
                 break;
-            case 2:
+            case EXTENDED:
                 mClimbSubsystem.extend();
                 break;
         }

@@ -10,7 +10,7 @@
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/.factorypath": true
-  },
-  "wpilib.autoSaveOnDeploy": true
+    "**/.factorypath": true,
+    "**/*~": true
+  }
 }

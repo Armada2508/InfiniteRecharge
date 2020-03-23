@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.config.FeedbackConfig;
 import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.*;
@@ -51,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         mRobotTab.add("Drive", mDrive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
-        coast();
+        brake();
 
         configTalons();
         resetHeading();
@@ -166,14 +167,14 @@ public class DriveSubsystem extends SubsystemBase {
         resetTalons();
         mRightFollower.follow(mRight);
         mLeftFollower.follow(mLeft);
-        mRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        mLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         mRight.configMotionProfileTrajectoryPeriod(0);
         mLeft.configMotionProfileTrajectoryPeriod(0);
         MotorConfig.resetTalon(mRight);
         MotorConfig.resetTalon(mLeft);
         FeedbackConstants.config(mRight, Constants.Drive.kFeedbackConstants, Constants.Drive.kSlot);
         FeedbackConstants.config(mLeft, Constants.Drive.kFeedbackConstants, Constants.Drive.kSlot);
+        FeedbackConfig.config(mRight, Constants.Drive.kFeedbackConfig);
+        FeedbackConfig.config(mLeft, Constants.Drive.kFeedbackConfig);
         MotorConfig.config(mRight, Constants.Drive.kConfig);
         MotorConfig.config(mLeft, Constants.Drive.kConfig);
     }

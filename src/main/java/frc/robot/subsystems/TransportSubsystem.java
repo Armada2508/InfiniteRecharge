@@ -7,6 +7,7 @@ import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
@@ -23,9 +24,10 @@ public class TransportSubsystem extends SubsystemBase {
         mTransportTalon = new WPI_TalonSRX(Constants.Transport.kTransportTalon);
         mTransportTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         MotorConfig.resetTalon(mTransportTalon);
-        MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportVelocityConfig, Constants.Transport.kTransportVelocitySlot);
-        MotorConfig.configTalon(mTransportTalon, Constants.Transport.kTransportConfig, Constants.Transport.kTransportSlot);
-        MotionMagicConfig.configTalon(mTransportTalon, Constants.Transport.kTransportMMConfig);
+        FeedbackConstants.config(mTransportTalon, Constants.Transport.kTransportVelocityFeedbackConstants, Constants.Transport.kTransportVelocitySlot);
+        FeedbackConstants.config(mTransportTalon, Constants.Transport.kTransportFeedbackConstants, Constants.Transport.kTransportSlot);
+        MotorConfig.config(mTransportTalon, Constants.Transport.kTransportConfig);
+        MotionMagicConfig.config(mTransportTalon, Constants.Transport.kTransportMMConfig);
         System.out.println(Constants.Transport.kTransportMMConfig.getCruiseVelocity());
 
         mIntake = new TimeOfFlight(Constants.Transport.kIntakeTOF);
@@ -43,7 +45,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return EncoderUtil.toDistance(getRawPosition(), Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
+        return EncoderUtil.toDistance(getRawPosition(), Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public int getRawVelocity() {
@@ -51,7 +53,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return EncoderUtil.toVelocity(getRawVelocity(), Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return EncoderUtil.toVelocity(getRawVelocity(), Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
     }
 
     public void setPower(double power) {
@@ -69,19 +71,19 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double toVelocity(int velocity) {
-        return EncoderUtil.toVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return EncoderUtil.toVelocity(velocity, Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
     }
 
     public int fromVelocity(double velocity) {
-        return (int)EncoderUtil.fromVelocity(velocity, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return (int)EncoderUtil.fromVelocity(velocity, Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
     }
 
     public double toDistance(int distance) {
-        return EncoderUtil.toDistance(distance, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
+        return EncoderUtil.toDistance(distance, Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public int fromDistance(double distance) {
-        return (int)EncoderUtil.fromDistance(distance, Constants.Transport.kTransportEncoderUnitsPerRev, Constants.Transport.kTransportGearRatio, Constants.Transport.kPulleyDiameter);
+        return (int)EncoderUtil.fromDistance(distance, Constants.Transport.kTransportConfig.getEpr(), Constants.Transport.kTransportConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public void setRawPosition(double position) {

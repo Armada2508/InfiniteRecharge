@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.*;
 import frc.robot.*;
@@ -172,8 +173,10 @@ public class DriveSubsystem extends SubsystemBase {
         mLeft.configMotionProfileTrajectoryPeriod(0);
         MotorConfig.resetTalon(mRight);
         MotorConfig.resetTalon(mLeft);
-        MotorConfig.configTalon(mRight, Constants.Drive.kDriveConfig, Constants.Drive.kDriveSlot);
-        MotorConfig.configTalon(mLeft, Constants.Drive.kDriveConfig, Constants.Drive.kDriveSlot);
+        FeedbackConstants.config(mRight, Constants.Drive.kDriveFeedbackConstants, Constants.Drive.kDriveSlot);
+        FeedbackConstants.config(mLeft, Constants.Drive.kDriveFeedbackConstants, Constants.Drive.kDriveSlot);
+        MotorConfig.config(mRight, Constants.Drive.kDriveConfig);
+        MotorConfig.config(mLeft, Constants.Drive.kDriveConfig);
     }
 
     public double getPositionLeft() {
@@ -189,7 +192,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toDistance(int sensorPosition) {
-        return EncoderUtil.toDistance(sensorPosition, Constants.Drive.kDriveEncoderUnitsPerRev, Constants.Drive.kDriveGearRatio, Constants.Drive.kDriveWheelDiameter);
+        return EncoderUtil.toDistance(sensorPosition, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter);
     }
 
     public double getVelocityRight() {
@@ -201,11 +204,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toVelocity(int velocity) {
-        return EncoderUtil.toVelocity(velocity, Constants.Drive.kDriveEncoderUnitsPerRev, Constants.Drive.kDriveGearRatio, Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
+        return EncoderUtil.toVelocity(velocity, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
     }
 
     public double fromVelocity(double velocity) {
-        return EncoderUtil.fromVelocity(velocity, Constants.Drive.kDriveEncoderUnitsPerRev, Constants.Drive.kDriveGearRatio, Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
+        return EncoderUtil.fromVelocity(velocity, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
     }
 
     public void setMaxOutput(double maxOutput) {

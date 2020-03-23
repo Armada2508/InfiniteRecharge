@@ -1,84 +1,39 @@
 package frc.lib.config;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class MotorConfig {
-    private final double mP;
-    private final double mI;
-    private final double mD;
-    private final double mF;
-    private final double mMia;
     private final int mMaxContCurrent;
     private final int mMaxPeakCurrent;
     private final int mPeakCurrentDuration;
     private final FeedbackDevice mEncoder;
+    private final int mEpr;
+    private final double mGearRatio;
     private final double mDeadband;
 
     /**
      * Creates a new MotorConfig object to store motor controller configuration settings
-     * @param p The propritional constant
-     * @param i The integral constant
-     * @param d The derivitive constant
-     * @param f The feed-forward constant
-     * @param mia The maximum integral accumulator constant
      * @param maxCurrent The maximum current the motor will draw continuously
      * @param maxPeakCurrent The maximum current the motor will draw at peak
      * @param peakCurrentDuration The duration of the peak current(in ms)
      * @param encoder The type of encoder the motor uses
+     * @param epr The number of edges per revolution counted by the encoder
+     * @param gearRatio The gear ratio from the motor to its output
      * @param deadband The deadband(0.0-1.0) to be applied to the motor controller
      */
-    public MotorConfig(double p, double i, double d, double f, double mia, int maxContCurrent, int maxPeakCurrent, int peakCurrentDuration, FeedbackDevice encoder, double deadband) {
-        mP = p;
-        mI = i;
-        mD = d;
-        mF = f;
-        mMia = mia;
+    public MotorConfig(int maxContCurrent, int maxPeakCurrent, int peakCurrentDuration, FeedbackDevice encoder, int epr, double gearRatio, double deadband) {
         mMaxContCurrent = maxContCurrent;
         mMaxPeakCurrent = maxPeakCurrent;
         mPeakCurrentDuration = peakCurrentDuration;
         mEncoder = encoder;
+        mEpr = epr;
+        mGearRatio = gearRatio;
         mDeadband = deadband;
     }
-
-    /**
-     * @return The proportional constant
-     */
-    public double getP() {
-        return mP;
-    }
-
-    /**
-     * @return The integral constant
-     */
-    public double getI() {
-        return mI;
-    }
-
-    /**
-     * @return The derivitive constant
-     */
-    public double getD() {
-        return mD;
-    }
-
-    /**
-     * @return The feed-forward constant
-     */
-    public double getF() {
-        return mF;
-    }
-
-    /**
-     * @return The max integral accumulator constant
-     */
-    public double getMIA() {
-        return mMia;
-    }
-
+    
     /**
      * @return The max current the motor will draw continuously
      */
@@ -108,6 +63,20 @@ public class MotorConfig {
     }
 
     /**
+     * @return The number of edges per revolution counted by the encoder
+     */
+    public int getEpr() {
+        return mEpr;
+    }
+
+    /**
+     * @return The gear ratio from the motor to its output
+     */
+    public double getGearRatio() {
+        return mGearRatio;
+    }
+
+    /**
      * @return The size of the deadband
      */
     public double getDeadband() {
@@ -121,12 +90,7 @@ public class MotorConfig {
      * @param config The configuration to apply
      * @param slot The PID slot to use
      */
-    public static void configTalon(TalonSRX talon, MotorConfig config, int slot) {
-        talon.config_kP(slot, config.getP());
-        talon.config_kI(slot, config.getI());
-        talon.config_kD(slot, config.getD());
-        talon.config_kF(slot, config.getF());
-        talon.configMaxIntegralAccumulator(slot, config.getMIA());
+    public static void config(TalonSRX talon, MotorConfig config) {
         talon.configContinuousCurrentLimit(config.getContinuousCurrent());
         talon.configPeakCurrentLimit(config.getPeakCurrent());
         talon.configPeakCurrentDuration(config.getPeakDuration());
@@ -141,12 +105,7 @@ public class MotorConfig {
      * @param config The MotorConfig to apply
      * @param slot The PID slot to use
      */
-    public static void configTalon(TalonFX talon, MotorConfig config, int slot) {
-        talon.config_kP(slot, config.getP());
-        talon.config_kI(slot, config.getI());
-        talon.config_kD(slot, config.getD());
-        talon.config_kF(slot, config.getF());
-        talon.configMaxIntegralAccumulator(slot, config.getMIA());
+    public static void config(TalonFX talon, MotorConfig config) {
         talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, config.getContinuousCurrent(), config.getPeakCurrent(), config.getPeakDuration()));
         talon.configSelectedFeedbackSensor(config.getEncoder());
         talon.configNeutralDeadband(config.getDeadband());

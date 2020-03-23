@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
 import frc.robot.Constants;
@@ -21,8 +22,11 @@ public class ShooterSubsystem extends SubsystemBase {
         MotorConfig.resetTalon(mLeftMotor);
         MotorConfig.resetTalon(mRightMotor);
 
-        MotorConfig.configTalon(mLeftMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
-        MotorConfig.configTalon(mRightMotor, Constants.Shooter.kShooterConfig, Constants.Shooter.kShooterSlot);
+        FeedbackConstants.config(mLeftMotor, Constants.Shooter.kShooterFeedbackConstants, Constants.Shooter.kShooterSlot);
+        FeedbackConstants.config(mRightMotor, Constants.Shooter.kShooterFeedbackConstants, Constants.Shooter.kShooterSlot);
+
+        MotorConfig.config(mLeftMotor, Constants.Shooter.kShooterConfig);
+        MotorConfig.config(mRightMotor, Constants.Shooter.kShooterConfig);
 
         mLeftMotor.setNeutralMode(NeutralMode.Coast);
         mRightMotor.setNeutralMode(NeutralMode.Coast);
@@ -41,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spin(double rpm) {
-        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kShooterEncoderUnitsPerRev, Constants.Shooter.kShooterGearRatio, Constants.Shooter.kShooterVelocitySampleTime);
+        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kShooterConfig.getEpr(), Constants.Shooter.kShooterConfig.getGearRatio(), Constants.Shooter.kShooterVelocitySampleTime);
         mLeftMotor.set(ControlMode.Velocity, velocity);
         mRightMotor.set(ControlMode.Velocity, velocity);
     }
@@ -52,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kShooterEncoderUnitsPerRev, Constants.Shooter.kShooterGearRatio, Constants.Shooter.kShooterVelocitySampleTime);
+        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kShooterConfig.getEpr(), Constants.Shooter.kShooterConfig.getGearRatio(), Constants.Shooter.kShooterVelocitySampleTime);
     }
 
     public void setCurrent(double amps) {

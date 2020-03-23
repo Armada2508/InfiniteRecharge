@@ -13,6 +13,7 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.EncoderUtil;
@@ -70,7 +71,8 @@ public final class Constants {
         public static final boolean kRightInverted = false;
         public static final boolean kLeftInverted = true;
         public static final int kDriveSlot = 0;
-        public static final MotorConfig kDriveConfig = new MotorConfig(0.02, 0, 0.02, 0.05, 200, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001);  // TODO: Tune PID
+        public static final FeedbackConstants kDriveFeedbackConstants = new FeedbackConstants(0.02, 0, 0.02, 0.05, 200);
+        public static final MotorConfig kDriveConfig = new MotorConfig(40, 0, 0, FeedbackDevice.IntegratedSensor, 2048, 12.75*(48.0/42.0), 0.001);  // TODO: Tune PID
 
         // Trajectory Following Constants
         public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361);
@@ -78,9 +80,7 @@ public final class Constants {
         public static final double kTrackWidth = 0.511;
         public static final double kB = 2.0;
         public static final double kZeta = 0.7;
-        public static final int kDriveEncoderUnitsPerRev = 2048;
         public static final double kDriveWheelDiameter = Units.inchesToMeters(8);
-        public static final double kDriveGearRatio = 12.75*(48.0/42.0);
         public static final double kVelSampleTime = 0.1;
 
         // Trajectory Generation Constants
@@ -153,9 +153,8 @@ public final class Constants {
         // Shooter Constants
         public static final int kLeftShooterMotor = 11;
         public static final int kRightShooterMotor = 10;
-        public static final int kShooterEncoderUnitsPerRev = 2048;
-        public static final double kShooterGearRatio = 1.0;
-        public static final MotorConfig kShooterConfig = new MotorConfig(0.1, 0.001, 0.0, 0.0463, 10000.0, 40, 0, 0, FeedbackDevice.IntegratedSensor, 0.001); // TODO: Redo current on shooter
+        public static final FeedbackConstants kShooterFeedbackConstants = new FeedbackConstants(0.1, 0.001, 0.0, 0.0463, 10000);
+        public static final MotorConfig kShooterConfig = new MotorConfig(40, 0, 0, FeedbackDevice.IntegratedSensor, 2048, 1.0, 0.001); // TODO: Redo current on shooter
         public static final double kStableRPMThreshold = 100;
         public static final double kShooterVelocitySampleTime = 0.1;
         public static final double kShooterStableCurrentLimit = 10;
@@ -170,11 +169,10 @@ public final class Constants {
 
         // Color Wheel Constants
         public static final double kWOFDiameter = 32;
-        public static final int kWOFEncoderUnitsPerRev = 4096;
-        public static final double kWOFGearRatio = 20.0;
         public static final double kWOFWheelDiameter = 7.5;
-        public static final MotorConfig kWOFConfig = new MotorConfig(0.01, 0, 0.01, 0.008, 0, 10, 20, 500, FeedbackDevice.QuadEncoder, 0.001);  // TODO: Tune PID
-        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(300, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(600, kWOFEncoderUnitsPerRev, kWOFGearRatio, Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
+        public static final FeedbackConstants kWOFFeedbackConstants = new FeedbackConstants(0.01, 0, 0.01, 0.008, 0);
+        public static final MotorConfig kWOFConfig = new MotorConfig(10, 20, 500, FeedbackDevice.QuadEncoder, 4096, 20.0, 0.001);  // TODO: Tune PID
+        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(300, kWOFConfig.getEpr(), kWOFConfig.getGearRatio(), Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(600, kWOFConfig.getEpr(), kWOFConfig.getGearRatio(), Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
         public static final double kRamp = 0.1;
         public static final int kWOFSlot = 0;
         public static final int kWOFMotor = 5;
@@ -188,18 +186,12 @@ public final class Constants {
         // Transport Constants
         public static final int kTransportTalon = 6;
         public static final double kPulleyDiameter = 2.75;  //TODO: Get correct diameter
-        public static final int kTransportEncoderUnitsPerRev = 4096;
-        public static final double kTransportGearRatio = 20.0;
         public static final double kVelocitySampleTime = 0.1;
-        public static final MotorConfig kTransportConfig = new MotorConfig(0.15, 0, 0.05, 0, 0, 15, 25, 500, FeedbackDevice.QuadEncoder, 0.001);
-        public static final MotorConfig kTransportVelocityConfig = new MotorConfig(0.01, 0, 1.0, 0.030536, 0,
-            kTransportConfig.getContinuousCurrent(),
-            kTransportConfig.getPeakCurrent(),
-            kTransportConfig.getPeakDuration(),
-            kTransportConfig.getEncoder(),
-            kTransportConfig.getDeadband());
-        public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig((int)EncoderUtil.fromVelocity(40.0, kTransportEncoderUnitsPerRev, kTransportGearRatio, kPulleyDiameter, kVelocitySampleTime),
-            (int)EncoderUtil.fromVelocity(160.0, kTransportEncoderUnitsPerRev, kTransportGearRatio, kPulleyDiameter, kVelocitySampleTime),
+        public static final FeedbackConstants kTransportFeedbackConstants = new FeedbackConstants(0.15, 0, 0.05, 0, 0);
+        public static final FeedbackConstants kTransportVelocityFeedbackConstants = new FeedbackConstants(0.01, 0, 1.0, 0.030536, 0);
+        public static final MotorConfig kTransportConfig = new MotorConfig(15, 25, 500, FeedbackDevice.QuadEncoder, 4096, 20.0, 0.001);
+        public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig((int)EncoderUtil.fromVelocity(40.0, kTransportConfig.getEpr(), kTransportConfig.getGearRatio(), kPulleyDiameter, kVelocitySampleTime),
+            (int)EncoderUtil.fromVelocity(160.0, kTransportConfig.getEpr(), kTransportConfig.getGearRatio(), kPulleyDiameter, kVelocitySampleTime),
             0);
         public static final int kTransportSlot = 0;
         public static final int kTransportVelocitySlot = 1;

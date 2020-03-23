@@ -22,14 +22,10 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
-import frc.robot.routines.Auto;
 import frc.robot.routines.MoveForward;
-import frc.robot.routines.SimpleAuto;
 import frc.robot.subsystems.*;
 
 import java.io.IOException;

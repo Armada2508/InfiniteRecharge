@@ -49,7 +49,7 @@ public class MotionMagicConfig {
      * @param talon The talon to configure
      * @param config The MotionMagicConfig to apply
      */
-    public static void configTalon(TalonSRX talon, MotionMagicConfig config) {
+    public static void config(TalonSRX talon, MotionMagicConfig config) {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());
@@ -62,7 +62,7 @@ public class MotionMagicConfig {
      * @param talon The talon to configure
      * @param config The MotionMagicConfig to apply
      */
-    public static void configTalon(TalonFX talon, MotionMagicConfig config) {
+    public static void config(TalonFX talon, MotionMagicConfig config) {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());

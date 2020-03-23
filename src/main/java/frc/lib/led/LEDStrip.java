@@ -12,7 +12,7 @@ public class LEDStrip {
     private int mBandIndex;
 
     /**
-     * Constructs a new LEDStrip Object
+     * Creates a new LEDStrip Object
      * @param port The PWM port that the LED strip is connected to
      * @param length The length of the LED strip
      */

@@ -62,6 +62,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio(), Constants.Shooter.kVelocitySampleTime);
     }
 
+
+    // TODO: Fix shooter current limiting
     public void setCurrent(double amps) {
         //mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
     }

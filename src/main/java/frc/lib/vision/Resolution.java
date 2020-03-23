@@ -1,8 +1,8 @@
 package frc.lib.vision;
 
 public class Resolution {
-    public final int mX;
-    public final int mY;
+    private final int mX;
+    private final int mY;
 
     /**
      * Create a new Resolution object

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    public WPI_TalonSRX mIntakeTalon;
+    private WPI_TalonSRX mIntakeTalon;
 
     public IntakeSubsystem(int talonID, boolean inverted) {
         mIntakeTalon = new WPI_TalonSRX(talonID);

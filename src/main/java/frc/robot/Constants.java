@@ -184,6 +184,7 @@ public final class Constants {
         public static final double kVelocitySampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
         public static final double kStableCurrentLimit = 10; // The current limit once the Talon is within the stable threshold
         public static final int kMaxSlewRate = 4000; // The max slew rate in RPM per second to ramp the shooter up at // TODO: Determine correct value
+        public static final double kRamp = 0.25; // How fast the motor will ramp from 0% to 100%(in seconds)
         public static final int kSlot = 0; // the PID slot to use for the shooter
         public static final boolean kLeftInverted = true; // If the left shooter motor is inverted
         public static final boolean kRightInverted = false; // If the right shooter motor is inverted
@@ -246,7 +247,8 @@ public final class Constants {
         public static final int kVelocitySlot = 1; // The PID slot to use for velocity control mode
         public static final double kVelocity = 25; // The speed of the transport in inches per second
         public static final double kThreshold = 0.125; // How close the transport has to be to it's setpoint to end the motion magic command
-        public static final double kMargin = 5.0; // How much to increment the transport after it stops sensing a ball
+        public static final double kMargin = 5.0; // How much to increment the transport after it stops sensing a 
+        public static final double kRamp = 0.15; // How fast the motor will ramp from 0% to 100%(in seconds)
 
         // TOF Sensors
         public static final int kIntakeTOF = 1; // The ID of the intake Time-of-Flight sensor
@@ -267,7 +269,7 @@ public final class Constants {
         public static final int kTalon = 4; // The ID of the Intake Talon
         public static final double kPower = 0.75; // The power to run the Intake at
         public static final boolean kInverted = false; // If the intake is inverted
-
+        public static final double kRamp = 0.25; // How fast the Intake will go from 0-100% power
     }
 
     // =====================
@@ -276,10 +278,10 @@ public final class Constants {
     public static class Climb {
 
         // Solenoids
-        public static final int kLeftTop = 3;
-        public static final int kLeftBottom = 2;
-        public static final int kRightTop = 1;
-        public static final int kRightBottom = 0;
+        public static final int kLeftTop = 3; // The Solenoid Connected to the top port on the left climb cylinder
+        public static final int kLeftBottom = 2; // The Solenoid Connected to the bottom port on the left climb cylinder
+        public static final int kRightTop = 1; // The Solenoid Connected to the top port on the right climb cylinder
+        public static final int kRightBottom = 0; // The Solenoid Connected to the bottom port on the right climb cylinder
     
     }
 

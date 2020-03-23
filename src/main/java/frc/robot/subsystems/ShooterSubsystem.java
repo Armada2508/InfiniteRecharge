@@ -33,6 +33,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
         mLeftMotor.setNeutralMode(NeutralMode.Coast);
         mRightMotor.setNeutralMode(NeutralMode.Coast);
+
+        mLeftMotor.configClosedloopRamp(Constants.Shooter.kRamp);
+        mLeftMotor.configOpenloopRamp(Constants.Shooter.kRamp);
+        mRightMotor.configClosedloopRamp(Constants.Shooter.kRamp);
+        mRightMotor.configOpenloopRamp(Constants.Shooter.kRamp);
     }
 
     @Override

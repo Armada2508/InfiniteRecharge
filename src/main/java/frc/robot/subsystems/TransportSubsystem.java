@@ -28,6 +28,8 @@ public class TransportSubsystem extends SubsystemBase {
         FeedbackConstants.config(mTransportTalon, Constants.Transport.kFeedbackConstants, Constants.Transport.kSlot);
         MotorConfig.config(mTransportTalon, Constants.Transport.kConfig);
         MotionMagicConfig.config(mTransportTalon, Constants.Transport.kMMConfig);
+        mTransportTalon.configClosedloopRamp(Constants.Transport.kRamp);
+        mTransportTalon.configOpenloopRamp(Constants.Transport.kRamp);
 
         mIntake = new TimeOfFlight(Constants.Transport.kIntakeTOF);
         mShooter = new TimeOfFlight(Constants.Transport.kShooterTOF);

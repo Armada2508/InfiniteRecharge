@@ -52,6 +52,16 @@ public class DriveSubsystem extends SubsystemBase {
 
         mRobotTab.add("Drive", mDrive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, Constants.Gyro.kPigeonCondFrame1Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_6_SensorFusion, Constants.Gyro.kPigeonCondFrame6Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, Constants.Gyro.kPigeonCondFrame9Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_11_GyroAccum, Constants.Gyro.kPigeonCondFrame11Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_3_GeneralAccel, Constants.Gyro.kPigeonCondFrame3Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_10_SixDeg_Quat, Constants.Gyro.kPigeonCondFrame10Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.RawStatus_4_Mag, Constants.Gyro.kPigeonRawFrame4Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, Constants.Gyro.kPigeonBiasedFrame2Period);
+        mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, Constants.Gyro.kPigeonBiasedFrame6Period);
+
         brake();
 
         configTalons();

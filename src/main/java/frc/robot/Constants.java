@@ -114,8 +114,13 @@ public final class Constants {
     // ========================================
     public static class MotorController {
 
-        public static final int kMotionMagicPeriod = 20;  // How often the Talon reports info on motion magic(in ms)
-        public static final int kPIDPeriod = 20; // How often the Talon reports info on PID(in ms)
+        public static final int kTalonFrame1Period = 20;  // How often the Talon reports basic info(Limits, limit overrides, faults, control mode, invert; in ms)
+        public static final int kTalonFrame2Period = 20;  // How often the Talon reports sensor info(Sensor position/velocity, current, sticky faults, profile; in ms)
+        public static final int kTalonFrame3Period = 160;  // How often the Talon reports non selected quad info(Position/velocity, edges, quad a and b pin, index pin; in ms)
+        public static final int kTalonFrame4Period = 160;  // How often the Talon reports additional info(Analog position/velocity, temperature, battery voltage, selected feedback sensor; in ms)
+        public static final int kTalonFrame8Period = 160;  // How often the Talon reports more encoder info(Talon Idx pin, PulseWidthEncoded sensor velocity/position; in ms)
+        public static final int kTalonFrame10Period = 160;  // How often the Talon reports info on motion magic(Target position, velocity, active trajectory point; in ms)
+        public static final int kTalonFrame13Period = 160; // How often the Talon reports info on PID(Error, Integral, Derivative, in ms)
 
     }
 

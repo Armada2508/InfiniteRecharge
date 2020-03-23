@@ -53,8 +53,13 @@ public class MotionMagicConfig {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.MotorController.kMotionMagicPeriod);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.MotorController.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, Constants.MotorController.kTalonFrame1Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.MotorController.kTalonFrame2Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.MotorController.kTalonFrame3Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, Constants.MotorController.kTalonFrame4Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, Constants.MotorController.kTalonFrame8Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MotorController.kTalonFrame10Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.MotorController.kTalonFrame13Period);
     }
 
     /**
@@ -66,7 +71,12 @@ public class MotionMagicConfig {
         talon.configMotionCruiseVelocity(config.getCruiseVelocity());
         talon.configMotionAcceleration(config.getAcceleration());
         talon.configMotionSCurveStrength(config.getSmoothing());
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.MotorController.kPIDPeriod);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, Constants.MotorController.kMotionMagicPeriod);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, Constants.MotorController.kTalonFrame1Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.MotorController.kTalonFrame2Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Constants.MotorController.kTalonFrame3Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, Constants.MotorController.kTalonFrame4Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, Constants.MotorController.kTalonFrame8Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MotorController.kTalonFrame10Period);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.MotorController.kTalonFrame13Period);
     }
 }

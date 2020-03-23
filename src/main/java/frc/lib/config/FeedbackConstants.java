@@ -15,7 +15,7 @@ public class FeedbackConstants {
      * Creates a new FeedbackConstants object
      * @param p The proportional constant
      * @param i The integral constant
-     * @param d The derivitive constant
+     * @param d The derivative constant
      * @param f The feed-forward constant
      * @param mia The maximum integral accumulator constant
      */
@@ -42,7 +42,7 @@ public class FeedbackConstants {
     }
 
     /**
-     * @return The derivitive constant
+     * @return The derivative constant
      */
     public double getD() {
         return mD;
@@ -61,12 +61,9 @@ public class FeedbackConstants {
     public double getMIA() {
         return mMia;
     }
-
-    
-    
     
     /**
-     * Configure a Talon SRX with the specified MotorConfig
+     * Configure a Talon SRX with the specified FeedbackConstants
      * @param talon The Talon SRX to be configure
      * @param config The configuration to apply
      * @param slot The PID slot to use
@@ -80,7 +77,7 @@ public class FeedbackConstants {
     }
     
     /**
-     * Configure a Talon FX with the specified MotorConfig
+     * Configure a Talon FX with the specified FeedbackConstants
      * @param talon The Talon FX to be configure
      * @param config The MotorConfig to apply
      * @param slot The PID slot to use

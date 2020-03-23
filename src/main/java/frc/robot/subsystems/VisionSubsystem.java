@@ -25,8 +25,6 @@ public class VisionSubsystem extends SubsystemBase {
     private double mXOffset;
     private double mYOffset;
 
-    // TODO: Turn LEDs on and off when vision is used
-
     /**
      * Creates a new VisionSubsystem
      */
@@ -43,7 +41,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-    //    System.out.println(getDistanceHeight() + "; " + getTargetCenter().getY());
     }
 
     public void setYOffset(double offset) {
@@ -55,10 +52,17 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void setup() {
-        setLED(true);
+        setLED(false);
         setYOffset(Constants.Vision.kLimelightAngle);
         setPipeline(0);
-        camMode(false);
+        camMode(true);
+        setPIP(true);
+    }
+
+    public void reset() {
+        setLED(false);
+        setPipeline(0);
+        camMode(true);
         setPIP(true);
     }
 

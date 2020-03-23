@@ -22,31 +22,30 @@ public class Robot extends TimedRobot {
   private RobotContainer mRobotContainer;
   private Command mAutonomousCommand;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+
   @Override
   public void robotInit() {
+    // Make a new RobotContainer to contain all the stuff we want to do
     mRobotContainer = new RobotContainer();
 
+    // Initialization
     mRobotContainer.robotInit();
     
     
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
+    // Run the scheduler to update commands
     CommandScheduler.getInstance().run();
+
+    // Update the dashboard
     mRobotContainer.updateDashboard();
+
+    // Update the dashboard(again)
     mRobotContainer.updateLogger();
+
+    // Update the Shooter RPM
     mRobotContainer.updateRPM();
   }
 
@@ -55,8 +54,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    // Cancel all running commands
     CommandScheduler.getInstance().cancelAll();
+    // We have changed modes
     mRobotContainer.changeMode();
+
+    // If the match just ended, stop logging data
     if(isOperatorControl()) {
       mRobotContainer.stopDashboardCapture();
     }
@@ -66,24 +69,22 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
   }
 
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
-   */
   @Override
   public void autonomousInit() {
-    
+    // We have changed modes
     mRobotContainer.changeMode();
+    // Start logging data if we're connected to the FMS
     mRobotContainer.startDashboardCapture();
+    // Get a command group to run in autonomous
     mAutonomousCommand = mRobotContainer.getAutonomousCommand();
 
+    // If we got an autonomous command
     if (mAutonomousCommand != null) {
+      // Run the autonomous command
       mAutonomousCommand.schedule();
     }
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
   @Override
   public void autonomousPeriodic() {
   }
@@ -93,21 +94,16 @@ public class Robot extends TimedRobot {
     mRobotContainer.changeMode();
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
   @Override
   public void teleopPeriodic() {
   }
 
   @Override
   public void testInit() {
+    // Cancel all commands
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
   @Override
   public void testPeriodic() {
   }

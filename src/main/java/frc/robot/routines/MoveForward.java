@@ -10,7 +10,6 @@ public class MoveForward extends SequentialCommandGroup {
 
     public MoveForward(DriveSubsystem driveSubsystem, Trajectory path) {
         addCommands(
-            new InstantCommand(() -> { System.out.println(path.getInitialPose() + ", " + driveSubsystem.getPose()); } ),
             FollowTrajectory.getCommand(driveSubsystem, path, path.getInitialPose())
         );
     }

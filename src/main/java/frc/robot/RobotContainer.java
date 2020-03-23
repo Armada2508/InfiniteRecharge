@@ -39,21 +39,21 @@ import java.util.*;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    // The robot's subsystems and commands are defined here...
+    // The robot's subsystems are defined here
     private final DriveSubsystem mDrive = new DriveSubsystem();
     private final TransportSubsystem mTransport = new TransportSubsystem();
     private final ShooterSubsystem mShooter = new ShooterSubsystem();
-    private final IntakeSubsystem mIntake = new IntakeSubsystem(Constants.Intake.kIntakeTalon, Constants.Intake.kIntakeInverted);
+    private final IntakeSubsystem mIntake = new IntakeSubsystem(Constants.Intake.kTalon, Constants.Intake.kInverted);
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
     private final VisionSubsystem mVision = new VisionSubsystem();
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
-    private Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
-    private Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
+    private final Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
+    private final Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
     private NetworkTableEntry mGyroEntry;
     private NetworkTableEntry mOdometer;
     private NetworkTableEntry mRPM;
-    private ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
+    private final ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,25 +66,32 @@ public class RobotContainer {
     }
 
     public void robotInit() {
+        // Initialize the Dashboard
         initDashboard();
-        mShooter.leftInverted(Constants.Shooter.kShooterLeftInveted);
-        mShooter.rightInverted(Constants.Shooter.kShooterRightInverted);
+
+        // Initialize the Camera(s)
         initCam();
+
+        // Setup the vision subsystem
         mVision.setup();
+
+        // Tell the Drive Subsystem to drive if it's bored
         /*mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0))));
-        */mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
+        */
+
+        // Tell the Transport Subsystem to do it's thing if it's bored
+        mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
     }
 
-    /**
-     * Use this method to define your button->command mappings.  Buttons can be created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-     * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
+
     private void configureButtonBindings() {
 
+        // =======================
+        //      Map Buttons
+        // =======================
+        
         //new JoystickButton(mJoystick, 3).whenHeld(new Intake(mIntake,  Constants.Intake.kIntakePower));
         //new JoystickButton(mJoystick, 1).whileHeld(new TransportPower(mTransport, 1.0));
         //new JoystickButton(mJoystick, 2).whenHeld(new SpinRoller(mShooter, 2000));
@@ -92,8 +99,8 @@ public class RobotContainer {
         //new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
         //new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
         //new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
-        new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kIntakePower));
-        new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kIntakePower));
+        new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kPower));
+        new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 2000));
         new JoystickButton(mButtonBoard, 4).whileHeld(new TransportPower(mTransport, 1.0));
         new JoystickButton(mButtonBoard, 12).whenHeld(new Climb(mClimb, ClimbState.EXTENDED));
@@ -106,6 +113,9 @@ public class RobotContainer {
     
 
     public void initDashboard() {
+
+        // Old dashboard stuff
+
         WPI_TalonFX[] allTalons = mDrive.getAllTalons();
 
      /*   for (WPI_TalonFX talon : allTalons) {
@@ -123,13 +133,18 @@ public class RobotContainer {
         mOdometer = mSensorLoggerTab.add("Odometer", mDrive.getAverageDistance())
                 .withWidget(BuiltInWidgets.kGraph)
                 .getEntry();
-    */}
+    */
+    }
 
     public void updateLogger() {
+        // More old dashboard stuff
+
 //        Logger.log(Timer.getFPGATimestamp(), "Time");
     }
 
     public void updateDashboard() {
+
+        // Even more old dashboard stuff
 
   /*      if ((Timer.getFPGATimestamp() % Constants.kUpdateRate) / 0.02 < 1) {
             
@@ -146,8 +161,11 @@ public class RobotContainer {
 
 
     public void initCam() {
+        // Get the back camera plugged into the RIO
         UsbCamera backCamera = CameraServer.getInstance().startAutomaticCapture(0);
+        // Feed that back camera into a new stream so we can add compression
         MjpegServer backCameraStream = CameraServer.getInstance().startAutomaticCapture(backCamera);
+        // Compress the stream, set it's resolution, and set it's framerate along with the camera's
         backCameraStream.setCompression(Constants.Camera.kCameraCompression);
         backCamera.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
         backCameraStream.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
@@ -157,21 +175,25 @@ public class RobotContainer {
     }
 
     public void startDashboardCapture() {
+        // If the FMS is connected, start recording all data sent to shuffleboard
         if(DriverStation.getInstance().isFMSAttached()) {
             Shuffleboard.startRecording();
         }
     }
 
     public void stopDashboardCapture() {
+        // Stop recording
         Shuffleboard.startRecording();
     }
 
     public void changeMode() {
-        mVision.setup();
+        // Reset the Vision Subsystem because robotInit doesn't work when connected to the FMS for some reason
+        mVision.reset();
         mDrive.reset();
     }
 
     public void stopTalons() {
+        // Stop powering the talons
         mDrive.setVoltage(0.0, 0.0);
     }
 
@@ -186,7 +208,9 @@ public class RobotContainer {
 */  
         //return new SimpleAuto(mDrive, mShooter, mTransport, mIntake, mVision);
         //return new Aim(mDrive, mVision); FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
-        FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
+        
+        // Configure global parameters for trajectory following
+        FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
 
         try {
             Trajectory line = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
@@ -196,33 +220,30 @@ public class RobotContainer {
             Trajectory[] paths = { intake1, intake2 };
             return new MoveForward(mDrive, turn);
         } catch (IOException e) {
+            // If the trajectory file can't be read, print the error and return a new command that does nothing
             System.out.println(e);
             return new InstantCommand();
         }
     
     }
 
-    public Command aim() {
-        return new Aim(mDrive, mVision);
-    }
-
     public void printOdo() {
+        // Print the odometer
         System.out.println(mDrive.getPose());
     }
 
     public void printPos() {
+        // Print both wheel encoder positions
         System.out.println(new WheelPositions(mDrive.getPositionLeft(), mDrive.getPositionRight()));
     }
 
     public void printVel() {
+        // Print the wheel velocities
         System.out.println(mDrive.getWheelSpeeds());
     }
 
     public void updateRPM() {
+        // Update the shooter RPM on Shuffleboard
         mRPM.setDouble(mShooter.getRPM());
-    }
-
-    public void printTOF() {
-        System.out.println(mTransport.getRange() + ", " + mTransport.getDeviation());
     }
 }

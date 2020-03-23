@@ -16,17 +16,20 @@ public class ShooterSubsystem extends SubsystemBase {
     private WPI_TalonFX mRightMotor;
 
     public ShooterSubsystem() {
-        mLeftMotor = new WPI_TalonFX(Constants.Shooter.kLeftShooterMotor);
-        mRightMotor = new WPI_TalonFX(Constants.Shooter.kRightShooterMotor);
+        mLeftMotor = new WPI_TalonFX(Constants.Shooter.kLeftMotor);
+        mRightMotor = new WPI_TalonFX(Constants.Shooter.kRightMotor);
 
         MotorConfig.resetTalon(mLeftMotor);
         MotorConfig.resetTalon(mRightMotor);
+        
+        leftInverted(Constants.Shooter.kLeftInverted);
+        rightInverted(Constants.Shooter.kRightInverted);
 
-        FeedbackConstants.config(mLeftMotor, Constants.Shooter.kShooterFeedbackConstants, Constants.Shooter.kShooterSlot);
-        FeedbackConstants.config(mRightMotor, Constants.Shooter.kShooterFeedbackConstants, Constants.Shooter.kShooterSlot);
+        FeedbackConstants.config(mLeftMotor, Constants.Shooter.kFeedbackConstants, Constants.Shooter.kSlot);
+        FeedbackConstants.config(mRightMotor, Constants.Shooter.kFeedbackConstants, Constants.Shooter.kSlot);
 
-        MotorConfig.config(mLeftMotor, Constants.Shooter.kShooterConfig);
-        MotorConfig.config(mRightMotor, Constants.Shooter.kShooterConfig);
+        MotorConfig.config(mLeftMotor, Constants.Shooter.kConfig);
+        MotorConfig.config(mRightMotor, Constants.Shooter.kConfig);
 
         mLeftMotor.setNeutralMode(NeutralMode.Coast);
         mRightMotor.setNeutralMode(NeutralMode.Coast);
@@ -45,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spin(double rpm) {
-        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kShooterConfig.getEpr(), Constants.Shooter.kShooterConfig.getGearRatio(), Constants.Shooter.kShooterVelocitySampleTime);
+        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio(), Constants.Shooter.kVelocitySampleTime);
         mLeftMotor.set(ControlMode.Velocity, velocity);
         mRightMotor.set(ControlMode.Velocity, velocity);
     }
@@ -56,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kShooterConfig.getEpr(), Constants.Shooter.kShooterConfig.getGearRatio(), Constants.Shooter.kShooterVelocitySampleTime);
+        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio(), Constants.Shooter.kVelocitySampleTime);
     }
 
     public void setCurrent(double amps) {

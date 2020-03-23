@@ -13,6 +13,7 @@ import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.lib.config.FeedbackConfig;
 import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotionMagicConfig;
 import frc.lib.config.MotorConfig;
@@ -22,8 +23,11 @@ import frc.lib.vision.Resolution;
 
 public final class Constants {
 
-    // Button Board Constants
+    // =============================
+    //    Button Board Constants
+    // =============================
     public static class ButtonBoard {
+        // Button Mapping
         public static final int kPort = 1;
         public static final int kSpinUp = 1;
         public static final int kAim = 2;
@@ -43,190 +47,239 @@ public final class Constants {
         public static final int kWOFRightSmall = 16;
     }
 
+
+    // ======================
+    //    Drive Constants
+    // ======================
     public static class Drive {
 
-        // Drive Motor Ports
-        public static final int kLeftDriveMotorPort = 0;
-        public static final int kLeftDriveMotorFollowerPort = 1;
-        public static final int kRightDriveMotorPort = 2;
-        public static final int kRightDriveMotorFollowerPort = 3;
+        // Motor Ports
+        public static final int kLeftMotorPort = 0; // The left drive motor port
+        public static final int kLeftMotorFollowerPort = 1; // The left follower drive motor port
+        public static final int kRightMotorPort = 2; // The right drive motor port
+        public static final int kRightMotorFollowerPort = 3; // The right follower drive motor port
 
         // Driving Constants
-        public static final double kDeadbandThreshold = 0.02;
-        public static final int kJoystickPort = 0;
-        public static final int kThrottleAxis = 1;
-        public static final int kTurnAxis = 2;
-        public static final int kTrimAxis = 0;
-        public static final double kMaxPower = 1.0;
-        public static final double kTurnRatio = 0.25;
-        public static final double kTrimRatio = 0.5;
-        public static final boolean kThrottleInverted = true;
-        public static final boolean kTurnInverted = false;
-        public static final boolean kTrimInverted = false;
-        public static final double kCreepSpeed = 0.15;
+        public static final double kDeadbandThreshold = 0.02; // The threshold for sensing input on the joystick
+        public static final int kJoystickPort = 0; // The port that the joystick is on
+        public static final int kThrottleAxis = 1; // The throttle axis on the joystick
+        public static final int kTurnAxis = 2; // The turn axis on the joystick
+        public static final int kTrimAxis = 0; // The trim axis on the joystick
+        public static final double kMaxPower = 1.0; // The maximum power(0.0-1.0) that the motors will output
+        public static final double kTurnRatio = 0.25; // How much the robot likes to turn
+        public static final double kTrimRatio = 0.5; // How much the robot trims
+        public static final boolean kThrottleInverted = true; // If the throttle axis is inverted
+        public static final boolean kTurnInverted = false; // If the turn axis is inverted
+        public static final boolean kTrimInverted = false; // If the trim axis is inverted
+        public static final double kCreepSpeed = 0.15; // How fast the robot creeps
 
-        // Drive System Constants
-        public static final boolean kRightDriveInverted = false;
-        public static final boolean kDriveInverted = false;
-        public static final boolean kRightInverted = false;
-        public static final boolean kLeftInverted = true;
-        public static final int kDriveSlot = 0;
-        public static final FeedbackConstants kDriveFeedbackConstants = new FeedbackConstants(0.02, 0, 0.02, 0.05, 200);
-        public static final MotorConfig kDriveConfig = new MotorConfig(40, 0, 0, FeedbackDevice.IntegratedSensor, 2048, 12.75*(48.0/42.0), 0.001);  // TODO: Tune PID
+        //  System Constants
+        public static final boolean kRightInverted = false; // If the right side is inverted
+        public static final boolean kLeftInverted = true; // If the left side is inverted
+        public static final int kSlot = 0; // The PID slot to use for the drive subsystem
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.02, 0, 0.02, 0.05, 200); // The feedback constants for the drive
+        public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 12.75*(48.0/42.0)); //  The feedback config for the drive
+        public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001);  // The config for the drive TODO: Tune PID
 
         // Trajectory Following Constants
-        public static final SimpleMotorFeedforward kDriveFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361);
-        public static final PIDController kPathPID = new PIDController(0.0287, 0,  0);
-        public static final double kTrackWidth = 0.511;
-        public static final double kB = 2.0;
-        public static final double kZeta = 0.7;
-        public static final double kDriveWheelDiameter = Units.inchesToMeters(8);
-        public static final double kVelSampleTime = 0.1;
+        public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361); // The feedforward for the drive
+        public static final PIDController kPathPID = new PIDController(0.0287, 0,  0); // The PID for trajectory following
+        public static final double kTrackWidth = 0.511; // The track width of the drive
+        public static final double kB = 2.0; // The B constant for RamseteController
+        public static final double kZeta = 0.7; // The Zeta constant for RamseteController
+        public static final double kWheelDiameter = Units.inchesToMeters(8); // The diameter of the wheels on the robot
+        public static final double kVelSampleTime = 0.1; // Velocity on the Talons is measured in encoder units per 100ms or 0.1 seconds
 
         // Trajectory Generation Constants
-        public static final double kMaxVelocity = 0.75;  // TODO: Determine correct value
-        public static final double kMaxAcceleration = 0.75;  // TODO: Determine correct value
+        public static final double kMaxVelocity = 0.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
+        public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
 
         // Aiming Constants
-        public static final double kMaxAimPower = 0.1;
+        public static final double kMaxAimPower = 0.1; // The maximum motor power used for aiming(0.0-1.0)
 
     }
 
+    // ===============================
+    //    Global Robot Constants
+    // ===============================
     public static class Robot {
 
-        public static final double kMinBatteryVoltage = 10;  // TODO: Determine correct value
+        public static final double kMinBatteryVoltage = 9; // The lowest voltage the battery should sag to  // TODO: Determine correct value
 
     }
     
 
-    public static class Config {
+    // ========================================
+    //    Global Motor Controller Constants
+    // ========================================
+    public static class MotorController {
 
-        // Motion Magic Constants
-        public static final int kMotionMagicPeriod = 10;
+        public static final int kMotionMagicPeriod = 20;  // How often the Talon reports info on motion magic(in ms)
+        public static final int kPIDPeriod = 20; // How often the Talon reports info on PID(in ms)
 
     }
+
+    // =====================
+    //    Gyro Constants
+    // =====================
 
     public static class Gyro {
 
-        // Gyro Constants
-        public static final boolean kGyroReversed = false;  // TODO: Determine correct value
+        public static final boolean kGyroReversed = false; // If the gyro is inverted
 
     }
 
+    // ==========================
+    //    Dashboard Constants
+    // ==========================
     public static class Dashboard {
 
         // Dashboard Constants
-        public static final double kUpdateRate = 0.5;  // TODO: Determine correct value
+        public static final double kUpdateRate = 0.5; // The dashboard update rate // TODO: Determine correct value
 
     }
 
     
+    // =======================
+    //    Vision Constants
+    // =======================
     public static class Vision {
 
-        // Vision Constants
-        public static final FOV kLimelightFOV = new FOV(59.6, 45.7);
-        public static final Resolution kLimelightResolution = new Resolution(960, 720);
-        public static final double kLimelightAngle = 16.5;  //TODO: Determine correct value
-        public static final double kLimelightHeight = .794;  //TODO: Determine final height
-        public static final double kTargetHeight = 2.5;
-        public static final double kVerticalOffset = kTargetHeight - kLimelightHeight;
-        public static final double kTargetWidth = 1.0;
-        public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254;
-        public static final double kPAim = 0.02;
-        public static final double kIAim = 0.0;
-       // public static final double kIAim = 0.0025;
-        public static final double kDAim = 0.0065;
-        public static final double kDampening = 0.0;
-        public static final double kAimOffset = 0.0;
+        public static final FOV kLimelightFOV = new FOV(59.6, 45.7); // The Field-of-view of the limelight
+        public static final Resolution kLimelightResolution = new Resolution(960, 720); // The resolution of the limelight
+        public static final double kLimelightAngle = 16.5; // The vertical angle the limelight is at //TODO: Determine correct value
+        public static final double kLimelightHeight = .794; // The height of the limelight off of the ground //TODO: Determine final height
+        public static final double kTargetHeight = 2.5; // The height of the target in meters
+        public static final double kVerticalOffset = kTargetHeight - kLimelightHeight; // The difference between the height of the limelight and the height of the target
+        public static final double kTargetWidth = 1.0; // The width of the retro-reflective tape on the port
+        public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254; // The width of the tape 
+        public static final double kPAim = 0.02; // The P value used for aiming
+        public static final double kIAim = 0.0;  // The I value used for aiming
+        public static final double kDAim = 0.0065; // The D value used for aiming
+        public static final double kAimOffset = 0.0; // A horizontal offset to use for aiming
     }
 
+    // ======================
+    //    Camera Constants
+    // ======================
     public static class Camera {
          
         // Camera Constants
-        public static final Resolution kCameraResolution = new Resolution(160, 120);
-        public static final int kCameraFPS = 14;
-        public static final int kCameraCompression = 75;
+        public static final Resolution kCameraResolution = new Resolution(160, 120); // The resolution to use for streaming the camera to the dashboard
+        public static final int kCameraFPS = 14;  // The FPS to use when streaming the camera to the dashboard
+        public static final int kCameraCompression = 75; // The compression to use when streaming the camera to the dashboard
     }   
 
+    // =======================
+    //    Shooter Constants
+    // =======================
     public static class Shooter {
         
-        // Shooter Constants
-        public static final int kLeftShooterMotor = 11;
-        public static final int kRightShooterMotor = 10;
-        public static final FeedbackConstants kShooterFeedbackConstants = new FeedbackConstants(0.1, 0.001, 0.0, 0.0463, 10000);
-        public static final MotorConfig kShooterConfig = new MotorConfig(40, 0, 0, FeedbackDevice.IntegratedSensor, 2048, 1.0, 0.001); // TODO: Redo current on shooter
-        public static final double kStableRPMThreshold = 100;
-        public static final double kShooterVelocitySampleTime = 0.1;
-        public static final double kShooterStableCurrentLimit = 10;
-        public static final int kMaxShooterSlewRate = 4000;  // TODO: Determine correct value
-        public static final int kShooterSlot = 0;
-        public static final boolean kShooterLeftInveted = true;
-        public static final boolean kShooterRightInverted = false;
+        public static final int kLeftMotor = 11; // The ID of the Shooter Falcon on the left
+        public static final int kRightMotor = 10; // The ID of the Shooter Falcon on the right
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.1, 0.001, 0.0, 0.0463, 10000); // The feedback constants to use for the shooter
+        public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 1.0); // The feedback config for the shooter
+        public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001); // The config for the shooter motors // TODO: Redo current on shooter, add voltage compensation
+        public static final double kStableRPMThreshold = 100; // The threshold to consider the rpm "Stable" at and switch to a lower current
+        public static final double kVelocitySampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
+        public static final double kStableCurrentLimit = 10; // The current limit once the Talon is within the stable threshold
+        public static final int kMaxSlewRate = 4000; // The max slew rate in RPM per second to ramp the shooter up at // TODO: Determine correct value
+        public static final int kSlot = 0; // the PID slot to use for the shooter
+        public static final boolean kLeftInverted = true; // If the left shooter motor is inverted
+        public static final boolean kRightInverted = false; // If the right shooter motor is inverted
     
     }
 
+    // ===========================
+    //    Color Wheel Constants   
+    // ===========================
     public static class WOF {
 
-        // Color Wheel Constants
-        public static final double kWOFDiameter = 32;
-        public static final double kWOFWheelDiameter = 7.5;
-        public static final FeedbackConstants kWOFFeedbackConstants = new FeedbackConstants(0.01, 0, 0.01, 0.008, 0);
-        public static final MotorConfig kWOFConfig = new MotorConfig(10, 20, 500, FeedbackDevice.QuadEncoder, 4096, 20.0, 0.001);  // TODO: Tune PID
-        public static final MotionMagicConfig kWOFMMConfig = new MotionMagicConfig((int)EncoderUtil.fromRPM(300, kWOFConfig.getEpr(), kWOFConfig.getGearRatio(), Constants.Drive.kVelSampleTime), (int)EncoderUtil.fromRPM(600, kWOFConfig.getEpr(), kWOFConfig.getGearRatio(), Constants.Drive.kVelSampleTime), 0);  // TODO: Determine correct values
-        public static final double kRamp = 0.1;
-        public static final int kWOFSlot = 0;
-        public static final int kWOFMotor = 5;
-        public static final double kWOFThreshold = 0.02;
-        public static final double kWOFRotations = 3.5;
+        public static final double kDiameter = 32; // The diameter of the Wheel-of-Fortune
+        public static final double kWheelDiameter = 7.5; // The diameter of the wheel used to turn the wheel of fortune
+        public static final double kVelSampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.01, 0, 0.01, 0.008, 0); // The feedback constants for the Wheel-of-Fortune
+        public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.QuadEncoder, 4096, 20.0); // The feedback config for the Wheel-of-Fortune
+        public static final MotorConfig kConfig = new MotorConfig(10, 20, 500, 0.001); // The motor config for the Wheel-of-Fortune // TODO: Tune PID
+        public static final MotionMagicConfig kMMConfig = new MotionMagicConfig(
+            (int)EncoderUtil.fromRPM(300,
+                kFeedbackConfig.getEpr(),
+                kFeedbackConfig.getGearRatio(),
+                kVelSampleTime),
+            (int)EncoderUtil.fromRPM(600,
+                kFeedbackConfig.getEpr(),
+                kFeedbackConfig.getGearRatio(),
+                Constants.Drive.kVelSampleTime),
+            0); // The Motion Magic config for the Wheel-of-Fortune // TODO: Determine correct values
+        public static final int kSlot = 0; // The PID slot used for the Wheel-of-Fortune talon
+        public static final int kTalon = 5; // The ID of the Talon used for the Wheel-of-Fortune
+        public static final double kThreshold = 0.02; // How close the Wheel-of-Fortune has to be to end the Motion Magic command
+        public static final double kRotations = 3.5; // How far to rotation the Wheel-of-Fortune for rotation control
 
     }
 
+    // ==========================
+    //    Transport Constants
+    // ==========================
     public static class Transport {
 
-        // Transport Constants
-        public static final int kTransportTalon = 6;
-        public static final double kPulleyDiameter = 2.75;  //TODO: Get correct diameter
-        public static final double kVelocitySampleTime = 0.1;
-        public static final FeedbackConstants kTransportFeedbackConstants = new FeedbackConstants(0.15, 0, 0.05, 0, 0);
-        public static final FeedbackConstants kTransportVelocityFeedbackConstants = new FeedbackConstants(0.01, 0, 1.0, 0.030536, 0);
-        public static final MotorConfig kTransportConfig = new MotorConfig(15, 25, 500, FeedbackDevice.QuadEncoder, 4096, 20.0, 0.001);
-        public static final MotionMagicConfig kTransportMMConfig = new MotionMagicConfig((int)EncoderUtil.fromVelocity(40.0, kTransportConfig.getEpr(), kTransportConfig.getGearRatio(), kPulleyDiameter, kVelocitySampleTime),
-            (int)EncoderUtil.fromVelocity(160.0, kTransportConfig.getEpr(), kTransportConfig.getGearRatio(), kPulleyDiameter, kVelocitySampleTime),
-            0);
-        public static final int kTransportSlot = 0;
-        public static final int kTransportVelocitySlot = 1;
-        public static final double kTransportVelocity = 25;
-        public static final double kTransportThreshold = 0.125;
-        public static final int kTransportDebounceSize = 5;
-        public static final double kTransportMargin = 5.0;
+        public static final int kTalon = 6; // The ID of the Talon used for the Transport
+        public static final double kPulleyDiameter = 2.75; // The diameter of the pulley used in the transport in inches //TODO: Get correct diameter
+        public static final double kVelocitySampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.15, 0, 0.05, 0, 0); // The feedback constants for the transport in position control mode
+        public static final FeedbackConstants kVelocityFeedbackConstants = new FeedbackConstants(0.01, 0, 1.0, 0.030536, 0); // The feedback constants for the transport in velocity control mode
+        public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.QuadEncoder, 4096, 20.0); // The feedback config for the transport
+        public static final MotorConfig kConfig = new MotorConfig(15, 25, 500, 0.001); // The motor config for the transport
+        public static final MotionMagicConfig kMMConfig = new MotionMagicConfig(
+            (int)EncoderUtil.fromVelocity(40.0,
+                kFeedbackConfig.getEpr(),
+                kFeedbackConfig.getGearRatio(),
+                kPulleyDiameter,
+                kVelocitySampleTime),
+            (int)EncoderUtil.fromVelocity(160.0,
+                kFeedbackConfig.getEpr(),
+                kFeedbackConfig.getGearRatio(),
+                kPulleyDiameter,
+                kVelocitySampleTime),
+            0); // The Motion Magic profile for the transport
+        public static final int kSlot = 0; // The PID slot to use for the transport
+        public static final int kVelocitySlot = 1; // The PID slot to use for velocity control mode
+        public static final double kVelocity = 25; // The speed of the transport in inches per second
+        public static final double kThreshold = 0.125; // How close the transport has to be to it's setpoint to end the motion magic command
+        public static final double kMargin = 5.0; // How much to increment the transport after it stops sensing a ball
 
         // TOF Sensors
-        public static final int kIntakeTOF = 1;  // TODO: Determine correct value
-        public static final int kShotoerTOF = 0;  // TODO: Determine correct value
-        public static final double kMaxDistance = 130.0;  // TODO: Determine correct value
-        public static final double kMaxDeviation = 5.0;
-        public static final RangingMode kRangingMode = RangingMode.Short;
-        public static final double kTOFSampleTime = 20;
+        public static final int kIntakeTOF = 1; // The ID of the intake Time-of-Flight sensor
+        public static final int kShooterTOF = 0;  // The ID of the shooter Time-of-Flight sensor
+        public static final double kMaxDistance = 130.0;  // The distance to detect a ball at
+        public static final double kMaxDeviation = 5.0; // The max deviation allowed for a ball detection
+        public static final RangingMode kRangingMode = RangingMode.Short; // Which ranging mode to use
+        public static final double kTOFSampleTime = 20; // How often to check for balls(in ms)
+        public static final int kDebounceSize = 5; // How much to debounce the Time-of-Flight sensors
 
     }
 
 
+    // =======================
+    //    Intake Constants
+    // =======================
     public static class Intake {
-
-        // Intake Constants
-        public static final int kIntakeTalon = 4;
-        public static final double kIntakePower = 0.75;
-        public static final boolean kIntakeInverted = false;
+        public static final int kTalon = 4; // The ID of the Intake Talon
+        public static final double kPower = 0.75; // The power to run the Intake at
+        public static final boolean kInverted = false; // If the intake is inverted
 
     }
 
+    // =====================
+    //    Climb Constants
+    // =====================
     public static class Climb {
 
-        // Climb Constants
-        public static final int kLeftClimbTop = 3;
-        public static final int kLeftClimbBottom = 2;
-        public static final int kRightClimbTop = 1;
-        public static final int kRightClimbBottom = 0;
+        // Solenoids
+        public static final int kLeftTop = 3;
+        public static final int kLeftBottom = 2;
+        public static final int kRightTop = 1;
+        public static final int kRightBottom = 0;
     
     }
 

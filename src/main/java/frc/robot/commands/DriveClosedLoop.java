@@ -48,8 +48,6 @@ public class DriveClosedLoop extends CommandBase {
   @Override
   public void execute() {
 
-    //System.out.println(mDriveSubsystem.getVelocityLeft());
-
     double throttle = mThrottle.getAsDouble();
     double trim = mTrim.getAsDouble();
     double turn = mTurn.getAsDouble();
@@ -72,10 +70,8 @@ public class DriveClosedLoop extends CommandBase {
       powerR = mMaxPower;
       powerL = mMaxPower + turningPower;
     }
-
-    //System.out.println((powerL*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)) + ", " + (powerR*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
-
-    mDriveSubsystem.driveClosedLoop((powerL*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)), (powerR*Constants.Drive.kDriveFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
+    
+    mDriveSubsystem.driveClosedLoop((powerL*Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)), (powerR*Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
   }
 
   // Called once the command ends or is interrupted.

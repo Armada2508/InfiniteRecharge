@@ -18,10 +18,10 @@ public class SpinRoller extends CommandBase {
 
         mShooterSubsystem = shooterSubsystem;
         mRpm = rpm;
-        mLimiter = new SlewRateLimiter(Constants.Shooter.kMaxShooterSlewRate);
+        mLimiter = new SlewRateLimiter(Constants.Shooter.kMaxSlewRate);
         mAtSpeed = false;
 
-        mShooterSubsystem.setCurrent(Constants.Shooter.kShooterConfig.getContinuousCurrent());
+        mShooterSubsystem.setCurrent(Constants.Shooter.kConfig.getContinuousCurrent());
 
         // Require ShooterSubsystem
         addRequirements(shooterSubsystem);
@@ -38,7 +38,7 @@ public class SpinRoller extends CommandBase {
             mAtSpeed = true;
         }
         if(mAtSpeed) {
-            mShooterSubsystem.setCurrent(Constants.Shooter.kShooterStableCurrentLimit);
+            mShooterSubsystem.setCurrent(Constants.Shooter.kStableCurrentLimit);
         }
         mShooterSubsystem.spin(mLimiter.calculate(mRpm));
     }

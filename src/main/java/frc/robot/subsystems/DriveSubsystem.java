@@ -24,10 +24,10 @@ import frc.robot.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private final WPI_TalonFX mRight = new WPI_TalonFX(Constants.Drive.kRightDriveMotorPort);
-    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(Constants.Drive.kRightDriveMotorFollowerPort);
-    private final WPI_TalonFX mLeft = new WPI_TalonFX(Constants.Drive.kLeftDriveMotorPort);
-    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(Constants.Drive.kLeftDriveMotorFollowerPort);
+    private final WPI_TalonFX mRight = new WPI_TalonFX(Constants.Drive.kRightMotorPort);
+    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(Constants.Drive.kRightMotorFollowerPort);
+    private final WPI_TalonFX mLeft = new WPI_TalonFX(Constants.Drive.kLeftMotorPort);
+    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(Constants.Drive.kLeftMotorFollowerPort);
 
     private final SpeedControllerGroup mRightMotors = new SpeedControllerGroup(mRight, mRightFollower);
     private final SpeedControllerGroup mLeftMotors = new SpeedControllerGroup(mLeft, mLeftFollower);
@@ -76,7 +76,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setVoltageReverse(double voltsR, double voltsL) {
-        System.out.println(voltsR + ", " + voltsL);
         mRightMotors.setVoltage(-voltsR);
         mLeftMotors.setVoltage(-voltsL);
     }
@@ -173,10 +172,10 @@ public class DriveSubsystem extends SubsystemBase {
         mLeft.configMotionProfileTrajectoryPeriod(0);
         MotorConfig.resetTalon(mRight);
         MotorConfig.resetTalon(mLeft);
-        FeedbackConstants.config(mRight, Constants.Drive.kDriveFeedbackConstants, Constants.Drive.kDriveSlot);
-        FeedbackConstants.config(mLeft, Constants.Drive.kDriveFeedbackConstants, Constants.Drive.kDriveSlot);
-        MotorConfig.config(mRight, Constants.Drive.kDriveConfig);
-        MotorConfig.config(mLeft, Constants.Drive.kDriveConfig);
+        FeedbackConstants.config(mRight, Constants.Drive.kFeedbackConstants, Constants.Drive.kSlot);
+        FeedbackConstants.config(mLeft, Constants.Drive.kFeedbackConstants, Constants.Drive.kSlot);
+        MotorConfig.config(mRight, Constants.Drive.kConfig);
+        MotorConfig.config(mLeft, Constants.Drive.kConfig);
     }
 
     public double getPositionLeft() {
@@ -192,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toDistance(int sensorPosition) {
-        return EncoderUtil.toDistance(sensorPosition, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter);
+        return EncoderUtil.toDistance(sensorPosition, Constants.Drive.kFeedbackConfig.getEpr(), Constants.Drive.kFeedbackConfig.getGearRatio(), Constants.Drive.kWheelDiameter);
     }
 
     public double getVelocityRight() {
@@ -204,11 +203,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double toVelocity(int velocity) {
-        return EncoderUtil.toVelocity(velocity, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
+        return EncoderUtil.toVelocity(velocity, Constants.Drive.kFeedbackConfig.getEpr(), Constants.Drive.kFeedbackConfig.getGearRatio(), Constants.Drive.kWheelDiameter, Constants.Drive.kVelSampleTime);
     }
 
     public double fromVelocity(double velocity) {
-        return EncoderUtil.fromVelocity(velocity, Constants.Drive.kDriveConfig.getEpr(), Constants.Drive.kDriveConfig.getGearRatio(), Constants.Drive.kDriveWheelDiameter, Constants.Drive.kVelSampleTime);
+        return EncoderUtil.fromVelocity(velocity, Constants.Drive.kFeedbackConfig.getEpr(), Constants.Drive.kFeedbackConfig.getGearRatio(), Constants.Drive.kWheelDiameter, Constants.Drive.kVelSampleTime);
     }
 
     public void setMaxOutput(double maxOutput) {

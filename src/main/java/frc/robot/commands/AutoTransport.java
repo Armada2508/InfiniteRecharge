@@ -19,7 +19,7 @@ public class AutoTransport extends CommandBase {
 
         // Require TransportSubsystem
         addRequirements(mTransportSubsystem);
-        mWasBall = new boolean[Constants.Transport.kTransportDebounceSize];
+        mWasBall = new boolean[Constants.Transport.kDebounceSize];
     }
 
     @Override
@@ -48,7 +48,7 @@ public class AutoTransport extends CommandBase {
         // If the motion magic profile running on the transport is finished run the transport
         if(mTransportSubsystem.motionMagicDone() && !shooterBall) {
             // If there is a ball and there is no ball by the shooter, run the transport
-            mTransportSubsystem.setVelocity(ball[0] ? Constants.Transport.kTransportVelocity : 0);
+            mTransportSubsystem.setVelocity(ball[0] ? Constants.Transport.kVelocity : 0);
         }
         if(shooterBall) {
             mTransportSubsystem.setVelocity(0);
@@ -69,7 +69,7 @@ public class AutoTransport extends CommandBase {
         // If the ball is gone and there is no ball by the shooter
         if(ballGone && !shooterBall) {
             // Move the transport to reduce jamming
-            mTransportSubsystem.incrementPosition(Constants.Transport.kTransportMargin);
+            mTransportSubsystem.incrementPosition(Constants.Transport.kMargin);
         }
         mWasNoBall = noBall;
     }

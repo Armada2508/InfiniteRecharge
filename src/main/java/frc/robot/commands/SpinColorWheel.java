@@ -33,6 +33,6 @@ public class SpinColorWheel extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return mColorWheelSubsystem.getRotations() < Constants.WOF.kWOFThreshold;
+        return mColorWheelSubsystem.getRotations() < Constants.WOF.kThreshold;
     }
 }

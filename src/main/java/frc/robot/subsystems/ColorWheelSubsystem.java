@@ -16,15 +16,15 @@ public class ColorWheelSubsystem extends SubsystemBase {
     private final WPI_TalonSRX mWOFTalon;
 
     public ColorWheelSubsystem() {
-        mWOFTalon = new WPI_TalonSRX(Constants.WOF.kWOFMotor);
+        mWOFTalon = new WPI_TalonSRX(Constants.WOF.kTalon);
         MotorConfig.resetTalon(mWOFTalon);
-        FeedbackConstants.config(mWOFTalon, Constants.WOF.kWOFFeedbackConstants, Constants.WOF.kWOFSlot);
-        MotorConfig.config(mWOFTalon, Constants.WOF.kWOFConfig);
-        MotionMagicConfig.config(mWOFTalon, Constants.WOF.kWOFMMConfig);
+        FeedbackConstants.config(mWOFTalon, Constants.WOF.kFeedbackConstants, Constants.WOF.kSlot);
+        MotorConfig.config(mWOFTalon, Constants.WOF.kConfig);
+        MotionMagicConfig.config(mWOFTalon, Constants.WOF.kMMConfig);
     }
 
     public void rotate(double rotations) {
-        mWOFTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(rotations*Constants.WOF.kWOFDiameter*Math.PI, Constants.WOF.kWOFConfig.getEpr(), Constants.WOF.kWOFConfig.getGearRatio(), Constants.WOF.kWOFWheelDiameter));
+        mWOFTalon.set(ControlMode.MotionMagic, EncoderUtil.fromDistance(rotations*Constants.WOF.kDiameter*Math.PI, Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio(), Constants.WOF.kWheelDiameter));
     }
 
     public void reset() {
@@ -32,11 +32,11 @@ public class ColorWheelSubsystem extends SubsystemBase {
     }
 
     public double getRotations() {
-        return EncoderUtil.toDistance(mWOFTalon.getSelectedSensorPosition(), Constants.WOF.kWOFConfig.getEpr(), Constants.WOF.kWOFConfig.getGearRatio(), Constants.WOF.kWOFWheelDiameter)/(Constants.WOF.kWOFDiameter*Math.PI);
+        return EncoderUtil.toDistance(mWOFTalon.getSelectedSensorPosition(), Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio(), Constants.WOF.kWheelDiameter)/(Constants.WOF.kDiameter*Math.PI);
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kWOFConfig.getEpr(), Constants.WOF.kWOFConfig.getGearRatio(), Constants.Drive.kVelSampleTime);
+        return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio(), Constants.Drive.kVelSampleTime);
     }
 
     public char getColor() {

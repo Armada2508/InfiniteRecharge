@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.lib.logger.Logger;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
@@ -47,12 +48,8 @@ public class RobotContainer {
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
     private final VisionSubsystem mVision = new VisionSubsystem();
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
-    private ArrayList<NetworkTableEntry> talonEntries = new ArrayList<NetworkTableEntry>();
     private final Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private final Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
-    private NetworkTableEntry mGyroEntry;
-    private NetworkTableEntry mOdometer;
-    private NetworkTableEntry mRPM;
     private final ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
 
     /**
@@ -62,7 +59,6 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         new PneumaticsSubsystem();
-        mRPM = mShooterTable.add("RPM", 0).getEntry();
     }
 
     public void robotInit() {
@@ -113,52 +109,18 @@ public class RobotContainer {
     
 
     public void initDashboard() {
+        
+        Logger.logDouble(mDrive.getGyro()::getFusedHeading, "Gyro");
+        Logger.logDouble(mDrive::getAverageDistance, "Odometer");
 
-        // Old dashboard stuff
-
-        WPI_TalonFX[] allTalons = mDrive.getAllTalons();
-
-     /*   for (WPI_TalonFX talon : allTalons) {
-            talonEntries.add(mSensorLoggerTab.add("Talon " + (talon.getDeviceID()),
-                    talon.getMotorOutputVoltage())
-                    .withWidget(BuiltInWidgets.kGraph)
-                    .getEntry());
+        for (int i = 0; i < mDrive.getAllTalons().length; i++) {
+            Logger.logDouble(mDrive.getAllTalons()[i]::getMotorOutputVoltage, "Talon " + mDrive.getAllTalons()[i].getDeviceID()); 
         }
 
-        mGyroEntry = mSensorLoggerTab.add("Gyro", mDrive.getGyro()
-                .getFusedHeading())
-                .withWidget(BuiltInWidgets.kGraph)
-                .getEntry();
+        
+        Logger.logDouble(mShooter::getRPM, "Shooter RPM");
 
-        mOdometer = mSensorLoggerTab.add("Odometer", mDrive.getAverageDistance())
-                .withWidget(BuiltInWidgets.kGraph)
-                .getEntry();
-    */
     }
-
-    public void updateLogger() {
-        // More old dashboard stuff
-
-//        Logger.log(Timer.getFPGATimestamp(), "Time");
-    }
-
-    public void updateDashboard() {
-
-        // Even more old dashboard stuff
-
-  /*      if ((Timer.getFPGATimestamp() % Constants.kUpdateRate) / 0.02 < 1) {
-            
-            Logger.newNoise();
-            Logger.logHistory(Logger.addNoise(mDrive.getGyro().getFusedHeading()), "Gyro");
-            Logger.logHistory(Logger.addNoise(mDrive.getAverageDistance()), "Odometer");
-
-            for (int i = 0; i < mDrive.getAllTalons().length; i++) {
-                Logger.logHistory(Logger.addNoise(mDrive.getAllTalons()[i].getMotorOutputVoltage()), "Talon " + mDrive.getAllTalons()[i].getDeviceID()); 
-            }
-        }
-        */
-    }
-
 
     public void initCam() {
         // Get the back camera plugged into the RIO
@@ -240,10 +202,5 @@ public class RobotContainer {
     public void printVel() {
         // Print the wheel velocities
         System.out.println(mDrive.getWheelSpeeds());
-    }
-
-    public void updateRPM() {
-        // Update the shooter RPM on Shuffleboard
-        mRPM.setDouble(mShooter.getRPM());
     }
 }

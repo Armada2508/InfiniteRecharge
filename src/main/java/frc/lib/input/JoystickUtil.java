@@ -1,4 +1,4 @@
-package frc.lib.drive;
+package frc.lib.input;
 
 public class JoystickUtil {
 

@@ -43,14 +43,26 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
     }
 
+    /**
+     * Set the vertical offset of the limelight
+     * @param offset The offset in degrees
+     */
     public void setYOffset(double offset) {
         mYOffset = offset;
     }
 
+
+    /**
+     * Set the horizontal offset of the limelight
+     * @param offset The offset in degrees
+     */
     public void setXOffset(double offset) {
         mXOffset = offset;
     }
 
+    /**
+     * Setup the subsystem
+     */
     public void setup() {
         setLED(false);
         setYOffset(Constants.Vision.kLimelightAngle);
@@ -59,6 +71,9 @@ public class VisionSubsystem extends SubsystemBase {
         setPIP(true);
     }
 
+    /**
+     * Reset all parameters(LEDs, Pipeline, Driver Cam, PIP)
+     */
     public void reset() {
         setLED(false);
         setPipeline(0);
@@ -106,6 +121,11 @@ public class VisionSubsystem extends SubsystemBase {
         return mLimelight.getEntry("tvert").getDouble(0.0);
     }
 
+    /**
+     * Get the distance to the target based on it's width
+     * @param targetWidth The width of the target
+     * @return The distance to the target in the same units as {@code targetWidth}
+     */
     public double getDistanceWidth(double targetWidth) {
       if(!targetFound()) return 0.0;
 
@@ -119,31 +139,54 @@ public class VisionSubsystem extends SubsystemBase {
       return distance;
     }
 
-    public double getDistanceHeight() {
+    /**
+     * Get the distance to the target based on it's height
+     * @param height The height of the target
+     * @return The distance to the target in the same units as {@code height}
+     */
+    public double getDistanceHeight(double height) {
         if(!targetFound()) return 0.0;
-        return Constants.Vision.kVerticalOffset / Math.tan(Math.toRadians(getTargetCenter().getY()));
+        return height / Math.tan(Math.toRadians(getTargetCenter().getY()));
     }
 
+    /**
+     * Get the skewed angle of the target
+     * @return The angle of the target in degrees
+     */
     public double getTargetAngle() {
         CameraPoint2d[] topPoints = getTopCorners();
         double targetWidth = topPoints[1].getX() - topPoints[0].getX();
-        double maxTargetWidth = Math.toDegrees(Math.atan((Constants.Vision.kTargetWidth - Constants.Vision.kTapeWidth ) / (2.0 * getDistanceHeight())));
+        double maxTargetWidth = Math.toDegrees(Math.atan((Constants.Vision.kTargetWidth - Constants.Vision.kTapeWidth ) / (2.0 * getDistanceHeight(Constants.Vision.kVerticalOffset))));
         int directionMultiplier = (topPoints[0].getY() > topPoints[1].getY()) ? -1 : 1;
-        return Math.acos(targetWidth/maxTargetWidth) * directionMultiplier;
+        return Math.toDegrees(Math.acos(targetWidth/maxTargetWidth)) * directionMultiplier;
     }
     
+    /**
+     * Set the current pipeline
+     * @param pipeline The pipeline to use(0-9)
+     */
     public void setPipeline(int pipeline) {
         mLimelight.getEntry("pipeline").setNumber(pipeline);
     }
 
+    /**
+     * Set the LED mode to the default mode specified in the Web UI
+     */
     public void defaultLED() {
         mLimelight.getEntry("ledMode").setNumber(0);
     }
 
+    /**
+     * Blink the LEDs
+     */
     public void blinkLED() {
         mLimelight.getEntry("ledMode").setNumber(2);
     }
 
+    /**
+     * Set the LEDs to on or off
+     * @param on If the LEDs are on
+     */
     public void setLED(boolean on) {
         if (!on) {
             mLimelight.getEntry("ledMode").setNumber(1);
@@ -152,14 +195,32 @@ public class VisionSubsystem extends SubsystemBase {
         }
     }
 
+    /**
+     * Set the camera to 
+     * @param driverCam If the limelight is in driving mode
+     */
     public void camMode(boolean driverCam) {
         mLimelight.getEntry("camMode").setNumber(driverCam ? 1 : 0);
     }
 
-    public void setPIP(boolean driverCam) {
-        mLimelight.getEntry("stream").setNumber(driverCam ? 2 : 1);
+    /**
+     * Set the streaming mode to Side-by-Side
+     */
+    public void setSBS() {
+        mLimelight.getEntry("stream").setNumber(0);
     }
 
+    /**
+     * Sets the streaming mode to Picture-in-Picture
+     * @param secondaryCam If the secondary camera is bigger than the limelight camera
+     */
+    public void setPIP(boolean secondaryCam) {
+        mLimelight.getEntry("stream").setNumber(secondaryCam ? 2 : 1);
+    }
+
+    /**
+     * @return All detected corners
+     */
     public CameraPoint2d[] getCorners() {
         double[] xy = mLimelight.getEntry("tcornxy").getDoubleArray(new double[0]);
         CameraPoint2d[] corners = new CameraPoint2d[xy.length/2];
@@ -174,6 +235,9 @@ public class VisionSubsystem extends SubsystemBase {
         return corners;
     }
 
+    /**
+     * @return The top two corners, the left point having index 0 and the right having index 1
+     */
     public CameraPoint2d[] getTopCorners() {
         CameraPoint2d[] corners = getCorners();
         if(corners.length < 2) {
@@ -201,6 +265,9 @@ public class VisionSubsystem extends SubsystemBase {
         return topCorners;
     }
 
+    /**
+     * @return The center of the target
+     */
     public CameraPoint2d getTargetCenter() {
         if(getTopCorners().length < 2) {
             return new CameraPoint2d(0, 0);

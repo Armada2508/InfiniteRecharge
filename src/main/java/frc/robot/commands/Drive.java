@@ -7,7 +7,7 @@
 
 package frc.robot.commands;
 
-import frc.lib.drive.JoystickUtil;
+import frc.lib.input.JoystickUtil;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;

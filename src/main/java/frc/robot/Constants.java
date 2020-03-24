@@ -59,7 +59,7 @@ public final class Constants {
         public static final int kRightMotorPort = 2; // The right drive motor port
         public static final int kRightMotorFollowerPort = 3; // The right follower drive motor port
 
-        // Driving Constants
+        // Drive Input Constants
         public static final double kDeadbandThreshold = 0.02; // The threshold for sensing input on the joystick
         public static final int kJoystickPort = 0; // The port that the joystick is on
         public static final int kThrottleAxis = 1; // The throttle axis on the joystick
@@ -73,7 +73,7 @@ public final class Constants {
         public static final boolean kTrimInverted = false; // If the trim axis is inverted
         public static final double kCreepSpeed = 0.15; // How fast the robot creeps
 
-        //  System Constants
+        // Drive System Constants
         public static final boolean kRightInverted = false; // If the right side is inverted
         public static final boolean kLeftInverted = true; // If the left side is inverted
         public static final int kSlot = 0; // The PID slot to use for the drive subsystem

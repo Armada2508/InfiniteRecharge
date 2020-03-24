@@ -38,15 +38,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     // Run the scheduler to update commands
     CommandScheduler.getInstance().run();
-
-    // Update the dashboard
-    mRobotContainer.updateDashboard();
-
-    // Update the dashboard(again)
-    mRobotContainer.updateLogger();
-
-    // Update the Shooter RPM
-    mRobotContainer.updateRPM();
   }
 
   /**

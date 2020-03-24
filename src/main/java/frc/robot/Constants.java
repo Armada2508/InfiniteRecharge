@@ -142,14 +142,14 @@ public final class Constants {
 
         public static final boolean kGyroReversed = false; // If the gyro is inverted
         public static final int kPigeonCondFrame1Period = 160; // How often the Pigeon reports calibration status and temp
-        public static final int kPigeonCondFrame9Period = 10; // Six degree Yaw, Pitch, Roll
-        public static final int kPigeonCondFrame6Period = 10;
-        public static final int kPigeonCondFrame11Period = 20;
-        public static final int kPigeonCondFrame3Period = 160;
-        public static final int kPigeonCondFrame10Period = 160;
-        public static final int kPigeonRawFrame4Period = 160;
-        public static final int kPigeonBiasedFrame2Period = 160;
-        public static final int kPigeonBiasedFrame6Period = 160;
+        public static final int kPigeonCondFrame9Period = 10; // Six degree fused Yaw, Pitch, Roll
+        public static final int kPigeonCondFrame6Period = 10; // Nine degree fused Yaw, Pitch, Roll
+        public static final int kPigeonCondFrame11Period = 20; // Accumulated Gyro Angles
+        public static final int kPigeonCondFrame3Period = 160; // Accelerometer derived angles
+        public static final int kPigeonCondFrame10Period = 160; // Six degree fused Quaternion
+        public static final int kPigeonRawFrame4Period = 160; // Unprocessed magnetometer values (x,y,z)
+        public static final int kPigeonBiasedFrame2Period = 160; // Biased gyro values (x,y,z)
+        public static final int kPigeonBiasedFrame6Period = 160; // Biased accelerometer values (x,y,z)
 
     }
 

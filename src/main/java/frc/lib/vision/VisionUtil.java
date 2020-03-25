@@ -52,7 +52,7 @@ public class VisionUtil {
      * @return The centered coordinate
      */
     public static double centerPixels(double pixel, double resolution, boolean inverted) {
-        pixel = MathUtil.clamp(pixel, -resolution/2.0, resolution/2.0);
+        pixel = MathUtil.clamp(pixel, 0, resolution - 1.0);
         if(inverted) {
             return (((resolution / 2.0) - 0.5) - (double)pixel);
         } else {

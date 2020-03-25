@@ -225,7 +225,7 @@ public final class Constants {
         public static final double kVelSampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
         public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.01, 0, 0.01, 0.008, 0); // The feedback constants for the Wheel-of-Fortune
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.QuadEncoder, 4096, 20.0); // The feedback config for the Wheel-of-Fortune
-        public static final MotorConfig kConfig = new MotorConfig(10, 20, 500, 0.001); // The motor config for the Wheel-of-Fortune // TODO: Tune PID
+        public static final MotorConfig kConfig = new MotorConfig(10, 20, 500, 0.001); // The motor config for the Wheel-of-Fortune
         public static final MotionMagicConfig kMMConfig = new MotionMagicConfig(
             (int)EncoderUtil.fromRPM(300,
                 kFeedbackConfig.getEpr(),
@@ -235,7 +235,7 @@ public final class Constants {
                 kFeedbackConfig.getEpr(),
                 kFeedbackConfig.getGearRatio(),
                 Constants.Drive.kVelSampleTime),
-            0); // The Motion Magic config for the Wheel-of-Fortune // TODO: Determine correct values
+            0); // The Motion Magic config for the Wheel-of-Fortune
         public static final int kSlot = 0; // The PID slot used for the Wheel-of-Fortune talon
         public static final int kTalon = 5; // The ID of the Talon used for the Wheel-of-Fortune
         public static final double kThreshold = 0.02; // How close the Wheel-of-Fortune has to be to end the Motion Magic command

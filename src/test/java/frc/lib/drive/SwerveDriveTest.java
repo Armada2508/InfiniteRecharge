@@ -150,6 +150,17 @@ public class SwerveDriveTest {
         assertEquals(new Translation2d(1.0, 2.0).getNorm(), states[1].speedMetersPerSecond, Util.kEpsilon);
         assertEquals(new Translation2d(-1.0, 2.0).getNorm(), states[2].speedMetersPerSecond, Util.kEpsilon);
         assertEquals(new Translation2d(-1.0, 0.0).getNorm(), states[3].speedMetersPerSecond, Util.kEpsilon);
+        states = drive.calculate(1.0, 0.0, 1.0, 50.0).clone();
+        assertEquals(new Translation2d(2.0, -1.0).getNorm(), states[0].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(2.0, 1.0).getNorm(), states[1].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(0.0, 1.0).getNorm(), states[2].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(0.0, -1.0).getNorm(), states[3].speedMetersPerSecond, Util.kEpsilon);
+        states = drive.calculate(0.0, 1.0, -1.0, 50.0).clone();
+        assertEquals(new Translation2d(-1.0, 2.0).getNorm(), states[0].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(-1.0, 0.0).getNorm(), states[1].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(1.0, 0.0).getNorm(), states[2].speedMetersPerSecond, Util.kEpsilon);
+        assertEquals(new Translation2d(1.0, 2.0).getNorm(), states[3].speedMetersPerSecond, Util.kEpsilon);
+    
     }
 
 }

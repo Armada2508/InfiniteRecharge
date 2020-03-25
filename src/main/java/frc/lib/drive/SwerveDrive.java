@@ -27,10 +27,8 @@ public class SwerveDrive {
     public SwerveModuleState[] calculate(double tX, double tY, double twist, double maxVelocity) {
         SwerveModuleState[] mModuleStates = new SwerveModuleState[mWheelPositions.length];
         for (int i = 0; i < mWheelPositions.length; i++) {
-            double rX = 0;
-            rX = twist * mWheelPositions[i].getY();
-            double rY = 0;
-            rY = -twist * mWheelPositions[i].getX();
+            double rX = twist * mWheelPositions[i].getY();
+            double rY = -twist * mWheelPositions[i].getX();
             Translation2d velocity = new Translation2d(tX + rX, tY + rY);
             Rotation2d angle = new Rotation2d(Math.IEEEremainder(Math.atan2(velocity.getY(), velocity.getX()), 2*Math.PI));
             mModuleStates[i] = new SwerveModuleState(velocity.getNorm(), angle);

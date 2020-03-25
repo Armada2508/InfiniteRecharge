@@ -88,7 +88,6 @@ public final class Constants {
         public static final double kB = 2.0; // The B constant for RamseteController
         public static final double kZeta = 0.7; // The Zeta constant for RamseteController
         public static final double kWheelDiameter = Units.inchesToMeters(8); // The diameter of the wheels on the robot
-        public static final double kVelSampleTime = 0.1; // Velocity on the Talons is measured in encoder units per 100ms or 0.1 seconds
 
         // Trajectory Generation Constants
         public static final double kMaxVelocity = 0.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
@@ -205,7 +204,6 @@ public final class Constants {
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 1.0); // The feedback config for the shooter
         public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001); // The config for the shooter motors // TODO: Redo current on shooter, add voltage compensation
         public static final double kStableRPMThreshold = 100; // The threshold to consider the rpm "Stable" at and switch to a lower current
-        public static final double kVelocitySampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
         public static final double kStableCurrentLimit = 10; // The current limit once the Talon is within the stable threshold
         public static final int kMaxSlewRate = 4000; // The max slew rate in RPM per second to ramp the shooter up at // TODO: Determine correct value
         public static final double kRamp = 0.25; // How fast the motor will ramp from 0% to 100%(in seconds)
@@ -222,19 +220,16 @@ public final class Constants {
 
         public static final double kDiameter = 32; // The diameter of the Wheel-of-Fortune
         public static final double kWheelDiameter = 7.5; // The diameter of the wheel used to turn the wheel of fortune
-        public static final double kVelSampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
         public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.01, 0, 0.01, 0.008, 0); // The feedback constants for the Wheel-of-Fortune
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.QuadEncoder, 4096, 20.0); // The feedback config for the Wheel-of-Fortune
         public static final MotorConfig kConfig = new MotorConfig(10, 20, 500, 0.001); // The motor config for the Wheel-of-Fortune
         public static final MotionMagicConfig kMMConfig = new MotionMagicConfig(
             (int)EncoderUtil.fromRPM(300,
                 kFeedbackConfig.getEpr(),
-                kFeedbackConfig.getGearRatio(),
-                kVelSampleTime),
+                kFeedbackConfig.getGearRatio()),
             (int)EncoderUtil.fromRPM(600,
                 kFeedbackConfig.getEpr(),
-                kFeedbackConfig.getGearRatio(),
-                Constants.Drive.kVelSampleTime),
+                kFeedbackConfig.getGearRatio()),
             0); // The Motion Magic config for the Wheel-of-Fortune
         public static final int kSlot = 0; // The PID slot used for the Wheel-of-Fortune talon
         public static final int kTalon = 5; // The ID of the Talon used for the Wheel-of-Fortune
@@ -250,7 +245,6 @@ public final class Constants {
 
         public static final int kTalon = 6; // The ID of the Talon used for the Transport
         public static final double kPulleyDiameter = 2.75; // The diameter of the pulley used in the transport in inches //TODO: Get correct diameter
-        public static final double kVelocitySampleTime = 0.1; // The Talons measure velocity in encoder units per 100ms or 0.1 second
         public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.15, 0, 0.05, 0, 0); // The feedback constants for the transport in position control mode
         public static final FeedbackConstants kVelocityFeedbackConstants = new FeedbackConstants(0.01, 0, 1.0, 0.030536, 0); // The feedback constants for the transport in velocity control mode
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.QuadEncoder, 4096, 20.0); // The feedback config for the transport
@@ -259,13 +253,11 @@ public final class Constants {
             (int)EncoderUtil.fromVelocity(40.0,
                 kFeedbackConfig.getEpr(),
                 kFeedbackConfig.getGearRatio(),
-                kPulleyDiameter,
-                kVelocitySampleTime),
+                kPulleyDiameter),
             (int)EncoderUtil.fromVelocity(160.0,
                 kFeedbackConfig.getEpr(),
                 kFeedbackConfig.getGearRatio(),
-                kPulleyDiameter,
-                kVelocitySampleTime),
+                kPulleyDiameter),
             0); // The Motion Magic profile for the transport
         public static final int kSlot = 0; // The PID slot to use for the transport
         public static final int kVelocitySlot = 1; // The PID slot to use for velocity control mode

@@ -36,7 +36,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio(), Constants.Drive.kVelSampleTime);
+        return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio());
     }
 
     public char getColor() {

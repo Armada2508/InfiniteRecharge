@@ -53,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spin(double rpm) {
-        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio(), Constants.Shooter.kVelocitySampleTime);
+        double velocity = EncoderUtil.fromRPM(rpm, Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio());
         mLeftMotor.set(ControlMode.Velocity, velocity);
         mRightMotor.set(ControlMode.Velocity, velocity);
     }
@@ -64,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getRPM() {
-        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio(), Constants.Shooter.kVelocitySampleTime);
+        return EncoderUtil.toRPM(mRightMotor.getSelectedSensorVelocity(), Constants.Shooter.kFeedbackConfig.getEpr(), Constants.Shooter.kFeedbackConfig.getGearRatio());
     }
 
 

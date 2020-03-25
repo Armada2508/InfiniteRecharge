@@ -54,7 +54,7 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return EncoderUtil.toVelocity(getRawVelocity(), Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return EncoderUtil.toVelocity(getRawVelocity(), Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public void setPower(double power) {
@@ -72,11 +72,11 @@ public class TransportSubsystem extends SubsystemBase {
     }
 
     public double toVelocity(int velocity) {
-        return EncoderUtil.toVelocity(velocity, Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return EncoderUtil.toVelocity(velocity, Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public int fromVelocity(double velocity) {
-        return (int)EncoderUtil.fromVelocity(velocity, Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter, Constants.Transport.kVelocitySampleTime);
+        return (int)EncoderUtil.fromVelocity(velocity, Constants.Transport.kFeedbackConfig.getEpr(), Constants.Transport.kFeedbackConfig.getGearRatio(), Constants.Transport.kPulleyDiameter);
     }
 
     public double toDistance(int distance) {

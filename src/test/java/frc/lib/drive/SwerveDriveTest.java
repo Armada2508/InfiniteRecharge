@@ -1,11 +1,10 @@
-/*package ;
+package frc.lib.drive;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 public class SwerveDriveTest {
 
-    @Test
     public void instantiationTest() {
-        SwerveDrive test = new SwerveDrive();
+        new SwerveDrive();
     }
-}*/
+}

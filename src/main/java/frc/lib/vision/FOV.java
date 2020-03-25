@@ -5,10 +5,10 @@ public class FOV {
     public final double mY;
 
     /**
-     * Create a new Resolution object
+     * Create a new Field-of-View object
      * 
-     * @param x The x resolution
-     * @param y The y resolution
+     * @param x The horizontal field of vew
+     * @param y The vertical field of view
      */
     public FOV(double x, double y) {
         mX = x;
@@ -16,16 +16,16 @@ public class FOV {
     }
 
     /**
-     * Get the x FOV
-     * @return The x FOV
+     * Get the horizontal FOV
+     * @return The horizontal FOV
      */
     public double getX() {
         return mX;
     }
 
     /**
-     * Get the y FOV
-     * @return The y FOV
+     * Get the vertical FOV
+     * @return The vertical FOV
      */
     public double getY() {
         return mY;

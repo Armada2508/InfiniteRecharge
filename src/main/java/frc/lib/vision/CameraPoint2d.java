@@ -101,6 +101,7 @@ public class CameraPoint2d {
         if(!mIsAngle) {
             mX = VisionUtil.pixelsToAngles(mX, fov.getX(), resolution.getX());
             mY = VisionUtil.pixelsToAngles(mY, fov.getY(), resolution.getY());
+            mIsAngle = true;
         }
     }
 
@@ -114,6 +115,7 @@ public class CameraPoint2d {
         if(mIsAngle) {
             mX = VisionUtil.anglesToPixels(mX, fov.getX(), resolution.getX());
             mY = VisionUtil.anglesToPixels(mY, fov.getY(), resolution.getY());
+            mIsAngle = false;
         }
     }
 
@@ -139,6 +141,7 @@ public class CameraPoint2d {
         if(!mIsAngle) {
             mX = VisionUtil.pixelsToAngles(mX, mFov.getX(), mRes.getX());
             mY = VisionUtil.pixelsToAngles(mY, mFov.getY(), mRes.getY());
+            mIsAngle = true;
         }
     }
 
@@ -153,6 +156,7 @@ public class CameraPoint2d {
         if(mIsAngle) {
             mX = VisionUtil.anglesToPixels(mX, mFov.getX(), mRes.getX());
             mY = VisionUtil.anglesToPixels(mY, mFov.getY(), mRes.getY());
+            mIsAngle = false;
         }
     }
 

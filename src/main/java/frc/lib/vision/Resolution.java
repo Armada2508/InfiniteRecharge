@@ -7,8 +7,8 @@ public class Resolution {
     /**
      * Create a new Resolution object
      * 
-     * @param x The x resolution
-     * @param y The y resolution
+     * @param x The horizontal resolution
+     * @param y The vertical resolution
      */
     public Resolution(int x, int y) {
         mX = x;
@@ -16,16 +16,16 @@ public class Resolution {
     }
 
     /**
-     * Get the x resolution
-     * @return The x resolution
+     * Get the horizontal resolution
+     * @return The horizontal resolution
      */
     public int getX() {
         return mX;
     }
 
     /**
-     * Get the y resolution
-     * @return The y resolution
+     * Get the vertical resolution
+     * @return The vertical resolution
      */
     public int getY() {
         return mY;

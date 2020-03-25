@@ -1,5 +1,7 @@
 package frc.lib.vision;
 
+import edu.wpi.first.wpiutil.math.MathUtil;
+
 public class VisionUtil {
     /**
      * Converts a pixel input to an angle output(measured in degrees)
@@ -10,18 +12,20 @@ public class VisionUtil {
      * @return The angle in degrees that the input is relative to the center camera
      */
     public static double pixelsToAngles(double pixel, double fov, double resolution) {
-        return Math.toDegrees(Math.atan(Math.tan(Math.toRadians(fov/2.0))*pixel/(resolution/2.0)));
+        pixel = MathUtil.clamp(pixel, -resolution/2.0, resolution/2.0);
+        return Math.toDegrees(Math.atan(Math.tan(Math.toRadians(fov/2.0))*2.0*pixel/resolution));
     }
     /**
      * Converts an angle input to a pixel output
      * 
-     * @param degrees The angle input(measured in degrees)
+     * @param angle The angle input(measured in degrees)
      * @param fov The full field of view of the camera in the desired direction
      * @param resolution The resolution of the camera in the desired direction
      * @return The pixel value at which the specified angle will be found
      */
-    public static double anglesToPixels(double degrees, double fov, double resolution) {
-        return Math.tan(Math.toRadians(degrees))/Math.tan(Math.toRadians(fov/2.0))*(resolution/2.0);
+    public static double anglesToPixels(double angle, double fov, double resolution) {
+        angle = MathUtil.clamp(angle, -fov/2.0, fov/2.0);
+        return (Math.tan(Math.toRadians(angle))*(resolution/2.0))/Math.tan(Math.toRadians(fov/2.0));
     }
 
     /**
@@ -34,7 +38,8 @@ public class VisionUtil {
      * 
      * @see centerPixels()
      */
-    public static double normalizePixels(int pixel, double resolution) {
+    public static double normalizePixels(double pixel, double resolution) {
+        pixel = MathUtil.clamp(pixel, -resolution/2.0, resolution/2.0);
         return pixel / (resolution / 2.0);
     }
 
@@ -46,7 +51,8 @@ public class VisionUtil {
      * @param inverted If the positive and negative directions are flipped
      * @return The centered coordinate
      */
-    public static double centerPixels(int pixel, double resolution, boolean inverted) {
+    public static double centerPixels(double pixel, double resolution, boolean inverted) {
+        pixel = MathUtil.clamp(pixel, -resolution/2.0, resolution/2.0);
         if(inverted) {
             return (((resolution / 2.0) - 0.5) - (double)pixel);
         } else {
@@ -61,6 +67,7 @@ public class VisionUtil {
      * @return The normalized angle coordinate
      */
     public static double normalizeAngle(double angle, double fov) {
+        angle = MathUtil.clamp(angle, -fov/2.0, fov/2.0);
         return angle / (fov / 2.0);
     }
 }

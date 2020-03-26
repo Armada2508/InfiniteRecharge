@@ -22,7 +22,7 @@ public class CameraPoint2d {
      * 
      * @param x The x coordinate
      * @param y The y coordinate
-     * @param angle If these CameraPoint2d values are angles
+     * @param angle If the coordinate values are in degrees
      */
     public CameraPoint2d(double x, double y, boolean angle) {
         mIsAngle = angle;
@@ -55,6 +55,16 @@ public class CameraPoint2d {
     }
 
     /**
+     * Sets this point's coordinates to the values given
+     * @param x The new x coordinate
+     * @param y The new y coordinate
+     */
+    public void set(double x, double y) {
+        mX = x;
+        mY = y;
+    }
+
+    /**
      * Get the y coordinate
      * @return The y coordinate
      */
@@ -62,9 +72,6 @@ public class CameraPoint2d {
     public double getY() {
         return mY;
     }
-
-    
-    
 
     /**
      * Check if the CameraPoint2d is an angle
@@ -84,10 +91,10 @@ public class CameraPoint2d {
      */
     public void center(Resolution resolution, boolean xInverted, boolean yInverted) {
         if(!mIsAngle) {
-            mX = VisionUtil.centerPixels((int)mX, (double)resolution.getX(), xInverted);
-            mY = VisionUtil.centerPixels((int)mY, (double)resolution.getY(), yInverted);
+            mX = VisionUtil.centerPixels(mX, (double)resolution.getX(), xInverted);
+            mY = VisionUtil.centerPixels(mY, (double)resolution.getY(), yInverted);
         } else {
-            System.out.println("Pair is not in pixels");
+            System.out.println(new Error("Pair is not in pixels"));
         }
     }
 

@@ -186,4 +186,33 @@ public class CameraPoint2dTest {
         assertEquals(200, point.getX(), Util.kEpsilon);
         assertEquals(150, point.getY(), Util.kEpsilon);
     }
+
+    @Test
+    public void centerTest() {
+        CameraPoint2d point = new CameraPoint2d(0, 0, false);
+        point.center(new Resolution(320, 240), false, true);
+        assertEquals(-159.5, point.getX(), Util.kEpsilon);
+        assertEquals(119.5, point.getY(), Util.kEpsilon);
+        point.set(159.5, 119.5);
+        point.center(new Resolution(320, 240), false, true);
+        assertEquals(0.0, point.getX(), Util.kEpsilon);
+        assertEquals(0.0, point.getY(), Util.kEpsilon);
+        point.set(319, 239);
+        point.center(new Resolution(320, 240), false, true);
+        assertEquals(159.5, point.getX(), Util.kEpsilon);
+        assertEquals(-119.5, point.getY(), Util.kEpsilon);
+
+        point.set(0, 0);
+        point.center(new Resolution(160, 120), true, false);
+        assertEquals(79.5, point.getX(), Util.kEpsilon);
+        assertEquals(-59.5, point.getY(), Util.kEpsilon);
+        point.set(79.5, 59.5);
+        point.center(new Resolution(160, 120), true, false);
+        assertEquals(0.0, point.getX(), Util.kEpsilon);
+        assertEquals(0.0, point.getY(), Util.kEpsilon);
+        point.set(159, 119);
+        point.center(new Resolution(160, 120), true, false);
+        assertEquals(-79.5, point.getX(), Util.kEpsilon);
+        assertEquals(59.5, point.getY(), Util.kEpsilon);
+    }
 }

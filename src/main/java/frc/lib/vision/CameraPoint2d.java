@@ -93,8 +93,6 @@ public class CameraPoint2d {
         if(!mIsAngle) {
             mX = VisionUtil.centerPixels(mX, (double)resolution.getX(), xInverted);
             mY = VisionUtil.centerPixels(mY, (double)resolution.getY(), yInverted);
-        } else {
-            System.out.println(new Error("Pair is not in pixels"));
         }
     }
 
@@ -165,6 +163,36 @@ public class CameraPoint2d {
             mY = VisionUtil.anglesToPixels(mY, mFov.getY(), mRes.getY());
             mIsAngle = false;
         }
+    }
+
+    /**
+     * Prints the CameraPoint2d Object
+     */
+    @Override
+    public String toString() {
+        return "X: " + getX() + ", Y:" + getY();
+    }
+
+    /**
+     * Checks if another Object is equal to this CameraPoint2d
+     */
+    @Override
+    public boolean equals(Object point) {
+        if(point == this) {
+            return true;
+        }
+        if(point.getClass() == this.getClass()) {
+            CameraPoint2d p = (CameraPoint2d) point;
+            return (p.getX() == getX()) && (p.getY() == getY()) && (p.isAngle() == isAngle());
+        } else {
+            return false;
+        }
+        
+    }
+
+    public static CameraPoint2d midpoint(CameraPoint2d point1, CameraPoint2d point2) {
+        if(point1.isAngle() != point2.isAngle()) return new CameraPoint2d(0.0, 0.0);
+        return new CameraPoint2d((point1.getX()+point2.getX())/2.0, (point1.getY()+point2.getY())/2.0, point1.isAngle());
     }
 
 }

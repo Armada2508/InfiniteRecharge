@@ -215,4 +215,22 @@ public class CameraPoint2dTest {
         assertEquals(-79.5, point.getX(), Util.kEpsilon);
         assertEquals(59.5, point.getY(), Util.kEpsilon);
     }
+
+    @Test
+    public void equalsTest() {
+        CameraPoint2d point1 = new CameraPoint2d(2.0, 2.0);
+        CameraPoint2d point2 = point1;
+        assertEquals(point1, point2);
+        assertEquals(new CameraPoint2d(0.0, 0.0), new CameraPoint2d(0.0, 0.0));
+        assertEquals(new CameraPoint2d(2.0, 0.0), new CameraPoint2d(2.0, 0.0));
+        assertEquals(new CameraPoint2d(0.0, 2.0), new CameraPoint2d(0.0, 2.0));
+        assertEquals(new CameraPoint2d(2.0, 2.0), new CameraPoint2d(2.0, 2.0));
+        assertEquals(new CameraPoint2d(-2.0, 0.0), new CameraPoint2d(-2.0, 0.0));
+        assertEquals(new CameraPoint2d(0.0, -2.0), new CameraPoint2d(0.0, -2.0));
+        assertEquals(new CameraPoint2d(-2.0, -2.0), new CameraPoint2d(-2.0, -2.0));
+        assertEquals(false, new CameraPoint2d(0.0, 2.0).equals(new CameraPoint2d(2.0, 0.0)));
+        assertEquals(false, new CameraPoint2d(0.0, 2.0).equals(new CameraPoint2d(0.0, 0.0)));
+        assertEquals(false, new CameraPoint2d(0.0, 0.0).equals(new CameraPoint2d(2.0, 0.0)));
+        assertEquals(false, new CameraPoint2d(0.0, 2.0).equals(new Object()));
+    }
 }

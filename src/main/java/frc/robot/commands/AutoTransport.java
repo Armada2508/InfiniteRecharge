@@ -33,10 +33,10 @@ public class AutoTransport extends CommandBase {
     @Override
     public void execute() {
         /*
-            noBall - There was no ball in the past debounce cycles(for sure no ball)
-            mWasNoBall - The value of noBall the past loop
-            ball[] - An array of the detection of balls for the past debounce cycles
-            mWasBall[] - An array of the detection of balls for the past debounce cycles in the past loop
+            noBall - There was no ball in the last specified number of loops(debounced)
+            mWasNoBall - The value of noBall the last loop(debounced)
+            ball[] - An array of the detection of balls for this loop(not debounced)
+            mWasBall[] - An array of the detection of balls for the last debounce cycles in the past loop(not debounced)
         */
         boolean noBall = true;
         boolean[] ball = mTransportSubsystem.isBall();

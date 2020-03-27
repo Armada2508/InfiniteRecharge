@@ -15,6 +15,7 @@ public class DrivePower extends CommandBase {
   private final DriveSubsystem mDriveSubsystem;
   private double mLeft;
   private double mRight;
+
   /**
    * Creates a new Drive.
    *
@@ -25,7 +26,7 @@ public class DrivePower extends CommandBase {
     mLeft = left;
     mRight = right;
 
-    // Require DriveSubsystem
+    // Require the DriveSubsystem
     addRequirements(mDriveSubsystem);
   }
 

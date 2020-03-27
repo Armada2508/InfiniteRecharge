@@ -30,4 +30,29 @@ public class FOV {
     public double getY() {
         return mY;
     }
+
+    /**
+     * Prints the FOV Object
+     */
+    @Override
+    public String toString() {
+        return "Horizontal: " + getX() + ", Vertical:" + getY();
+    }
+
+    /**
+     * Checks if another Object is equal to this FOV Object
+     */
+    @Override
+    public boolean equals(Object point) {
+        if(point == this) {
+            return true;
+        }
+        if(point.getClass() == this.getClass()) {
+            FOV p = (FOV) point;
+            return (p.getX() == getX()) && (p.getY() == getY());
+        } else {
+            return false;
+        }
+        
+    }
 }

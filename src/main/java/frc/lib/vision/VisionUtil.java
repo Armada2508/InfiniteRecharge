@@ -36,7 +36,7 @@ public class VisionUtil {
      * 
      * @return The normalized coordinate
      * 
-     * @see centerPixels()
+     * @see {@link frc.lib.vision.VisionUtil#centerPixels(double pixel, double resolution, boolean inverted)}
      */
     public static double normalizePixels(double pixel, double resolution) {
         pixel = MathUtil.clamp(pixel, -resolution/2.0, resolution/2.0);

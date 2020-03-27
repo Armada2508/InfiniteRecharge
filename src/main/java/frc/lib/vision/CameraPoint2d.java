@@ -137,7 +137,7 @@ public class CameraPoint2d {
 
     
     /**
-     * Converts the CameraPoint2d to an angle using the FOV and Resolution set globally with {@link CameraPoint2d#config(FOV, Resolution)}
+     * Converts the CameraPoint2d to an angle using the FOV and Resolution set globally with {@link frc.lib.vision.CameraPoint2d#config(FOV, Resolution)}
      */
     public void toAngle() {
         if(mFov == null || mRes == null) {
@@ -152,7 +152,7 @@ public class CameraPoint2d {
 
     
     /**
-     * Converts the CameraPoint2d to pixel coordinates using the FOV and Resolution set globally with {@link CameraPoint2d#config(FOV, Resolution)}
+     * Converts the CameraPoint2d to pixel coordinates using the FOV and Resolution set globally with {@link frc.lib.vision.CameraPoint2d#config(FOV, Resolution)}
      */
     public void toPixels() {
         if(mFov == null || mRes == null) {

@@ -3,8 +3,6 @@ package frc.lib.vision;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 import frc.lib.util.Util;

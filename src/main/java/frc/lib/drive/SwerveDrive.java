@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
+/**
+ * Calculates Swerve Module States, explanation of calculations can be found here: https://www.chiefdelphi.com/uploads/default/original/3X/8/c/8c0451987d09519712780ce18ce6755c21a0acc0.pdf
+ */
 public class SwerveDrive {
 
     private Translation2d[] mWheelPositions;

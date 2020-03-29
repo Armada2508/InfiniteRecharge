@@ -5,7 +5,7 @@ package frc.lib.controller;
  */
 public class TakeBackHalfController {
 
-    public double mKP;
+    public double mKI;
     public double mSetpoint;
     public double mError;
     public double mLastControlEffort;
@@ -13,11 +13,11 @@ public class TakeBackHalfController {
 
     /**
      * Creates a new TakeBackHalfController
-     * @param kP The proportional gain
+     * @param kI The integral gain
      * @param setpoint The setpoint of the controller
      */
-    public TakeBackHalfController(double kP, double setpoint) {
-        mKP = kP;
+    public TakeBackHalfController(double kI, double setpoint) {
+        mKI = kI;
         mSetpoint = setpoint;
         mLastControlEffort = 0.0;
     }
@@ -36,7 +36,7 @@ public class TakeBackHalfController {
      */
     public double calculate(double input) {
         double error = mSetpoint - input;
-        double controlEffort = mLastControlEffort + error * mKP;
+        double controlEffort = mLastControlEffort + error * mKI;
         if(Math.signum(error) != Math.signum(mError)) {
             controlEffort = (mH0 + controlEffort) / 2.0;
             mH0 = controlEffort;

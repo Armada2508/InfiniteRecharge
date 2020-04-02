@@ -1,5 +1,7 @@
 package frc.lib.controller;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Based on https://www.chiefdelphi.com/t/paper-take-back-half-shooter-wheel-speed-control/121640
  */
@@ -36,7 +38,7 @@ public class TakeBackHalfController {
      */
     public double calculate(double input) {
         double error = mSetpoint - input;
-        double controlEffort = mLastControlEffort + error * mKI;
+        double controlEffort = mLastControlEffort + error * mKI * Timer.getFPGATimestamp();
         if(Math.signum(error) != Math.signum(mError)) {
             controlEffort = (mH0 + controlEffort) / 2.0;
             mH0 = controlEffort;

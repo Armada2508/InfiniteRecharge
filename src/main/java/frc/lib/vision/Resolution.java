@@ -1,5 +1,7 @@
 package frc.lib.vision;
 
+import frc.lib.util.Util;
+
 public class Resolution {
     private final int mX;
     private final int mY;
@@ -49,7 +51,7 @@ public class Resolution {
         }
         if(point.getClass() == this.getClass()) {
             Resolution p = (Resolution) point;
-            return (p.getX() == getX()) && (p.getY() == getY());
+            return Util.epsilonEquals(p.getX(), getX()) && Util.epsilonEquals(p.getY(), getY());
         } else {
             return false;
         }

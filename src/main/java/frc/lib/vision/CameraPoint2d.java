@@ -1,5 +1,7 @@
 package frc.lib.vision;
 
+import frc.lib.util.Util;
+
 public class CameraPoint2d {
     private double mX;
     private double mY;
@@ -183,7 +185,7 @@ public class CameraPoint2d {
         }
         if(point.getClass() == this.getClass()) {
             CameraPoint2d p = (CameraPoint2d) point;
-            return (p.getX() == getX()) && (p.getY() == getY()) && (p.isAngle() == isAngle());
+            return Util.epsilonEquals(p.getX(), getX()) && Util.epsilonEquals(p.getY(), getY()) && (p.isAngle() == isAngle());
         } else {
             return false;
         }

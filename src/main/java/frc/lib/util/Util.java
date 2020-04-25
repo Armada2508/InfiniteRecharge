@@ -85,18 +85,6 @@ public class Util {
         return epsilonEquals(a, b, kEpsilon);
     }
 
-
-    /**
-     * Checks if the difference between two values is less than a margin of error(some small value)
-     * @param a The first value
-     * @param b The second value
-     * @param epsilon The margin of error
-     * @return If the difference between two values is less than {@code epsilon}
-     */
-    public static boolean epsilonEquals(int a, int b, int epsilon) {
-        return (a - epsilon <= b) && (a + epsilon >= b);
-    }
-
     /**
      * Checks if the difference between all values in a list is less than a margin of error
      * @param list The list of value
@@ -113,27 +101,54 @@ public class Util {
     }
 
     /**
-     * @param angle An angle in radians
-     * @return A colinear angle less than 2π and greater than or equal to 0 
+     * Checks if the difference between all values in a list is less than a margin of error
+     * @param list The list of value
+     * @param value The value to check with
+     * @return If all of the values in the list are within {@code epsilon} of {@code value}
      */
-    public static double boundedAngle(double angle) {
-        return angle % (2 * Math.PI);
+    public static boolean allCloseTo(final List<Double> list, double value) {
+        return allCloseTo(list, value, kEpsilon);
+    }
+
+    /**
+     * @param angle An angle in radians
+     * @param positive If the angle should be constrained from (0-2π] or (-π-π] (true indicating the former)
+     * @return A colinear angle from (0-2π] or (-π-π]
+     */
+    public static double boundedAngle(double angle, boolean positive) {
+        if(positive) {
+            return ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        } else {
+            if(epsilonEquals(Math.IEEEremainder(angle, 2*Math.PI), -Math.PI)) {
+                return Math.PI;
+            }
+            return Math.IEEEremainder(angle, 2*Math.PI);
+        }
     }
 
     /**
      * @param angle An angle in degrees
-     * @return A colinear angle less than 360 and greater than or equal to 0 
+     * @param positive If the angle should be constrained from (0-360] or (-180-180] (true indicating the former)
+     * @return A colinear angle from (0-360] or (-180-180]
      */
-    public static double boundedAngleDegrees(double angle) {
-        return angle % 360;
+    public static double boundedAngleDegrees(double angle, boolean positive) {
+        if(positive) {
+            return (angle % 360 + 360) % 360;
+        } else {
+            if(epsilonEquals(Math.IEEEremainder(angle, 360), -180)) {
+                return 180;
+            }
+            return Math.IEEEremainder(angle, 360);
+        }
     }
     
 
     /**
      * @param rotation A Rotation2d object
-     * @return A Rotation2d object less than 2π and greater than or equal to 0 
+     * @param positive If the angle should be constrained from (0-2π] or (-π-π] (true indicating the former)
+     * @return A Rotation2d Object with an angle from (0-2π] or (-π-π]
      */
-    public static Rotation2d boundedAngle(Rotation2d rotation) {
-        return new Rotation2d(boundedAngle(rotation.getRadians()));
+    public static Rotation2d boundedAngle(Rotation2d rotation, boolean positive) {
+        return new Rotation2d(boundedAngle(rotation.getRadians(), positive));
     }
 }

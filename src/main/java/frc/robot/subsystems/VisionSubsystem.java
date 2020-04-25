@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.util.Util;
 import frc.lib.vision.CameraPoint2d;
 import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
@@ -86,7 +87,7 @@ public class VisionSubsystem extends SubsystemBase {
      * @return If a target has been found
      */
     public boolean targetFound() {
-        return mLimelight.getEntry("tv").getDouble(0.0) == 1.0;
+        return Util.epsilonEquals(mLimelight.getEntry("tv").getDouble(0.0), 1.0);
     }
 
     /**

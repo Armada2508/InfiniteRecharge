@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.lib.util.Util;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -14,7 +15,7 @@ public class SpinRoller extends CommandBase {
     private boolean mCoast;
 
     public SpinRoller(ShooterSubsystem shooterSubsystem, double rpm) {
-        mCoast = rpm == 0;
+        mCoast = Util.epsilonEquals(rpm, 0);
 
         mShooterSubsystem = shooterSubsystem;
         mRpm = rpm;

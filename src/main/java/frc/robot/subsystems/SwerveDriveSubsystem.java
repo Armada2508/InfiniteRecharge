@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.config.MotorConfig;
+import frc.lib.util.Util;
 import frc.robot.*;
 
 
@@ -130,7 +131,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(mImu.getFusedHeading(), 360) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
+        return Util.boundedAngleDegrees(mImu.getFusedHeading(), false) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
     }
 
     public void reset() {

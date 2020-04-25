@@ -20,6 +20,7 @@ import frc.lib.config.FeedbackConfig;
 import frc.lib.config.FeedbackConstants;
 import frc.lib.config.MotorConfig;
 import frc.lib.motion.*;
+import frc.lib.util.Util;
 import frc.robot.*;
 
 
@@ -125,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(mImu.getFusedHeading(), 360) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
+        return Util.boundedAngleDegrees(mImu.getFusedHeading(), false) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {

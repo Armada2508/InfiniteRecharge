@@ -1,6 +1,7 @@
 package frc.lib.vision;
 
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.lib.util.Util;
 
 public class VisionUtil {
     /**
@@ -131,7 +132,7 @@ public class VisionUtil {
             System.out.println(1);
             return 0.0;
         }
-        return Math.IEEEremainder(Math.toDegrees(Math.acos(targetWidth/realTargetWidth)), 180) * directionMultiplier;
+        return Util.boundedAngleDegrees(Math.toDegrees(Math.acos(targetWidth/realTargetWidth)), false) * directionMultiplier;
     }
 
       /**

@@ -1,5 +1,7 @@
 package frc.lib.vision;
 
+import frc.lib.util.Util;
+
 public class FOV {
     public final double mX;
     public final double mY;
@@ -49,7 +51,7 @@ public class FOV {
         }
         if(point.getClass() == this.getClass()) {
             FOV p = (FOV) point;
-            return (p.getX() == getX()) && (p.getY() == getY());
+            return Util.epsilonEquals(p.getX(), getX()) && Util.epsilonEquals(p.getY(), getY());
         } else {
             return false;
         }

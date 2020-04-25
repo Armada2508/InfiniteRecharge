@@ -15,6 +15,23 @@ public class TakeBackHalfController {
     /**
      * Creates a new TakeBackHalfController
      * @param kI The integral gain
+     */
+    public TakeBackHalfController(double kI) {
+        this(kI, 0.0, 0.02);
+    }
+
+    /**
+     * Creates a new TakeBackHalfController
+     * @param kI The integral gain
+     * @param setpoint The setpoint of the controller
+     */
+    public TakeBackHalfController(double kI, double setpoint) {
+        this(kI, setpoint, 0.02);
+    }
+
+    /**
+     * Creates a new TakeBackHalfController
+     * @param kI The integral gain
      * @param setpoint The setpoint of the controller
      * @param period The period of the controller
      */

@@ -71,13 +71,13 @@ public class RobotContainer {
         // Setup the vision subsystem
         mVision.setup();
 
-        // Tell the Drive Subsystem to drive if it's bored
+        // Tell the Drive Subsystem to drive if its bored
         /*mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0))));
         */
 
-        // Tell the Transport Subsystem to do it's thing if it's bored
+        // Tell the Transport Subsystem to do its thing if its bored
         mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
     }
 
@@ -127,7 +127,7 @@ public class RobotContainer {
         UsbCamera backCamera = CameraServer.getInstance().startAutomaticCapture(0);
         // Feed that back camera into a new stream so we can add compression
         MjpegServer backCameraStream = CameraServer.getInstance().startAutomaticCapture(backCamera);
-        // Compress the stream, set it's resolution, and set it's framerate along with the camera's
+        // Compress the stream, set its resolution, and set its framerate along with the camera's
         backCameraStream.setCompression(Constants.Camera.kCameraCompression);
         backCamera.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());
         backCameraStream.setResolution(Constants.Camera.kCameraResolution.getX(), Constants.Camera.kCameraResolution.getY());

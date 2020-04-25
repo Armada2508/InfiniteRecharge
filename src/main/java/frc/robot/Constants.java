@@ -262,7 +262,7 @@ public final class Constants {
         public static final int kSlot = 0; // The PID slot to use for the transport
         public static final int kVelocitySlot = 1; // The PID slot to use for velocity control mode
         public static final double kVelocity = 25; // The speed of the transport in inches per second
-        public static final double kThreshold = 0.125; // How close the transport has to be to it's setpoint to end the motion magic command
+        public static final double kThreshold = 0.125; // How close the transport has to be to its setpoint to end the motion magic command
         public static final double kMargin = 5.0; // How much to increment the transport after it stops sensing a 
         public static final double kRamp = 0.15; // How fast the motor will ramp from 0% to 100%(in seconds)
 

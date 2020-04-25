@@ -11,6 +11,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void instantiationTest() {
+        // Test Instantiating CameraPoint2d
         assertNotNull(new CameraPoint2d(0.0, 0.0));
         assertNotNull(new CameraPoint2d(5.0, 0.0));
         assertNotNull(new CameraPoint2d(0.0, 5.0));
@@ -36,6 +37,7 @@ public class CameraPoint2dTest {
  
     @Test
     public void setTest() {
+        // Test storing values in CameraPoint2d
         CameraPoint2d point = new CameraPoint2d(0.0, 0.0);
         point.setX(5.0);
         point.setY(-5.0);
@@ -61,6 +63,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void isAngleTest() {
+        // Test the storing of coordinate type in CameraPoint2d
         CameraPoint2d point = new CameraPoint2d(0.0, 0.0);
         assertEquals(true, point.isAngle());
         point.toPixels(new FOV(60, 40), new Resolution(160, 120));
@@ -71,6 +74,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void pixelAngleCalculationTest() {
+        // Test converting between pixels and angles
         CameraPoint2d point = new CameraPoint2d(30.0, 20.0);
         point.toPixels(new FOV(60, 40), new Resolution(320, 240));
         assertEquals(160.0, point.getX(), Util.kEpsilon);
@@ -117,6 +121,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void globalPixelAngleCalculationTest() {
+        // Test converting between pixels and angles using the global FOV and Resolution
         CameraPoint2d point = new CameraPoint2d(30.0, 20.0);
         point.config(new FOV(60, 40), new Resolution(320, 240));
         point.toPixels();
@@ -189,6 +194,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void centerTest() {
+        // Test Centering Coordinates
         CameraPoint2d point = new CameraPoint2d(0, 0, false);
         point.center(new Resolution(320, 240), false, true);
         assertEquals(-159.5, point.getX(), Util.kEpsilon);
@@ -218,6 +224,7 @@ public class CameraPoint2dTest {
 
     @Test
     public void equalsTest() {
+        // Test Equals Method
         CameraPoint2d point1 = new CameraPoint2d(2.0, 2.0);
         CameraPoint2d point2 = point1;
         assertEquals(point1, point2);

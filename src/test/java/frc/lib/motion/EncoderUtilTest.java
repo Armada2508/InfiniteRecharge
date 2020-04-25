@@ -11,6 +11,7 @@ public class EncoderUtilTest {
     
     @Test
     public void toDistanceTest() {
+        // Test Converting from Encoder Units to Distance
         assertEquals(Math.PI, EncoderUtil.toDistance(4096, 4096, 1, 1), Util.kEpsilon);
         assertEquals(2*Math.PI, EncoderUtil.toDistance(8192, 4096, 1, 1), Util.kEpsilon);
         assertEquals(Math.PI, EncoderUtil.toDistance(8192, 4096, 2, 1), Util.kEpsilon);
@@ -25,6 +26,7 @@ public class EncoderUtilTest {
 
     @Test
     public void fromDistanceTest() {
+        // Test Converting from Distance to Encoder Units
         assertEquals(4096, EncoderUtil.fromDistance(Math.PI, 4096, 1, 1), Util.kEpsilon);
         assertEquals(8192, EncoderUtil.fromDistance(Math.PI, 4096, 2, 1), Util.kEpsilon);
         assertEquals(4096, EncoderUtil.fromDistance(Math.PI, 4096, 2, 2), Util.kEpsilon);
@@ -38,6 +40,7 @@ public class EncoderUtilTest {
     
     @Test
     public void toVelocityTest() {
+        // Test Converting from Encoder Unit Velocity to Velocity
         assertEquals(10*Math.PI, EncoderUtil.toVelocity(4096, 4096, 1, 1), Util.kEpsilon);
         assertEquals(20*Math.PI, EncoderUtil.toVelocity(8192, 4096, 1, 1), Util.kEpsilon);
         assertEquals(10*Math.PI, EncoderUtil.toVelocity(8192, 4096, 2, 1), Util.kEpsilon);
@@ -74,6 +77,7 @@ public class EncoderUtilTest {
 
     @Test
     public void fromVelocityTest() {
+        // Test Converting from Velocity to Encoder Unit Velocity
         assertEquals(409.6, EncoderUtil.fromVelocity(Math.PI, 4096, 1, 1), Util.kEpsilon);
         assertEquals(819.2, EncoderUtil.fromVelocity(Math.PI, 4096, 2, 1), Util.kEpsilon);
         assertEquals(409.6, EncoderUtil.fromVelocity(Math.PI, 4096, 2, 2), Util.kEpsilon);
@@ -105,6 +109,7 @@ public class EncoderUtilTest {
     
     @Test
     public void toRPMTest() {
+        // Test Converting to RPM from Encoder Unit Velocity
         assertEquals(409.6, EncoderUtil.fromRPM(60, 4096, 1), Util.kEpsilon);
         assertEquals(4096, EncoderUtil.fromRPM(600, 4096, 1), Util.kEpsilon);
         assertEquals(819.2, EncoderUtil.fromRPM(60, 4096, 2), Util.kEpsilon);
@@ -135,6 +140,7 @@ public class EncoderUtilTest {
 
     @Test
     public void fromRPMTest() {
+        // Test Converting from RPM to Encoder Unit Velocity
         assertEquals(60, EncoderUtil.toRPM(409.6, 4096, 1), Util.kEpsilon);
         assertEquals(600, EncoderUtil.toRPM(4096, 4096, 1), Util.kEpsilon);
         assertEquals(60, EncoderUtil.toRPM(819.2, 4096, 2), Util.kEpsilon);

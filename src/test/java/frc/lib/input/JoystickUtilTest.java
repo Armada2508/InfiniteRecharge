@@ -11,6 +11,7 @@ public class JoystickUtilTest {
 
     @Test
     public void deadbandTest() {
+        // Test Deadband Method
         assertEquals(0, JoystickUtil.deadband(0.025, 0.1), Util.kEpsilon);
         assertEquals(0.1, JoystickUtil.deadband(0.1, 0.01), Util.kEpsilon);
         assertEquals(0, JoystickUtil.deadband(0.1, 0.1), Util.kEpsilon);

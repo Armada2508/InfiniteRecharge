@@ -13,6 +13,7 @@ public class UtilTest {
 
     @Test
     public void inRangeMagnitudeTest() {
+        // Test if a number is contained in an interval
         assertEquals(true, Util.inRange(0.0, 1.0));
         assertEquals(true, Util.inRange(0.5, 1.0));
         assertEquals(false, Util.inRange(1.5, 1.0));
@@ -33,6 +34,7 @@ public class UtilTest {
 
     @Test
     public void inRangeTest() {
+        // Test if a number is contained in an interval
         assertEquals(true, Util.inRange(0.0, -0.5, 0.5));
         assertEquals(false, Util.inRange(-0.5, -0.5, 0.5));
         assertEquals(false, Util.inRange(0.5, -0.5, 0.5));
@@ -44,6 +46,7 @@ public class UtilTest {
 
     @Test
     public void lerpTest() {
+        // Test Linear Interpolation
         assertEquals(0.0, Util.lerp(0.0, 1.0, 0.0), Util.kEpsilon);
         assertEquals(0.5, Util.lerp(0.0, 1.0, 0.5), Util.kEpsilon);
         assertEquals(1.0, Util.lerp(0.0, 1.0, 1.0), Util.kEpsilon);
@@ -69,6 +72,7 @@ public class UtilTest {
 
     @Test
     public void joinStringsTest() {
+        // Test Joining Strings
         ArrayList<String> strings = new ArrayList<>();
         strings.add("This");
         strings.add("is");
@@ -81,6 +85,7 @@ public class UtilTest {
 
     @Test
     public void epsilonEqualsTest() {
+        // Test Equals Method using kEpsilon
         assertEquals(Util.epsilonEquals(0.0, 1e-14), true);
         assertEquals(Util.epsilonEquals(0.0, 1e-13), true);
         assertEquals(Util.epsilonEquals(0.0, 1e-12), true);
@@ -101,6 +106,7 @@ public class UtilTest {
 
     @Test
     public void allCloseToTest() {
+        // Test if values in a list are close to some value
         assertEquals(Util.allCloseTo(Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0), 1.0), true);
         assertEquals(Util.allCloseTo(Arrays.asList(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0), 5.0), true);
         assertEquals(Util.allCloseTo(Arrays.asList(-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0), -1.0), true);
@@ -113,6 +119,7 @@ public class UtilTest {
 
     @Test
     public void boundedAngleTest() {
+        // Test finding coterminal angles in radians
         assertEquals(Util.boundedAngle(Math.PI/2.0, false), Math.PI/2.0, Util.kEpsilon);
         assertEquals(Util.boundedAngle(Math.PI, false), Math.PI, Util.kEpsilon);
         assertEquals(Util.boundedAngle(-Math.PI/2.0, false), -Math.PI/2.0, Util.kEpsilon);
@@ -146,6 +153,7 @@ public class UtilTest {
 
     @Test
     public void boundedAngleDegreesTest() {
+        // Test finding coterminal angles in degrees
         assertEquals(Util.boundedAngleDegrees(90, true), 90, Util.kEpsilon);
         assertEquals(Util.boundedAngleDegrees(180, true), 180, Util.kEpsilon);
         assertEquals(Util.boundedAngleDegrees(-180, true), 180, Util.kEpsilon);

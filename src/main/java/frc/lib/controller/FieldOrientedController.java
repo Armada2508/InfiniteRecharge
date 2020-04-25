@@ -14,6 +14,15 @@ public class FieldOrientedController {
     private double mMaxVelocity;
     private PIDController mTurnController;
 
+    
+    /**
+     * Creates a new FieldOrientedController Object
+     */
+    public FieldOrientedController(double maxVelocity, PIDController turnController) {
+        mMaxVelocity = maxVelocity;
+        mTurnController = turnController;
+    }
+
     /**
      * Creates a new FieldOrientedController Object
      * @param velocityX The global X velocity
@@ -31,18 +40,40 @@ public class FieldOrientedController {
     }
 
     /**
-     * @return The wheel speeds fo each side of the robot
+     * @return The wheel speeds for the robot
      */
     public DifferentialDriveWheelSpeeds calculate() {
-        Vector2d globalDirectionVector = new Vector2d(mVelocityX.getAsDouble(), mVelocityY.getAsDouble());
-        if(globalDirectionVector.magnitude() > 1.0) {
-            globalDirectionVector.x /= globalDirectionVector.magnitude();
-            globalDirectionVector.y /= globalDirectionVector.magnitude();
+        if(mVelocityX == null || mVelocityY == null || mHeading == null) {
+            return new DifferentialDriveWheelSpeeds(0.0, 0.0);
         }
-        double globalHeading = Math.atan2(globalDirectionVector.x, globalDirectionVector.y);
-        double localDirectionHeading = Util.boundedAngle(globalHeading - mHeading.getAsDouble(), false);
-        Vector2d localVelocityVector = new Vector2d(mMaxVelocity*Math.sin(localDirectionHeading)*globalDirectionVector.magnitude(), mMaxVelocity*Math.sin(localDirectionHeading)*globalDirectionVector.magnitude());
-        double turnPower = mTurnController.calculate(localDirectionHeading);
-        return new DifferentialDriveWheelSpeeds(localVelocityVector.y + turnPower, localVelocityVector.y - turnPower);
+        return calculate(mVelocityX.getAsDouble(), mVelocityY.getAsDouble(), mHeading.getAsDouble());
+    }
+
+    
+
+    /**
+     * @param velocityX The global X velocity of the robot
+     * @param velocityY The global Y velocity of the robot
+     * @param heading The heading of the robot in radians
+     * @return The wheel speeds for the robot
+     */
+    public DifferentialDriveWheelSpeeds calculate(double velocityX, double velocityY, double heading) {
+        Vector2d globalVelocityVector = new Vector2d(velocityX, velocityY);
+        double desiredGlobalHeading = Math.atan2(globalVelocityVector.x, globalVelocityVector.y);
+        double localHeading = Util.boundedAngle(desiredGlobalHeading - heading, false);
+        Vector2d localVelocityVector = new Vector2d(Math.sin(localHeading)*globalVelocityVector.magnitude(), Math.cos(localHeading)*globalVelocityVector.magnitude());
+        double turnPower = mTurnController.calculate(localHeading);
+        double lPower = localVelocityVector.y + turnPower;
+        double rPower = localVelocityVector.y - turnPower;
+        if(Math.abs(lPower) > mMaxVelocity || Math.abs(rPower) > mMaxVelocity) {
+            if(Math.abs(lPower) > Math.abs(rPower)) {
+                lPower /= Math.abs(lPower / mMaxVelocity);
+                rPower /= Math.abs(lPower / mMaxVelocity);
+            } else {
+                lPower /= Math.abs(rPower / mMaxVelocity);
+                rPower /= Math.abs(rPower / mMaxVelocity);
+            }
+        }
+        return new DifferentialDriveWheelSpeeds(lPower, rPower);
     }
 }

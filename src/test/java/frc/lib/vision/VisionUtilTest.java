@@ -12,6 +12,7 @@ public class VisionUtilTest {
 
     @Test
     public void anglesToPixelsTest() {
+        // Test Converting Angles to Pixels
         assertEquals(0, VisionUtil.anglesToPixels(0, 60, 320), Util.kEpsilon);
         assertEquals(160, VisionUtil.anglesToPixels(30, 60, 320), Util.kEpsilon);
         assertEquals(-160, VisionUtil.anglesToPixels(-30, 60, 320), Util.kEpsilon);
@@ -30,6 +31,7 @@ public class VisionUtilTest {
 
     @Test
     public void pixelsToAnglesTest() {
+        // Test Converting Pixels to Angles
         assertEquals(0, VisionUtil.pixelsToAngles(0, 60, 320), Util.kEpsilon);
         assertEquals(30, VisionUtil.pixelsToAngles(160, 60, 320), Util.kEpsilon);
         assertEquals(-30, VisionUtil.pixelsToAngles(-160, 60, 320), Util.kEpsilon);
@@ -49,6 +51,7 @@ public class VisionUtilTest {
 
     @Test
     public void centerPixelsTest() {
+        // Test Centering
         assertEquals(-159.5, VisionUtil.centerPixels(0, 320, false), Util.kEpsilon);
         assertEquals(0.0, VisionUtil.centerPixels(159.5, 320, false), Util.kEpsilon);
         assertEquals(159.5, VisionUtil.centerPixels(319, 320, false), Util.kEpsilon);
@@ -85,6 +88,7 @@ public class VisionUtilTest {
 
     @Test
     public void parseCornersTest() {
+        // Test Parsing Corners
         double[] corners = {
             -159.5, 119.5,
             159.5, -119.5,
@@ -118,6 +122,7 @@ public class VisionUtilTest {
 
     @Test
     public void getDistanceWidthTest() {
+        // Test getting distance from a target width
         Resolution res = new Resolution(320, 240);
         FOV fov = new FOV(60, 40);
         double distance = VisionUtil.getDistanceWidth(4.0, res, fov, 160.0, 0);
@@ -131,7 +136,23 @@ public class VisionUtilTest {
     }
 
     @Test
+    public void getDistanceHeightTest() {
+        // Test getting distance from a target height
+        double distance = VisionUtil.getDistanceHeight(2.0, 45.0);
+        assertEquals(2.0, distance, Util.kEpsilon);
+        distance = VisionUtil.getDistanceHeight(1.0, 30);
+        assertEquals(1.732050807568877293, distance, Util.kEpsilon);
+        distance = VisionUtil.getDistanceHeight(2.0, 15.0);
+        assertEquals(7.464101615137754587, distance, Util.kEpsilon);
+        distance = VisionUtil.getDistanceHeight(3.0, 12.0);
+        assertEquals(14.11389032843536270, distance, Util.kEpsilon);
+        distance = VisionUtil.getDistanceHeight(1.25, 23.0);
+        assertEquals(2.944815457279691042, distance, Util.kEpsilon);
+    }
+
+    @Test
     public void getSkewAngleTest() {
+        // Test getting the skew angle of a target
         CameraPoint2d leftCorner = new CameraPoint2d(-5.0, 0.0);
         CameraPoint2d rightCorner = new CameraPoint2d(5.0, 0.0);
         assertEquals(0.0, VisionUtil.getSkewAngle(leftCorner, rightCorner, 4.0, 2.0/Math.tan(Math.toRadians(5))), Util.kEpsilon);
@@ -150,6 +171,7 @@ public class VisionUtilTest {
 
     @Test
     public void getTopCornersTest() {
+        // Test getting the top corners of a target
         CameraPoint2d[] test1 = {
             new CameraPoint2d(5.0, 5.0),
             new CameraPoint2d(-5.0, 5.0),

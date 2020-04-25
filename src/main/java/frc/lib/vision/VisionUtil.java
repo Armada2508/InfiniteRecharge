@@ -95,7 +95,7 @@ public class VisionUtil {
     }
 
     /**
-     * Get the distance to the target based on it's width
+     * Get the distance to the target based on its width
      * @param realTargetWidth The physical width of the target
      * @param resolution The resolution of the camera
      * @param fov The field of view of the camera
@@ -115,6 +115,19 @@ public class VisionUtil {
         return distance;
     }
 
+    
+
+    /**
+     * Get the distance to the target based on its height
+     * @param delta The difference between the height of the camera and the height of the target
+     * @param targetAngle The measured angle of the target(in degrees)
+     * @return The distance to the target in the same units as {@code delta}
+     */
+    public static double getDistanceHeight(double delta, double targetAngle) {
+        return delta / Math.tan(Math.toRadians(targetAngle));
+    }
+
+
       /**
        * Gets the angle of the target relative to the robot
        * @param leftCorner The left corner of the target
@@ -129,7 +142,6 @@ public class VisionUtil {
         double targetWidth = Math.abs(right - left);
         int directionMultiplier = (leftCorner.getY() > rightCorner.getY()) ? -1 : 1;
         if(targetWidth/realTargetWidth > 1.0) {
-            System.out.println(1);
             return 0.0;
         }
         return Util.boundedAngleDegrees(Math.toDegrees(Math.acos(targetWidth/realTargetWidth)), false) * directionMultiplier;

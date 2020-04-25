@@ -103,7 +103,7 @@ public class VisionSubsystem extends SubsystemBase {
      * @return The y location of the target in degrees
      */
     public double getY() {
-        return mLimelight.getEntry("ty").getDouble(0.0) + mYOffset;
+        return mLimelight.getEntry("ty").getDouble(0.0) + mYOffset*Math.cos(Math.toRadians(getX()));
     }
 
     /**
@@ -123,7 +123,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get the distance to the target based on it's width
+     * Get the distance to the target based on its width
      * @param targetWidth The physical width of the target
      * @return The distance to the target in the same units as {@code targetWidth}
      */
@@ -133,13 +133,13 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get the distance to the target based on it's height
-     * @param height The height of the target
-     * @return The distance to the target in the same units as {@code height}
+     * Get the distance to the target based on its height
+     * @param delta The difference between the height of the camera and the height of the target
+     * @return The distance to the target in the same units as {@code delta}
      */
-    public double getDistanceHeight(double height) {
+    public double getDistanceHeight(double delta) {
         if(!targetFound()) return 0.0;
-        return height / Math.tan(Math.toRadians(getTargetCenter().getY()));
+        return VisionUtil.getDistanceHeight(delta, getTargetCenter().getY());
     }
 
     /**

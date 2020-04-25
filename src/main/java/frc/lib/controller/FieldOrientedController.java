@@ -65,20 +65,11 @@ public class FieldOrientedController {
      * @return The wheel speeds for the robot
      */
     public DifferentialDriveWheelSpeeds calculate(double velocityX, double velocityY, double heading) {
-        System.out.println("*********************************************");
         Vector2d globalVelocityVector = new Vector2d(velocityX, velocityY);
         double desiredGlobalHeading = Math.atan2(-globalVelocityVector.x, globalVelocityVector.y);
-        System.out.println("Global Forward: " + velocityY + ", Global Sideways: " + velocityX);
-        System.out.println("Desired Global Heading: " + desiredGlobalHeading);
-        System.out.println("Current Global Heading: " + heading);
-        System.out.println("Current Heading Delta: " + ( heading - desiredGlobalHeading));
         double localHeading = Util.boundedAngle(heading - desiredGlobalHeading, false);
-        System.out.println("Local Heading: " + ( heading - desiredGlobalHeading));
         Vector2d localVelocityVector = new Vector2d(Math.sin(localHeading)*globalVelocityVector.magnitude(), Math.cos(localHeading)*globalVelocityVector.magnitude());
-        System.out.println("Local Forward: " + localVelocityVector.y + ", Local Sideways: " + localVelocityVector.x);
-        System.out.println("Current Local Heading: " + localHeading);
         double turnPower = mTurnController.calculate(localHeading);
-        System.out.println("Turn Power: " + localHeading);
         double lPower = localVelocityVector.y - turnPower;
         double rPower = localVelocityVector.y + turnPower;
         if(Math.abs(lPower) > mMaxVelocity || Math.abs(rPower) > mMaxVelocity) {
@@ -90,8 +81,6 @@ public class FieldOrientedController {
                 rPower /= Math.abs(rPower / mMaxVelocity);
             }
         }
-        System.out.println("Left Power: " + lPower + ", Right Power: " + rPower);
-        System.out.println("*********************************************");
         return new DifferentialDriveWheelSpeeds(lPower, rPower);
     }
 }

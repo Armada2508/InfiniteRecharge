@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.config.MotorConfig;
-import frc.lib.drive.SwerveDrive;
 import frc.robot.*;
 
 
@@ -33,7 +32,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private final SwerveDriveKinematics mKinematics;
     private final SwerveDriveOdometry mOdometry;
-    private final SwerveDrive mDrive;
     private SwerveModuleState[] mModuleStates;
 
     private final PigeonIMU mImu = new PigeonIMU(0);
@@ -63,8 +61,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             new Translation2d(width/2.0, -height/2.0)};
 
         mKinematics = new SwerveDriveKinematics(wheelPositions);
-
-        mDrive = new SwerveDrive(wheelPositions);
 
         mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(0), new Pose2d());
     }
@@ -101,7 +97,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param twist Twist(rotational) motion
      */
     public void drive(double tX, double tY, double twist) {
-        setModuleStates(mDrive.calculate(tX, tY, twist, 0.0));
+        setModuleStates(mKinematics.toSwerveModuleStates(new ChassisSpeeds(tX, tY, twist)));
     }
 
     public void brake() {

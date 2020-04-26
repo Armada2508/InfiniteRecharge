@@ -44,8 +44,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final PigeonIMU mImu = new PigeonIMU(0);
 
-    private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
-
     private DriveState mState;
     
     public DriveSubsystem() {
@@ -57,8 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
         mDrive.setRightSideInverted(Constants.Drive.kRightInverted);
 
         mDrive.setSafetyEnabled(false);
-
-        mRobotTab.add("Drive", mDrive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, Constants.Gyro.kPigeonCondFrame1Period);
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_6_SensorFusion, Constants.Gyro.kPigeonCondFrame6Period);

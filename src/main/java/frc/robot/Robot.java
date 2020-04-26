@@ -50,10 +50,6 @@ public class Robot extends TimedRobot {
     // We have changed modes
     mRobotContainer.changeMode();
 
-    // If the match just ended, stop logging data
-    if(isOperatorControl()) {
-      mRobotContainer.stopDashboardCapture();
-    }
   }
 
   @Override
@@ -64,8 +60,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // We have changed modes
     mRobotContainer.changeMode();
-    // Start logging data if we're connected to the FMS
-    mRobotContainer.startDashboardCapture();
     // Get a command group to run in autonomous
     mAutonomousCommand = mRobotContainer.getAutonomousCommand();
 

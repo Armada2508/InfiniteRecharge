@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return mIntakeTalon.getTemperature();
     }
 
-    public double getID() {
+    public int getID() {
         return mIntakeTalon.getDeviceID();
     }
 }

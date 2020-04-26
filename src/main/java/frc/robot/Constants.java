@@ -74,8 +74,8 @@ public final class Constants {
         public static final double kCreepSpeed = 0.15; // How fast the robot creeps
 
         // Drive System Constants
-        public static final boolean kRightInverted = false; // If the right side is inverted
-        public static final boolean kLeftInverted = true; // If the left side is inverted
+        public static final boolean kRightInverted = true; // If the right side is inverted
+        public static final boolean kLeftInverted = false; // If the left side is inverted
         public static final int kSlot = 0; // The PID slot to use for the drive subsystem
         public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.02, 0, 0.02, 0.05, 200); // The feedback constants for the drive
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 12.75*(48.0/42.0)); //  The feedback config for the drive

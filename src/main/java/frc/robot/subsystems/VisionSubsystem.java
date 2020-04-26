@@ -148,6 +148,9 @@ public class VisionSubsystem extends SubsystemBase {
      */
     public double getTargetAngle() {
         CameraPoint2d[] topPoints = getTopCorners();
+        if(!targetFound() || topPoints.length > 1) {
+            return 0;
+        }
         return VisionUtil.getSkewAngle(topPoints[0], topPoints[1], Constants.Vision.kTargetWidth - Constants.Vision.kTapeWidth, getDistanceHeight(Constants.Vision.kVerticalOffset));
     }
     

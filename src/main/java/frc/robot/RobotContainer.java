@@ -52,7 +52,6 @@ public class RobotContainer {
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private final Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private final Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
-    private final ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
     private final PowerDistributionPanel mPDP = new PowerDistributionPanel();
 
     /**
@@ -69,15 +68,18 @@ public class RobotContainer {
 
         // Initialize the Camera(s)
         initCam();
+        
+        // Reset the total PDP energy measured
+        mPDP.resetTotalEnergy();
 
         // Setup the vision subsystem
         mVision.setup();
 
         // Tell the Drive Subsystem to drive if its bored
-        /*mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
+        mDrive.setDefaultCommand(new DriveClosedLoop(mDrive, () -> (mJoystick.getRawAxis(Constants.Drive.kThrottleAxis) * (Constants.Drive.kThrottleInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTrimAxis) * (Constants.Drive.kTrimInverted ? -1.0 : 1.0)),
             () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0))));
-        */
+        
 
         // Tell the Transport Subsystem to do its thing if its bored
         mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
@@ -117,103 +119,108 @@ public class RobotContainer {
         // ================
 
         // Talon Stuff
-        for (int i = 0; i < mDrive.getVoltage().length; i++) {
-            ShuffleboardManager.logDouble(mDrive.getVoltage()[i], "Talon " + mDrive.getIDs()[i] + " Output Voltage"); 
-        }
-        for (int i = 0; i < mDrive.getCurrent().length; i++) {
-            ShuffleboardManager.logDouble(mDrive.getCurrent()[i], "Talon " + mDrive.getIDs()[i] + " Current Draw"); 
-        }
-        for (int i = 0; i < mDrive.getTemps().length; i++) {
-            ShuffleboardManager.logDouble(mDrive.getTemps()[i], "Talon " + mDrive.getIDs()[i] + " Temperature"); 
-        }
-        for (int i = 0; i < mDrive.getVelocities().length; i++) {
-            ShuffleboardManager.logDouble(mDrive.getVelocities()[i], "Talon " + mDrive.getIDs()[i] + " Velocity"); 
-        }
-        for (int i = 0; i < mDrive.getPositions().length; i++) {
-            ShuffleboardManager.logDouble(mDrive.getPositions()[i], "Talon " + mDrive.getIDs()[i] + " Position"); 
-        }
-        for (int i = 0; i < mDrive.getInverted().length; i++) {
-            ShuffleboardManager.logBoolean(mDrive.getInverted()[i], "Talon " + mDrive.getIDs()[i] + " Inverted"); 
+        for (int i = 0; i < mDrive.getIDs().length; i++) {
+            Shuffleboard.getTab("Drive")
+                .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kList)
+                .withPosition(0+2*i, 0)
+                .withSize(2, 6)
+                .addNumber("Output Voltage", mDrive.getVoltage()[i])
+                .withWidget(BuiltInWidgets.kGraph);
+            Shuffleboard.getTab("Drive")
+                .getLayout("Talon " + mDrive.getIDs()[i])
+                .addNumber("Current Draw", mDrive.getCurrent()[i])
+                .withWidget(BuiltInWidgets.kGraph);
+            Shuffleboard.getTab("Drive")
+                .getLayout("Talon " + mDrive.getIDs()[i])
+                .addNumber("Velocity", mDrive.getVelocities()[i])
+                .withWidget(BuiltInWidgets.kGraph);
+            Shuffleboard.getTab("Drive")
+                .getLayout("Talon " + mDrive.getIDs()[i])
+                .addNumber("Position", mDrive.getPositions()[i])
+                .withWidget(BuiltInWidgets.kGraph);
+            Shuffleboard.getTab("Drive")
+                .getLayout("Talon " + mDrive.getIDs()[i])
+                .addBoolean("Inverted", mDrive.getInverted()[i])
+                .withWidget(BuiltInWidgets.kBooleanBox);
         }
         // Other Drive Stuff
-        ShuffleboardManager.logDouble(mDrive::getVelocity, "Robot Velocity");
-        ShuffleboardManager.logDouble(mDrive::getTurnVelocity, "Turn Velocity");
-        ShuffleboardManager.logDouble(mDrive::getUnboundedHeading, "Gyro");
-        ShuffleboardManager.logDouble(mDrive::getOdometryHeading, "Odometry Heading");
-        ShuffleboardManager.logDouble(mDrive::getOdometryX, "Odometry X");
-        ShuffleboardManager.logDouble(mDrive::getOdometryY, "Odometry Y");
-        ShuffleboardManager.logBoolean(mDrive::isAiming, "Is Aiming");
+        ShuffleboardManager.logDoubleHistory(mDrive::getVelocity, "Robot Velocity", "Robot");
+        ShuffleboardManager.logDoubleHistory(mDrive::getTurnVelocity, "Turn Velocity", "Robot");
+        Shuffleboard.getTab("Drive")
+            .addNumber("Gyro", mDrive::getUnboundedHeading)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(8, 0)
+            .withSize(4, 4);
+        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryHeading, "Odometry Heading", "Robot");
+        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryX, "Odometry X", "Robot");
+        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryY, "Odometry Y", "Robot");
+        ShuffleboardManager.logBoolean(mDrive::isAiming, "Is Aiming", "Robot");
 
         
         // ================
         //      Power
         // ================
-        ShuffleboardManager.logPDP(mPDP);
-        ShuffleboardManager.logDouble(mPDP::getTotalEnergy, "Total Energy");
+        ShuffleboardManager.logPDP(mPDP, "Power");
+        ShuffleboardManager.logDoubleHistory(mPDP::getTotalEnergy, "Total Energy", "Power");
         
         // =================
         //      Intake
         // =================
-        ShuffleboardManager.logDouble(mIntake::getVoltage, "Talon " + mIntake.getID() + " Voltage");
-        ShuffleboardManager.logDouble(mIntake::getCurrent, "Talon " + mIntake.getID() + " Current");
-        ShuffleboardManager.logDouble(mIntake::getTemp, "Talon " + mIntake.getID() + " Temperature");
+        ShuffleboardManager.logDoubleHistory(mIntake::getVoltage, "Talon " + mIntake.getID() + " Voltage", "Balls");
+        ShuffleboardManager.logDoubleHistory(mIntake::getCurrent, "Talon " + mIntake.getID() + " Current", "Balls");
+        ShuffleboardManager.logDoubleHistory(mIntake::getTemp, "Talon " + mIntake.getID() + " Temperature", "Balls");
         
         
         // ================
         //      Climb
         // ================
-        ShuffleboardManager.logBoolean(mClimb::isExtended, "Extended");
-        ShuffleboardManager.logBoolean(mClimb::isRetracted, "Retracted");
-        ShuffleboardManager.logBoolean(mClimb::isVented, "Vented");
+        ShuffleboardManager.logBoolean(mClimb::isExtended, "Extended", "Pneumatics");
+        ShuffleboardManager.logBoolean(mClimb::isRetracted, "Retracted", "Pneumatics");
+        ShuffleboardManager.logBoolean(mClimb::isVented, "Vented", "Pneumatics");
 
         // ================
         //      Vision 
         // ================
 
-        ShuffleboardManager.logBoolean(mVision::targetFound, "Found Target");
-        ShuffleboardManager.logDouble(mVision::getX, "Target X");
-        ShuffleboardManager.logDouble(mVision::getY, "Target Y");
-        ShuffleboardManager.logDouble(mVision::getTargetWidth, "Target Width");
-        ShuffleboardManager.logDouble(mVision::getTargetHeight, "Target Height");
-        ShuffleboardManager.logDouble(mVision::getTargetAngle, "Target Angle");
-        ShuffleboardManager.logDouble(mVision::getTargetHeight, "Target Height");
+        ShuffleboardManager.logBoolean(mVision::targetFound, "Found Target", "Vision");
+        ShuffleboardManager.logDoubleHistory(mVision::getX, "Target X", "Vision");
+        ShuffleboardManager.logDoubleHistory(mVision::getY, "Target Y", "Vision");
+        ShuffleboardManager.logDoubleHistory(mVision::getTargetWidth, "Target Width", "Vision");
+        ShuffleboardManager.logDoubleHistory(mVision::getTargetHeight, "Target Height", "Vision");
+        ShuffleboardManager.logDoubleHistory(mVision::getTargetAngle, "Target Angle", "Vision");
 
 
         // ======================
         //      Color Wheel
         // ======================
-        ShuffleboardManager.logDouble(mWOF::getRotations, "WOF Rotations");
-        ShuffleboardManager.logDouble(mWOF::getRPM, "WOF RPM");
-        ShuffleboardManager.logString(mWOF::getColorString, "WOF Color");
-        ShuffleboardManager.logDouble(mWOF::getVoltage, "WOF Voltage");
-        ShuffleboardManager.logDouble(mWOF::getCurrent, "WOF Current");
-        ShuffleboardManager.logDouble(mWOF::getTemp, "WOF Temperature");
-        ShuffleboardManager.logBoolean(mWOF::getInverted, "WOF Inverted");
+        ShuffleboardManager.logDoubleHistory(mWOF::getRotations, "WOF Rotations", "WOF");
+        ShuffleboardManager.logDoubleHistory(mWOF::getRPM, "WOF RPM", "WOF");
+        ShuffleboardManager.logString(mWOF::getColorString, "WOF Color", "WOF");
+        ShuffleboardManager.logDoubleHistory(mWOF::getVoltage, "WOF Voltage", "WOF");
+        ShuffleboardManager.logDoubleHistory(mWOF::getCurrent, "WOF Current", "WOF");
+        ShuffleboardManager.logBoolean(mWOF::getInverted, "WOF Inverted", "WOF");
 
 
         // =====================
         //      Pneumatics
         // =====================
-        ShuffleboardManager.logBoolean(mPneumatics::getPressureSwitch, "Pressure Switch");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighFault, "Current Fault");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighStickyFault, "Current Sticky Fault");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedFault, "Short Fault");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedStickyFault, "Short Sticky Fault");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedFault, "Not Connected Fault");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedStickyFault, "Not Connected Sticky Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getPressureSwitch, "Pressure Switch", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighFault, "Current Fault", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighStickyFault, "Current Sticky Fault", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedFault, "Short Fault", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedStickyFault, "Short Sticky Fault", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedFault, "Not Connected Fault", "Pneumatics");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedStickyFault, "Not Connected Sticky Fault", "Pneumatics");
 
         // =================
         //      Shooter
         // =================
-        ShuffleboardManager.logDouble(mShooter::getRPM, "Shooter RPM");
+        ShuffleboardManager.logDoubleHistory(mShooter::getRPM, "Shooter RPM", "Shooter");
         for (int i = 0; i < mShooter.getVoltage().length; i++) {
-            ShuffleboardManager.logDouble(mShooter.getVoltage()[i], "Talon " + mShooter.getIDs()[i] + " Output Voltage"); 
+            ShuffleboardManager.logDoubleHistory(mShooter.getVoltage()[i], "Talon " + mShooter.getIDs()[i] + " Output Voltage", "Shooter");
         }
         for (int i = 0; i < mShooter.getCurrent().length; i++) {
-            ShuffleboardManager.logDouble(mShooter.getCurrent()[i], "Talon " + mShooter.getIDs()[i] + " Current Draw"); 
-        }
-        for (int i = 0; i < mShooter.getTemp().length; i++) {
-            ShuffleboardManager.logDouble(mShooter.getTemp()[i], "Talon " + mShooter.getIDs()[i] + " Temperature"); 
+            ShuffleboardManager.logDoubleHistory(mShooter.getCurrent()[i], "Talon " + mShooter.getIDs()[i] + " Current Draw", "Shooter");
         }
 
     }
@@ -231,19 +238,7 @@ public class RobotContainer {
         backCameraStream.setFPS(Constants.Camera.kCameraFPS);
         
     }
-
-    public void startDashboardCapture() {
-        // If the FMS is connected, start recording all data sent to shuffleboard
-        if(DriverStation.getInstance().isFMSAttached()) {
-            Shuffleboard.startRecording();
-        }
-    }
-
-    public void stopDashboardCapture() {
-        // Stop recording
-        Shuffleboard.startRecording();
-    }
-
+    
     public void changeMode() {
         // Reset the Vision Subsystem because robotInit doesn't work when connected to the FMS for some reason
         mVision.reset();

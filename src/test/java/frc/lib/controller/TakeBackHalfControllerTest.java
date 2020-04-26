@@ -28,5 +28,8 @@ public class TakeBackHalfControllerTest {
         controller.reset();
         controller.setSetpoint(1.0);
         assertEquals(controller.calculate(1.0), 0.0, Util.kEpsilon);
+        // Test the controller period
+        controller = new TakeBackHalfController(0.5, 1.0, 1.0);
+        assertEquals(controller.calculate(2.0), -0.25, Util.kEpsilon);
     }
 }

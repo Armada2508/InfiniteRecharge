@@ -105,6 +105,56 @@ public class UtilTest {
     }
 
     @Test
+    public void epsilonGreaterThanTest() {
+        // Test Greater Than Method using kEpsilon
+        assertEquals(Util.epsilonGreaterThan(0.0, 1e-14), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, 1e-13), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, 1e-12), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, 1e-11), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, 1.0), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, -1e-14), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, -1e-13), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, -1e-12), false);
+        assertEquals(Util.epsilonGreaterThan(0.0, -1e-11), true);
+        assertEquals(Util.epsilonGreaterThan(0.0, -1.0), true);
+        assertEquals(Util.epsilonGreaterThan(1e-14, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(1e-13, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(1e-12, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(1e-11, 0.0), true);
+        assertEquals(Util.epsilonGreaterThan(1.0, 0.0), true);
+        assertEquals(Util.epsilonGreaterThan(-1e-14, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(-1e-13, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(-1e-12, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(-1e-11, 0.0), false);
+        assertEquals(Util.epsilonGreaterThan(-1.0, 0.0), false);
+    }
+
+    @Test
+    public void epsilonLessThanTest() {
+        // Test Less Than Method using kEpsilon
+        assertEquals(Util.epsilonLessThan(0.0, 1e-14), false);
+        assertEquals(Util.epsilonLessThan(0.0, 1e-13), false);
+        assertEquals(Util.epsilonLessThan(0.0, 1e-12), false);
+        assertEquals(Util.epsilonLessThan(0.0, 1e-11), true);
+        assertEquals(Util.epsilonLessThan(0.0, 1.0), true);
+        assertEquals(Util.epsilonLessThan(0.0, -1e-14), false);
+        assertEquals(Util.epsilonLessThan(0.0, -1e-13), false);
+        assertEquals(Util.epsilonLessThan(0.0, -1e-12), false);
+        assertEquals(Util.epsilonLessThan(0.0, -1e-11), false);
+        assertEquals(Util.epsilonLessThan(0.0, -1.0), false);
+        assertEquals(Util.epsilonLessThan(1e-14, 0.0), false);
+        assertEquals(Util.epsilonLessThan(1e-13, 0.0), false);
+        assertEquals(Util.epsilonLessThan(1e-12, 0.0), false);
+        assertEquals(Util.epsilonLessThan(1e-11, 0.0), false);
+        assertEquals(Util.epsilonLessThan(1.0, 0.0), false);
+        assertEquals(Util.epsilonLessThan(-1e-14, 0.0), false);
+        assertEquals(Util.epsilonLessThan(-1e-13, 0.0), false);
+        assertEquals(Util.epsilonLessThan(-1e-12, 0.0), false);
+        assertEquals(Util.epsilonLessThan(-1e-11, 0.0), true);
+        assertEquals(Util.epsilonLessThan(-1.0, 0.0), true);
+    }
+
+    @Test
     public void allCloseToTest() {
         // Test if values in a list are close to some value
         assertEquals(Util.allCloseTo(Arrays.asList(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0), 1.0), true);

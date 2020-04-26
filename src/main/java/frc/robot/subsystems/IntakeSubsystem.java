@@ -24,4 +24,20 @@ public class IntakeSubsystem extends SubsystemBase {
     public void set(double power) {
         mIntakeTalon.set(ControlMode.PercentOutput, power);
     }
+
+    public double getVoltage() {
+        return mIntakeTalon.getMotorOutputVoltage();
+    }
+
+    public double getCurrent() {
+        return mIntakeTalon.getMotorOutputVoltage();
+    }
+
+    public double getTemp() {
+        return mIntakeTalon.getTemperature();
+    }
+
+    public double getID() {
+        return mIntakeTalon.getDeviceID();
+    }
 }

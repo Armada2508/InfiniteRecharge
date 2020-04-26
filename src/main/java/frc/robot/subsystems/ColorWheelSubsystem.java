@@ -39,6 +39,22 @@ public class ColorWheelSubsystem extends SubsystemBase {
         return EncoderUtil.toRPM(mWOFTalon.getSelectedSensorVelocity(), Constants.WOF.kFeedbackConfig.getEpr(), Constants.WOF.kFeedbackConfig.getGearRatio());
     }
 
+    public double getVoltage() {
+        return mWOFTalon.getMotorOutputVoltage();
+    }
+
+    public double getCurrent() {
+        return mWOFTalon.getSupplyCurrent();
+    }
+
+    public double getTemp() {
+        return mWOFTalon.getTemperature();
+    }
+
+    public boolean getInverted() {
+        return mWOFTalon.getInverted();
+    }
+
     public char getColor() {
         return DriverStation.getInstance().getGameSpecificMessage().charAt(0);
     }

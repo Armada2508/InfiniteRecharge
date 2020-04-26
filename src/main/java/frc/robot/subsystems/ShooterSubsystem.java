@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -71,5 +73,21 @@ public class ShooterSubsystem extends SubsystemBase {
     // TODO: Fix shooter current limiting
     public void setCurrent(double amps) {
         //mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
+    }
+
+    public double[] getIDs() {
+        return new double[] { mLeftMotor.getDeviceID(), mRightMotor.getDeviceID() };
+    }
+
+    public DoubleSupplier[] getVoltage() {
+        return new DoubleSupplier[] { mLeftMotor::getMotorOutputVoltage, mRightMotor::getMotorOutputVoltage };
+    }
+
+    public DoubleSupplier[] getCurrent() {
+        return new DoubleSupplier[] { mLeftMotor::getSupplyCurrent, mRightMotor::getSupplyCurrent };
+    }
+
+    public DoubleSupplier[] getTemp() {
+        return new DoubleSupplier[] { mLeftMotor::getTemperature, mRightMotor::getTemperature };
     }
 }

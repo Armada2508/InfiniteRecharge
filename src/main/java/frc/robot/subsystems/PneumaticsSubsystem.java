@@ -27,5 +27,33 @@ public class PneumaticsSubsystem extends SubsystemBase {
     public void periodic() {
         
     }
+    
+    public boolean getPressureSwitch() {
+        return mCompressor.getPressureSwitchValue();
+    }
+
+    public boolean getCompressorCurrentTooHighFault() {
+        return mCompressor.getCompressorCurrentTooHighFault();
+    }
+
+    public boolean getCompressorCurrentTooHighStickyFault() {
+        return mCompressor.getCompressorCurrentTooHighStickyFault();
+    }
+
+    public boolean getCompressorShortedFault() {
+        return mCompressor.getCompressorShortedFault();
+    }
+
+    public boolean getCompressorShortedStickyFault() {
+        return mCompressor.getCompressorShortedStickyFault();
+    }
+
+    public boolean getCompressorNotConnectedFault() {
+        return mCompressor.getCompressorNotConnectedFault();
+    }
+
+    public boolean getCompressorNotConnectedStickyFault() {
+        return mCompressor.getCompressorNotConnectedStickyFault();
+    }
 
 }

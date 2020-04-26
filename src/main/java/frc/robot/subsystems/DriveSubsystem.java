@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.sensors.*;
@@ -22,6 +25,7 @@ import frc.lib.config.MotorConfig;
 import frc.lib.motion.*;
 import frc.lib.util.Util;
 import frc.robot.*;
+import frc.robot.enums.DriveState;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -36,10 +40,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final DifferentialDrive mDrive = new DifferentialDrive(mLeftMotors, mRightMotors);
     private final DifferentialDriveOdometry mOdometry;
+    private final DifferentialDriveKinematics mKinematics = new DifferentialDriveKinematics(Constants.Drive.kTrackWidth);
 
     private final PigeonIMU mImu = new PigeonIMU(0);
 
     private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
+
+    private DriveState mState;
     
     public DriveSubsystem() {
         mRight.setInverted(Constants.Drive.kRightInverted);
@@ -129,6 +136,10 @@ public class DriveSubsystem extends SubsystemBase {
         return Util.boundedAngleDegrees(mImu.getFusedHeading()) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
     }
 
+    public double getUnboundedHeading() {
+        return mImu.getFusedHeading() * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
+    }
+
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getVelocityLeft(), getVelocityRight());
     }
@@ -198,8 +209,16 @@ public class DriveSubsystem extends SubsystemBase {
         return toDistance(mRight.getSelectedSensorPosition());
     }
 
-    public double getAverageDistance() {
-        return (getPositionLeft() + getPositionRight()) / 2.0;
+    public double getOdometryHeading() {
+        return mOdometry.getPoseMeters().getRotation().getRadians();
+    }
+
+    public double getOdometryX() {
+        return mOdometry.getPoseMeters().getTranslation().getX();
+    }
+
+    public double getOdometryY() {
+        return mOdometry.getPoseMeters().getTranslation().getY();
     }
 
     public double toDistance(int sensorPosition) {
@@ -214,6 +233,14 @@ public class DriveSubsystem extends SubsystemBase {
         return toVelocity(mLeft.getSelectedSensorVelocity());
     }
 
+    public double getVelocity() {
+        return mKinematics.toChassisSpeeds(getWheelSpeeds()).vxMetersPerSecond;
+    }
+
+    public double getTurnVelocity() {
+        return mKinematics.toChassisSpeeds(getWheelSpeeds()).omegaRadiansPerSecond;
+    }
+
     public double toVelocity(int velocity) {
         return EncoderUtil.toVelocity(velocity, Constants.Drive.kFeedbackConfig.getEpr(), Constants.Drive.kFeedbackConfig.getGearRatio(), Constants.Drive.kWheelDiameter);
     }
@@ -226,21 +253,44 @@ public class DriveSubsystem extends SubsystemBase {
         mDrive.setMaxOutput(maxOutput);
     }
 
-    public WPI_TalonFX[] getAllTalons() {
-        return new WPI_TalonFX[]{ mRight, mRightFollower, mLeft, mLeftFollower };
+    public DoubleSupplier[] getVoltage() {
+        return new DoubleSupplier[] { mRight::getMotorOutputVoltage, mRightFollower::getMotorOutputVoltage, mLeft::getMotorOutputVoltage, mLeftFollower::getMotorOutputVoltage };
     }
 
-    public DifferentialDriveOdometry getOdometry() {
-        return mOdometry;
+    public DoubleSupplier[] getCurrent() {
+        return new DoubleSupplier[] { mRight::getSupplyCurrent, mRightFollower::getSupplyCurrent, mLeft::getSupplyCurrent, mLeftFollower::getMotorOutputVoltage };
     }
 
-    public PigeonIMU getGyro() {
-        return mImu;
+    public DoubleSupplier[] getTemps() {
+        return new DoubleSupplier[] { mRight::getTemperature, mRightFollower::getTemperature, mLeft::getTemperature, mLeftFollower::getTemperature };
     }
 
-    public double[] getTemps() {
-        double[] temperatures = { mRight.getTemperature(), mRightFollower.getTemperature(), mLeft.getTemperature(), mLeftFollower.getTemperature() };
-        return temperatures;
+    public DoubleSupplier[] getVelocities() {
+        return new DoubleSupplier[] { mRight::getSelectedSensorVelocity, mRightFollower::getSelectedSensorVelocity, mLeft::getSelectedSensorVelocity, mLeftFollower::getSelectedSensorVelocity };
+    }
+
+    public DoubleSupplier[] getPositions() {
+        return new DoubleSupplier[] { mRight::getSelectedSensorPosition, mRightFollower::getSelectedSensorPosition, mLeft::getSelectedSensorPosition, mLeftFollower::getSelectedSensorPosition };
+    }
+
+    public BooleanSupplier[] getInverted() {
+        return new BooleanSupplier[] { mRight::getInverted, mRightFollower::getInverted, mLeft::getInverted, mLeftFollower::getInverted };
+    }
+
+    public int[] getIDs() {
+        return new int[]{ mRight.getDeviceID(), mRightFollower.getDeviceID(), mLeft.getDeviceID(), mLeftFollower.getDeviceID() };
+    }
+
+    public void setState(DriveState state) {
+        mState = state;
+    }
+
+    public DriveState getState() {
+        return mState;
+    }
+
+    public boolean isAiming() {
+        return mState == DriveState.AIM;
     }
 
 }

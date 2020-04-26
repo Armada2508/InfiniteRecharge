@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.enums.DriveState;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -27,6 +28,7 @@ public class Aim extends CommandBase {
     public void initialize() {
         mVisionSubsystem.setLED(true);
         mDriveSubsystem.brake();
+        mDriveSubsystem.setState(DriveState.AIM);
     }
 
 
@@ -49,4 +51,5 @@ public class Aim extends CommandBase {
     public boolean isFinished() {
         return false;
     }
+
 }

@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint.MinMax;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.lib.logger.Logger;
+import frc.lib.logging.ShuffleboardManager;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
@@ -45,12 +46,14 @@ public class RobotContainer {
     private final TransportSubsystem mTransport = new TransportSubsystem();
     private final ShooterSubsystem mShooter = new ShooterSubsystem();
     private final IntakeSubsystem mIntake = new IntakeSubsystem(Constants.Intake.kTalon, Constants.Intake.kInverted);
+    private final PneumaticsSubsystem mPneumatics = new PneumaticsSubsystem();
     private final ClimbSubsystem mClimb = new ClimbSubsystem();
     private final VisionSubsystem mVision = new VisionSubsystem();
     private final ColorWheelSubsystem mWOF = new ColorWheelSubsystem();
     private final Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private final Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
     private final ShuffleboardTab mShooterTable = Shuffleboard.getTab("Shooter");
+    private final PowerDistributionPanel mPDP = new PowerDistributionPanel();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -58,7 +61,6 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the button bindings
         configureButtonBindings();
-        new PneumaticsSubsystem();
     }
 
     public void robotInit() {
@@ -110,15 +112,109 @@ public class RobotContainer {
 
     public void initDashboard() {
         
-        Logger.logDouble(mDrive.getGyro()::getFusedHeading, "Gyro");
-        Logger.logDouble(mDrive::getAverageDistance, "Odometer");
+        // ================
+        //      Drive
+        // ================
 
-        for (int i = 0; i < mDrive.getAllTalons().length; i++) {
-            Logger.logDouble(mDrive.getAllTalons()[i]::getMotorOutputVoltage, "Talon " + mDrive.getAllTalons()[i].getDeviceID()); 
+        // Talon Stuff
+        for (int i = 0; i < mDrive.getVoltage().length; i++) {
+            ShuffleboardManager.logDouble(mDrive.getVoltage()[i], "Talon " + mDrive.getIDs()[i] + " Output Voltage"); 
         }
+        for (int i = 0; i < mDrive.getCurrent().length; i++) {
+            ShuffleboardManager.logDouble(mDrive.getCurrent()[i], "Talon " + mDrive.getIDs()[i] + " Current Draw"); 
+        }
+        for (int i = 0; i < mDrive.getTemps().length; i++) {
+            ShuffleboardManager.logDouble(mDrive.getTemps()[i], "Talon " + mDrive.getIDs()[i] + " Temperature"); 
+        }
+        for (int i = 0; i < mDrive.getVelocities().length; i++) {
+            ShuffleboardManager.logDouble(mDrive.getVelocities()[i], "Talon " + mDrive.getIDs()[i] + " Velocity"); 
+        }
+        for (int i = 0; i < mDrive.getPositions().length; i++) {
+            ShuffleboardManager.logDouble(mDrive.getPositions()[i], "Talon " + mDrive.getIDs()[i] + " Position"); 
+        }
+        for (int i = 0; i < mDrive.getInverted().length; i++) {
+            ShuffleboardManager.logBoolean(mDrive.getInverted()[i], "Talon " + mDrive.getIDs()[i] + " Inverted"); 
+        }
+        // Other Drive Stuff
+        ShuffleboardManager.logDouble(mDrive::getVelocity, "Robot Velocity");
+        ShuffleboardManager.logDouble(mDrive::getTurnVelocity, "Turn Velocity");
+        ShuffleboardManager.logDouble(mDrive::getUnboundedHeading, "Gyro");
+        ShuffleboardManager.logDouble(mDrive::getOdometryHeading, "Odometry Heading");
+        ShuffleboardManager.logDouble(mDrive::getOdometryX, "Odometry X");
+        ShuffleboardManager.logDouble(mDrive::getOdometryY, "Odometry Y");
+        ShuffleboardManager.logBoolean(mDrive::isAiming, "Is Aiming");
 
         
-        Logger.logDouble(mShooter::getRPM, "Shooter RPM");
+        // ================
+        //      Power
+        // ================
+        ShuffleboardManager.logPDP(mPDP);
+        ShuffleboardManager.logDouble(mPDP::getTotalEnergy, "Total Energy");
+        
+        // =================
+        //      Intake
+        // =================
+        ShuffleboardManager.logDouble(mIntake::getVoltage, "Talon " + mIntake.getID() + " Voltage");
+        ShuffleboardManager.logDouble(mIntake::getCurrent, "Talon " + mIntake.getID() + " Current");
+        ShuffleboardManager.logDouble(mIntake::getTemp, "Talon " + mIntake.getID() + " Temperature");
+        
+        
+        // ================
+        //      Climb
+        // ================
+        ShuffleboardManager.logBoolean(mClimb::isExtended, "Extended");
+        ShuffleboardManager.logBoolean(mClimb::isRetracted, "Retracted");
+        ShuffleboardManager.logBoolean(mClimb::isVented, "Vented");
+
+        // ================
+        //      Vision 
+        // ================
+
+        ShuffleboardManager.logBoolean(mVision::targetFound, "Found Target");
+        ShuffleboardManager.logDouble(mVision::getX, "Target X");
+        ShuffleboardManager.logDouble(mVision::getY, "Target Y");
+        ShuffleboardManager.logDouble(mVision::getTargetWidth, "Target Width");
+        ShuffleboardManager.logDouble(mVision::getTargetHeight, "Target Height");
+        ShuffleboardManager.logDouble(mVision::getTargetAngle, "Target Angle");
+        ShuffleboardManager.logDouble(mVision::getTargetHeight, "Target Height");
+
+
+        // ======================
+        //      Color Wheel
+        // ======================
+        ShuffleboardManager.logDouble(mWOF::getRotations, "WOF Rotations");
+        ShuffleboardManager.logDouble(mWOF::getRPM, "WOF RPM");
+        ShuffleboardManager.logString(mWOF::getColorString, "WOF Color");
+        ShuffleboardManager.logDouble(mWOF::getVoltage, "WOF Voltage");
+        ShuffleboardManager.logDouble(mWOF::getCurrent, "WOF Current");
+        ShuffleboardManager.logDouble(mWOF::getTemp, "WOF Temperature");
+        ShuffleboardManager.logBoolean(mWOF::getInverted, "WOF Inverted");
+
+
+        // =====================
+        //      Pneumatics
+        // =====================
+        ShuffleboardManager.logBoolean(mPneumatics::getPressureSwitch, "Pressure Switch");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighFault, "Current Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighStickyFault, "Current Sticky Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedFault, "Short Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedStickyFault, "Short Sticky Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedFault, "Not Connected Fault");
+        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedStickyFault, "Not Connected Sticky Fault");
+
+        // =================
+        //      Shooter
+        // =================
+        ShuffleboardManager.logDouble(mShooter::getRPM, "Shooter RPM");
+        for (int i = 0; i < mShooter.getVoltage().length; i++) {
+            ShuffleboardManager.logDouble(mShooter.getVoltage()[i], "Talon " + mShooter.getIDs()[i] + " Output Voltage"); 
+        }
+        for (int i = 0; i < mShooter.getCurrent().length; i++) {
+            ShuffleboardManager.logDouble(mShooter.getCurrent()[i], "Talon " + mShooter.getIDs()[i] + " Current Draw"); 
+        }
+        for (int i = 0; i < mShooter.getTemp().length; i++) {
+            ShuffleboardManager.logDouble(mShooter.getTemp()[i], "Talon " + mShooter.getIDs()[i] + " Temperature"); 
+        }
 
     }
 

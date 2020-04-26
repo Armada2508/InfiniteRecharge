@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.lib.input.JoystickUtil;
 import frc.robot.Constants;
+import frc.robot.enums.DriveState;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -43,6 +44,7 @@ public class Drive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    mDriveSubsystem.setState(DriveState.DRIVE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -25,17 +25,7 @@ public class Climb extends CommandBase {
 
     @Override
     public void initialize() {
-        switch (mState) {
-            case RETRACTED:
-                mClimbSubsystem.retract();
-                break;
-            case VENTED:
-                mClimbSubsystem.vent();
-                break;
-            case EXTENDED:
-                mClimbSubsystem.extend();
-                break;
-        }
+        mClimbSubsystem.setState(mState);
     }
 
     @Override

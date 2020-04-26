@@ -24,5 +24,9 @@ public class TakeBackHalfControllerTest {
         // If we change the sign again it should average the values that
         // changed the sign(-0.005 and -0.035)
         assertEquals(controller.calculate(1.0), -0.02, Util.kEpsilon);
+        // Test Reset
+        controller.reset();
+        controller.setSetpoint(1.0);
+        assertEquals(controller.calculate(1.0), 0.0, Util.kEpsilon);
     }
 }

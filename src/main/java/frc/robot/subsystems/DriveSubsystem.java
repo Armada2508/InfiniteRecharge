@@ -126,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Util.boundedAngleDegrees(mImu.getFusedHeading(), false) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
+        return Util.boundedAngleDegrees(mImu.getFusedHeading()) * (Constants.Gyro.kGyroReversed ? -1.0 : 1.0);
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {

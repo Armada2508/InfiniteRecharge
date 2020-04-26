@@ -144,7 +144,7 @@ public class VisionUtil {
         if(targetWidth/realTargetWidth > 1.0) {
             return 0.0;
         }
-        return Util.boundedAngleDegrees(Math.toDegrees(Math.acos(targetWidth/realTargetWidth)), false) * directionMultiplier;
+        return Util.boundedAngleDegrees(Math.toDegrees(Math.acos(targetWidth/realTargetWidth))) * directionMultiplier;
     }
 
       /**

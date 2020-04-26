@@ -67,7 +67,7 @@ public class FieldOrientedController {
     public DifferentialDriveWheelSpeeds calculate(double velocityX, double velocityY, double heading) {
         Vector2d globalVelocityVector = new Vector2d(velocityX, velocityY);
         double desiredGlobalHeading = Math.atan2(-globalVelocityVector.x, globalVelocityVector.y);
-        double localHeading = Util.boundedAngle(heading - desiredGlobalHeading, false);
+        double localHeading = Util.boundedAngle(heading - desiredGlobalHeading);
         Vector2d localVelocityVector = new Vector2d(Math.sin(localHeading)*globalVelocityVector.magnitude(), Math.cos(localHeading)*globalVelocityVector.magnitude());
         double turnPower = mTurnController.calculate(localHeading);
         double lPower = localVelocityVector.y - turnPower;

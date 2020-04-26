@@ -112,43 +112,57 @@ public class Util {
 
     /**
      * @param angle An angle in radians
-     * @param positive If the angle should be constrained from (0-2π] or (-π-π] (true indicating the former)
-     * @return A colinear angle from (0-2π] or (-π-π]
+     * @return A colinear angle from (-π-π]
      */
-    public static double boundedAngle(double angle, boolean positive) {
-        if(positive) {
-            return ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-        } else {
-            if(epsilonEquals(Math.IEEEremainder(angle, 2*Math.PI), -Math.PI)) {
-                return Math.PI;
-            }
-            return Math.IEEEremainder(angle, 2*Math.PI);
+    public static double boundedAngle(double angle) {
+        if(epsilonEquals(Math.IEEEremainder(angle, 2*Math.PI), -Math.PI)) {
+            return Math.PI;
         }
+        return Math.IEEEremainder(angle, 2*Math.PI);
     }
 
     /**
      * @param angle An angle in degrees
-     * @param positive If the angle should be constrained from (0-360] or (-180-180] (true indicating the former)
-     * @return A colinear angle from (0-360] or (-180-180]
+     * @return A colinear angle from (-180-180]
      */
-    public static double boundedAngleDegrees(double angle, boolean positive) {
-        if(positive) {
-            return (angle % 360 + 360) % 360;
-        } else {
-            if(epsilonEquals(Math.IEEEremainder(angle, 360), -180)) {
-                return 180;
-            }
-            return Math.IEEEremainder(angle, 360);
+    public static double boundedAngleDegrees(double angle) {
+        if(epsilonEquals(Math.IEEEremainder(angle, 360), -180)) {
+            return 180;
         }
+        return Math.IEEEremainder(angle, 360);
+    }
+
+    /**
+     * @param angle An angle in radians
+     * @return A colinear angle from (0-2π]
+     */
+    public static double boundedAnglePositive(double angle) {
+        return ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    }
+
+    /**
+     * @param angle An angle in degrees
+     * @return A colinear angle from (0-360]
+     */
+    public static double boundedAngleDegreesPositive(double angle) {
+        return (angle % 360 + 360) % 360;
     }
     
 
     /**
      * @param rotation A Rotation2d object
-     * @param positive If the angle should be constrained from (0-2π] or (-π-π] (true indicating the former)
-     * @return A Rotation2d Object with an angle from (0-2π] or (-π-π]
+     * @return A Rotation2d Object with an angle from (-π-π]
      */
-    public static Rotation2d boundedAngle(Rotation2d rotation, boolean positive) {
-        return new Rotation2d(boundedAngle(rotation.getRadians(), positive));
+    public static Rotation2d boundedAngle(Rotation2d rotation) {
+        return new Rotation2d(boundedAngle(rotation.getRadians()));
+    }
+    
+
+    /**
+     * @param rotation A Rotation2d object
+     * @return A Rotation2d Object with an angle from (0-2π]
+     */
+    public static Rotation2d boundedAnglePositive(Rotation2d rotation) {
+        return new Rotation2d(boundedAnglePositive(rotation.getRadians()));
     }
 }

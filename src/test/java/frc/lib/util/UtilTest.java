@@ -120,33 +120,33 @@ public class UtilTest {
     @Test
     public void boundedAngleTest() {
         // Test finding coterminal angles in radians
-        assertEquals(Util.boundedAngle(Math.PI/2.0, false), Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(Math.PI, false), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-Math.PI/2.0, false), -Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(2*Math.PI, false), 0.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-3*Math.PI/2.0, false), Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(3*Math.PI/2.0, false), -Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(3*Math.PI, false), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-3*Math.PI, false), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(5*Math.PI, false), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-5*Math.PI, false), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(Math.PI/2.0), Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(-Math.PI/2.0), -Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(2*Math.PI), 0.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(-3*Math.PI/2.0), Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(3*Math.PI/2.0), -Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(3*Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(-3*Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(5*Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(-5*Math.PI), Math.PI, Util.kEpsilon);
         
-        assertEquals(Util.boundedAngle(Math.PI/2.0, true), Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(Math.PI, true), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-Math.PI, true), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-Math.PI/2.0, true), 3.0*Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(2*Math.PI, true), 0.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-2*Math.PI, true), 0.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(3*Math.PI, true), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(-3*Math.PI, true), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(Math.PI/2.0), Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(-Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(-Math.PI/2.0), 3.0*Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(2*Math.PI), 0.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(-2*Math.PI), 0.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(3*Math.PI), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(-3*Math.PI), Math.PI, Util.kEpsilon);
         
-        assertEquals(Util.boundedAngle(new Rotation2d(Math.PI/2.0), false).getRadians(), Math.PI/2.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(Math.PI), true).getRadians(), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(-Math.PI), false).getRadians(), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(2*Math.PI), true).getRadians(), 0.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(-2*Math.PI), false).getRadians(), 0.0, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(3*Math.PI), true).getRadians(), Math.PI, Util.kEpsilon);
-        assertEquals(Util.boundedAngle(new Rotation2d(-3*Math.PI), false).getRadians(), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(new Rotation2d(Math.PI/2.0)).getRadians(), Math.PI/2.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(new Rotation2d(Math.PI)).getRadians(), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(new Rotation2d(-Math.PI)).getRadians(), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(new Rotation2d(2*Math.PI)).getRadians(), 0.0, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(new Rotation2d(-2*Math.PI)).getRadians(), 0.0, Util.kEpsilon);
+        assertEquals(Util.boundedAnglePositive(new Rotation2d(3*Math.PI)).getRadians(), Math.PI, Util.kEpsilon);
+        assertEquals(Util.boundedAngle(new Rotation2d(-3*Math.PI)).getRadians(), Math.PI, Util.kEpsilon);
     }
 
     
@@ -154,21 +154,21 @@ public class UtilTest {
     @Test
     public void boundedAngleDegreesTest() {
         // Test finding coterminal angles in degrees
-        assertEquals(Util.boundedAngleDegrees(90, true), 90, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(180, true), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-180, true), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-90, true), 270, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-45, true), 315, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(540, true), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-540, true), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(90), 90, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(180), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(-180), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(-90), 270, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(-45), 315, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(540), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegreesPositive(-540), 180, Util.kEpsilon);
 
         
-        assertEquals(Util.boundedAngleDegrees(90, false), 90, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(180, false), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-180, false), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-90, false), -90, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-45, false), -45, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(540, false), 180, Util.kEpsilon);
-        assertEquals(Util.boundedAngleDegrees(-540, false), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(90), 90, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(180), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(-180), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(-90), -90, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(-45), -45, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(540), 180, Util.kEpsilon);
+        assertEquals(Util.boundedAngleDegrees(-540), 180, Util.kEpsilon);
     }
 }

@@ -87,49 +87,6 @@ public class Util {
     }
 
     /**
-     * Checks if one value is greater than another value with a difference greater than a margin of error(some small value)
-     * @param a The first value
-     * @param b The second value
-     * @param epsilon The margin of error
-     * @return If a is greater than b by a margin of {@code epsilon} or greater
-     */
-    public static boolean epsilonGreaterThan(double a, double b, double epsilon) {
-        return (a > b  + epsilon);
-    }
-
-    /**
-     * Checks if one value is greater than another value with a difference greater than a margin of error(some small value)
-     * @param a The first value
-     * @param b The second value
-     * @return If a is greater than b
-     */
-    public static boolean epsilonGreaterThan(double a, double b) {
-        return epsilonGreaterThan(a, b, kEpsilon);
-    }
-
-    /**
-     * Checks if one value is less than another value with a difference greater than a margin of error(some small value)
-     * @param a The first value
-     * @param b The second value
-     * @param epsilon The margin of error
-     * @return If a is less than b by a margin of {@code epsilon} or greater
-     */
-    public static boolean epsilonLessThan(double a, double b, double epsilon) {
-        return (a < b - epsilon);
-    }
-
-    /**
-     * Checks if one value is less than another value with a difference greater than a margin of error(some small value)
-     * @param a The first value
-     * @param b The second value
-     * @return If a is less than b
-     */
-    public static boolean epsilonLessThan(double a, double b) {
-        return epsilonLessThan(a, b, kEpsilon);
-    }
-
-
-    /**
      * Checks if the difference between all values in a list is less than a margin of error
      * @param list The list of value
      * @param value The value to check with

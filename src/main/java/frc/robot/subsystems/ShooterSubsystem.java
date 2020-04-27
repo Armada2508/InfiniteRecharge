@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -87,7 +88,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return new DoubleSupplier[] { mLeftMotor::getSupplyCurrent, mRightMotor::getSupplyCurrent };
     }
 
-    public DoubleSupplier[] getTemp() {
-        return new DoubleSupplier[] { mLeftMotor::getTemperature, mRightMotor::getTemperature };
+    public BooleanSupplier[] getInverted() {
+        return new BooleanSupplier[] { mLeftMotor::getInverted, mRightMotor::getInverted };
     }
 }

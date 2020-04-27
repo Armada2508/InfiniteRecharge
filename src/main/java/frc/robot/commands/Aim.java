@@ -45,6 +45,7 @@ public class Aim extends CommandBase {
         mVisionSubsystem.setLED(false);
         mDriveSubsystem.coast();
         mDriveSubsystem.setPowers(0, 0);
+        mDriveSubsystem.setState(DriveState.DRIVE);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -67,18 +68,30 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public ClimbState getState() {
+        if(DriverStation.getInstance().isDisabled()) {
+            return ClimbState.RETRACTED;
+        }
         return mState;
     }
 
     public boolean isExtended() {
+        if(DriverStation.getInstance().isDisabled()) {
+            return false;
+        }
         return mState == ClimbState.EXTENDED;
     }
 
     public boolean isRetracted() {
+        if(DriverStation.getInstance().isDisabled()) {
+            return true;
+        }
         return mState == ClimbState.RETRACTED;
     }
 
     public boolean isVented() {
+        if(DriverStation.getInstance().isDisabled()) {
+            return false;
+        }
         return mState == ClimbState.VENTED;
     }
 }

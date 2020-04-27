@@ -81,6 +81,8 @@ public class RobotContainer {
             () -> (mJoystick.getRawAxis(Constants.Drive.kTurnAxis) * (Constants.Drive.kTurnInverted ? -1.0 : 1.0))));
         
 
+        mClimb.setDefaultCommand(new Climb(mClimb, ClimbState.VENTED));
+
         // Tell the Transport Subsystem to do its thing if its bored
         mTransport.setDefaultCommand(new AutoTransport(mTransport, new JoystickButton(mButtonBoard, 16)::get));
     }
@@ -101,11 +103,11 @@ public class RobotContainer {
         //new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
         new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kPower));
-        new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 2000));
+        new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 750));
         new JoystickButton(mButtonBoard, 4).whileHeld(new TransportPower(mTransport, 1.0));
-        new JoystickButton(mButtonBoard, 12).whenHeld(new Climb(mClimb, ClimbState.EXTENDED));
-        new JoystickButton(mButtonBoard, 13).whenHeld(new Climb(mClimb, ClimbState.VENTED));
-        new JoystickButton(mButtonBoard, 14).whenHeld(new Climb(mClimb, ClimbState.RETRACTED));
+        new JoystickButton(mButtonBoard, 12).whileHeld(new Climb(mClimb, ClimbState.EXTENDED));
+        new JoystickButton(mButtonBoard, 13).whileHeld(new Climb(mClimb, ClimbState.VENTED));
+        new JoystickButton(mButtonBoard, 14).whileHeld(new Climb(mClimb, ClimbState.RETRACTED));
         new JoystickButton(mButtonBoard, 3).whileHeld(new TransportPower(mTransport, -1.0));
         new JoystickButton(mButtonBoard, 6).whileHeld(new Aim(mDrive, mVision));
 
@@ -120,108 +122,271 @@ public class RobotContainer {
 
         // Talon Stuff
         for (int i = 0; i < mDrive.getIDs().length; i++) {
-            Shuffleboard.getTab("Drive")
-                .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kList)
-                .withPosition(0+2*i, 0)
-                .withSize(2, 6)
-                .addNumber("Output Voltage", mDrive.getVoltage()[i])
-                .withWidget(BuiltInWidgets.kGraph);
-            Shuffleboard.getTab("Drive")
-                .getLayout("Talon " + mDrive.getIDs()[i])
-                .addNumber("Current Draw", mDrive.getCurrent()[i])
-                .withWidget(BuiltInWidgets.kGraph);
-            Shuffleboard.getTab("Drive")
-                .getLayout("Talon " + mDrive.getIDs()[i])
+            Shuffleboard.getTab("Drive Physical")
+                .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kGrid)
+                .withPosition(0+3*i, 0)
+                .withSize(3, 6)
+                .withProperties(Map.of("Number of columns", 1))
                 .addNumber("Velocity", mDrive.getVelocities()[i])
-                .withWidget(BuiltInWidgets.kGraph);
-            Shuffleboard.getTab("Drive")
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 0);
+            Shuffleboard.getTab("Drive Physical")
                 .getLayout("Talon " + mDrive.getIDs()[i])
                 .addNumber("Position", mDrive.getPositions()[i])
-                .withWidget(BuiltInWidgets.kGraph);
-            Shuffleboard.getTab("Drive")
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 1);
+        }
+        for (int i = 0; i < mDrive.getIDs().length; i++) {
+            Shuffleboard.getTab("Drive Electrical")
+                .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kGrid)
+                .withPosition(0+3*i, 0)
+                .withSize(3, 6)
+                .withProperties(Map.of("Number of columns", 1))
+                .addNumber("Output Voltage", mDrive.getVoltage()[i])
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 0);
+            Shuffleboard.getTab("Drive Electrical")
+                .getLayout("Talon " + mDrive.getIDs()[i])
+                .addNumber("Current Draw", mDrive.getCurrent()[i])
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 1);
+            Shuffleboard.getTab("Drive Electrical")
                 .getLayout("Talon " + mDrive.getIDs()[i])
                 .addBoolean("Inverted", mDrive.getInverted()[i])
-                .withWidget(BuiltInWidgets.kBooleanBox);
+                .withPosition(0, 2);
         }
-        // Other Drive Stuff
-        ShuffleboardManager.logDoubleHistory(mDrive::getVelocity, "Robot Velocity", "Robot");
-        ShuffleboardManager.logDoubleHistory(mDrive::getTurnVelocity, "Turn Velocity", "Robot");
-        Shuffleboard.getTab("Drive")
-            .addNumber("Gyro", mDrive::getUnboundedHeading)
+
+        // Global Robot Stuff
+        Shuffleboard.getTab("Robot")
+            .addNumber("Robot Velocity", mDrive::getVelocity)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(4, 0)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Robot")
+            .addNumber("Turn Velocity", mDrive::getTurnVelocity)
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(8, 0)
-            .withSize(4, 4);
-        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryHeading, "Odometry Heading", "Robot");
-        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryX, "Odometry X", "Robot");
-        ShuffleboardManager.logDoubleHistory(mDrive::getOdometryY, "Odometry Y", "Robot");
-        ShuffleboardManager.logBoolean(mDrive::isAiming, "Is Aiming", "Robot");
+            .withSize(4, 3);
+        Shuffleboard.getTab("Robot")
+            .addNumber("Gyro", mDrive::getHeading)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(8, 3)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Robot")
+            .addNumber("Odometry Heading", mDrive::getOdometryHeading)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(4, 3)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Robot")
+            .addNumber("Odometry X", mDrive::getOdometryX)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 0)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Robot")
+            .addNumber("Odometry Y", mDrive::getOdometryY)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 3)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Vision")
+            .addBoolean("Is Aiming", mDrive::isAiming)
+            .withPosition(12, 0)
+            .withSize(1, 6);
 
         
         // ================
         //      Power
         // ================
-        ShuffleboardManager.logPDP(mPDP, "Power");
-        ShuffleboardManager.logDoubleHistory(mPDP::getTotalEnergy, "Total Energy", "Power");
+        Shuffleboard.getTab("Power")
+            .add("Power", mPDP)
+            .withPosition(0, 0)
+            .withSize(6, 5);
+        Shuffleboard.getTab("Power")
+            .addNumber("Total Energy", mPDP::getTotalEnergy)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(6,0)
+            .withSize(6,5);
         
         // =================
         //      Intake
         // =================
-        ShuffleboardManager.logDoubleHistory(mIntake::getVoltage, "Talon " + mIntake.getID() + " Voltage", "Balls");
-        ShuffleboardManager.logDoubleHistory(mIntake::getCurrent, "Talon " + mIntake.getID() + " Current", "Balls");
-        ShuffleboardManager.logDoubleHistory(mIntake::getTemp, "Talon " + mIntake.getID() + " Temperature", "Balls");
-        
+        Shuffleboard.getTab("Intake")
+            .getLayout("Talon " + mIntake.getID(), BuiltInLayouts.kGrid)
+            .withPosition(0, 0)
+            .withSize(4, 6)
+            .withProperties(Map.of("Number of columns", 1))
+            .addNumber("Output Voltage", mIntake::getVoltage)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Intake")
+            .getLayout("Talon " + mIntake.getID())
+            .addNumber("Current Draw", mIntake::getCurrent)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Intake")
+            .getLayout("Talon " + mIntake.getID())
+            .addBoolean("Inverted", mIntake::getInverted);
         
         // ================
         //      Climb
         // ================
-        ShuffleboardManager.logBoolean(mClimb::isExtended, "Extended", "Pneumatics");
-        ShuffleboardManager.logBoolean(mClimb::isRetracted, "Retracted", "Pneumatics");
-        ShuffleboardManager.logBoolean(mClimb::isVented, "Vented", "Pneumatics");
+        
+        Shuffleboard.getTab("Climb")
+            .getLayout("Climb State", BuiltInLayouts.kGrid)
+            .withSize(4, 6)
+            .withPosition(0, 0)
+            .withProperties(Map.of("Number of columns", 1))
+            .addBoolean("Extended", mClimb::isExtended)
+            .withPosition(0, 0);
+        Shuffleboard.getTab("Climb")
+            .getLayout("Climb State")
+            .addBoolean("Retracted", mClimb::isRetracted)
+            .withPosition(0, 2);
+        Shuffleboard.getTab("Climb")
+            .getLayout("Climb State")
+            .addBoolean("Vented", mClimb::isVented)
+            .withPosition(0, 1);
 
         // ================
         //      Vision 
         // ================
 
-        ShuffleboardManager.logBoolean(mVision::targetFound, "Found Target", "Vision");
-        ShuffleboardManager.logDoubleHistory(mVision::getX, "Target X", "Vision");
-        ShuffleboardManager.logDoubleHistory(mVision::getY, "Target Y", "Vision");
-        ShuffleboardManager.logDoubleHistory(mVision::getTargetWidth, "Target Width", "Vision");
-        ShuffleboardManager.logDoubleHistory(mVision::getTargetHeight, "Target Height", "Vision");
-        ShuffleboardManager.logDoubleHistory(mVision::getTargetAngle, "Target Angle", "Vision");
+        Shuffleboard.getTab("Vision")
+            .addBoolean("Target Found", mVision::targetFound)
+            .withPosition(0, 0)
+            .withSize(4, 3);
+        Shuffleboard.getTab("Vision")
+            .addNumber("Target X", mVision::getX)
+            .withPosition(8, 0)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Vision")
+            .addNumber("Target Y", mVision::getY)
+            .withPosition(8, 3)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Vision")
+            .addNumber("Target Width", mVision::getTargetWidth)
+            .withPosition(4, 0)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Vision")
+            .addNumber("Target Height", mVision::getTargetHeight)
+            .withPosition(4, 3)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("Vision")
+            .addNumber("Target Angle", mVision::getTargetAngle)
+            .withPosition(0, 3)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
 
 
         // ======================
         //      Color Wheel
         // ======================
-        ShuffleboardManager.logDoubleHistory(mWOF::getRotations, "WOF Rotations", "WOF");
-        ShuffleboardManager.logDoubleHistory(mWOF::getRPM, "WOF RPM", "WOF");
-        ShuffleboardManager.logString(mWOF::getColorString, "WOF Color", "WOF");
-        ShuffleboardManager.logDoubleHistory(mWOF::getVoltage, "WOF Voltage", "WOF");
-        ShuffleboardManager.logDoubleHistory(mWOF::getCurrent, "WOF Current", "WOF");
-        ShuffleboardManager.logBoolean(mWOF::getInverted, "WOF Inverted", "WOF");
+        Shuffleboard.getTab("WOF")
+            .addNumber("WOF Rotations", mWOF::getRotations)
+            .withPosition(0, 0)
+            .withSize(5, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("WOF")
+            .addNumber("WOF RPM", mWOF::getRPM)
+            .withPosition(5, 0)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("WOF")
+            .addNumber("WOF Voltage", mWOF::getVoltage)
+            .withPosition(9, 0)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("WOF")
+            .addBoolean("WOF Inverted", mWOF::getInverted)
+            .withPosition(0, 3)
+            .withSize(5, 3);
+        Shuffleboard.getTab("WOF")
+            .addString("WOF Color", mWOF::getColorString)
+            .withPosition(5, 3)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
+        Shuffleboard.getTab("WOF")
+            .addNumber("WOF Current", mWOF::getCurrent)
+            .withPosition(9, 3)
+            .withSize(4, 3)
+            .withWidget(BuiltInWidgets.kGraph);
 
 
         // =====================
         //      Pneumatics
         // =====================
-        ShuffleboardManager.logBoolean(mPneumatics::getPressureSwitch, "Pressure Switch", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighFault, "Current Fault", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorCurrentTooHighStickyFault, "Current Sticky Fault", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedFault, "Short Fault", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorShortedStickyFault, "Short Sticky Fault", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedFault, "Not Connected Fault", "Pneumatics");
-        ShuffleboardManager.logBoolean(mPneumatics::getCompressorNotConnectedStickyFault, "Not Connected Sticky Fault", "Pneumatics");
+        Shuffleboard.getTab("Pneumatics")
+            .addBoolean("Pressure Switch", mPneumatics::getPressureSwitch)
+            .withPosition(0, 0)
+            .withSize(3, 6);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Faults", BuiltInLayouts.kGrid)
+            .withSize(5, 6)
+            .withPosition(3, 0)
+            .withProperties(Map.of("Number of columns", 1))
+            .addBoolean("Not Connected Fault", mPneumatics::getCompressorNotConnectedFault)
+            .withPosition(0, 0)
+            .withSize(6, 2);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Faults")
+            .addBoolean("Current Fault", mPneumatics::getCompressorCurrentTooHighFault)
+            .withPosition(0, 1)
+            .withSize(6, 2);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Faults")
+            .addBoolean("Short Fault", mPneumatics::getCompressorShortedFault)
+            .withPosition(0, 2)
+            .withSize(6, 2);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Sticky Faults", BuiltInLayouts.kGrid)
+            .withSize(5, 6)
+            .withPosition(8, 0)
+            .withProperties(Map.of("Number of columns", 1))
+            .addBoolean("Not Connected Sticky Fault", mPneumatics::getCompressorNotConnectedStickyFault)
+            .withPosition(0, 0)
+            .withSize(6, 2);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Sticky Faults")
+            .addBoolean("Current Sticky Fault", mPneumatics::getCompressorCurrentTooHighStickyFault)
+            .withPosition(0, 1)
+            .withSize(6, 2);
+        Shuffleboard.getTab("Pneumatics")
+            .getLayout("Pneumatics Sticky Faults")
+            .addBoolean("Short Sticky Fault", mPneumatics::getCompressorShortedStickyFault)
+            .withPosition(0, 2)
+            .withSize(6, 2);
 
         // =================
         //      Shooter
         // =================
-        ShuffleboardManager.logDoubleHistory(mShooter::getRPM, "Shooter RPM", "Shooter");
-        for (int i = 0; i < mShooter.getVoltage().length; i++) {
-            ShuffleboardManager.logDoubleHistory(mShooter.getVoltage()[i], "Talon " + mShooter.getIDs()[i] + " Output Voltage", "Shooter");
+
+        
+        for (int i = 0; i < mShooter.getIDs().length; i++) {
+            Shuffleboard.getTab("Shooter")
+                .getLayout("Talon " + mShooter.getIDs()[i], BuiltInLayouts.kGrid)
+                .withPosition(0+4*i, 0)
+                .withSize(4, 7)
+                .withProperties(Map.of("Number of columns", 1))
+                .addNumber("Output Voltage", mShooter.getVoltage()[i])
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 0);
+            Shuffleboard.getTab("Shooter")
+                .getLayout("Talon " + mShooter.getIDs()[i])
+                .addNumber("Current Draw", mShooter.getCurrent()[i])
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(0, 1);
+            Shuffleboard.getTab("Shooter")
+                .getLayout("Talon " + mShooter.getIDs()[i])
+                .addBoolean("Inverted", mShooter.getInverted()[i])
+                .withPosition(0, 2);
         }
-        for (int i = 0; i < mShooter.getCurrent().length; i++) {
-            ShuffleboardManager.logDoubleHistory(mShooter.getCurrent()[i], "Talon " + mShooter.getIDs()[i] + " Current Draw", "Shooter");
-        }
+        
+        Shuffleboard.getTab("Shooter")
+            .addNumber("Shooter RPM", mShooter::getRPM)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(8, 0)
+            .withSize(5, 4);
 
     }
 

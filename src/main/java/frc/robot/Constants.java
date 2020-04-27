@@ -94,7 +94,7 @@ public final class Constants {
         public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
 
         // Aiming Constants
-        public static final double kMaxAimPower = 0.1; // The maximum motor power used for aiming(0.0-1.0)
+        public static final double kMaxAimPower = 0.04; // The maximum motor power used for aiming(0.0-1.0)
 
     }
 

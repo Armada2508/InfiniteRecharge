@@ -33,8 +33,8 @@ public class IntakeSubsystem extends SubsystemBase {
         return mIntakeTalon.getMotorOutputVoltage();
     }
 
-    public double getTemp() {
-        return mIntakeTalon.getTemperature();
+    public boolean getInverted() {
+        return mIntakeTalon.getInverted();
     }
 
     public int getID() {

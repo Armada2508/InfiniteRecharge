@@ -60,7 +60,7 @@ public final class Constants {
         public static final int kRightMotorFollowerPort = 3; // The right follower drive motor port
 
         // Drive Input Constants
-        public static final double kDeadbandThreshold = 0.02; // The threshold for sensing input on the joystick
+        public static final double kDeadbandThreshold = 0.075; // The threshold for sensing input on the joystick
         public static final int kJoystickPort = 0; // The port that the joystick is on
         public static final int kThrottleAxis = 1; // The throttle axis on the joystick
         public static final int kTurnAxis = 2; // The turn axis on the joystick
@@ -74,8 +74,8 @@ public final class Constants {
         public static final double kCreepSpeed = 0.15; // How fast the robot creeps
 
         // Drive System Constants
-        public static final boolean kRightInverted = false; // If the right side is inverted
-        public static final boolean kLeftInverted = true; // If the left side is inverted
+        public static final boolean kRightInverted = true; // If the right side is inverted
+        public static final boolean kLeftInverted = false; // If the left side is inverted
         public static final int kSlot = 0; // The PID slot to use for the drive subsystem
         public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.02, 0, 0.02, 0.05, 200); // The feedback constants for the drive
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 12.75*(48.0/42.0)); //  The feedback config for the drive
@@ -92,9 +92,6 @@ public final class Constants {
         // Trajectory Generation Constants
         public static final double kMaxVelocity = 0.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
         public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
-
-        // Aiming Constants
-        public static final double kMaxAimPower = 0.1; // The maximum motor power used for aiming(0.0-1.0)
 
     }
 
@@ -176,10 +173,12 @@ public final class Constants {
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight; // The difference between the height of the limelight and the height of the target
         public static final double kTargetWidth = 1.0; // The width of the retro-reflective tape on the port
         public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254; // The width of the tape 
-        public static final double kPAim = 0.02; // The P value used for aiming
+        public static final double kPAim = 0.01; // The P value used for aiming
         public static final double kIAim = 0.0;  // The I value used for aiming
-        public static final double kDAim = 0.0065; // The D value used for aiming
+        public static final double kDAim = 0.0005; // The D value used for aiming
         public static final double kAimOffset = 0.0; // A horizontal offset to use for aiming
+        public static final double kMaxAimPower = 0.35; // The maximum motor power used for aiming(0.0-1.0)
+
     }
 
     // ======================

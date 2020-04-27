@@ -16,6 +16,8 @@ import frc.lib.vision.FOV;
 import frc.lib.vision.Resolution;
 import frc.lib.vision.VisionUtil;
 import frc.robot.Constants;
+import frc.robot.enums.CamMode;
+import frc.robot.enums.StreamingMode;
 
 public class VisionSubsystem extends SubsystemBase {
     
@@ -68,8 +70,8 @@ public class VisionSubsystem extends SubsystemBase {
         setLED(false);
         setYOffset(Constants.Vision.kLimelightAngle);
         setPipeline(0);
-        camMode(true);
-        setPIP(true);
+        setCamMode(CamMode.DRIVER);
+        setStreamingMode(StreamingMode.PIPAUX);
     }
 
     /**
@@ -78,8 +80,8 @@ public class VisionSubsystem extends SubsystemBase {
     public void reset() {
         setLED(false);
         setPipeline(0);
-        camMode(true);
-        setPIP(true);
+        setCamMode(CamMode.DRIVER);
+        setStreamingMode(StreamingMode.PIPAUX);
     }
 
     /**
@@ -148,6 +150,9 @@ public class VisionSubsystem extends SubsystemBase {
      */
     public double getTargetAngle() {
         CameraPoint2d[] topPoints = getTopCorners();
+        if(!targetFound() || topPoints.length > 1) {
+            return 0;
+        }
         return VisionUtil.getSkewAngle(topPoints[0], topPoints[1], Constants.Vision.kTargetWidth - Constants.Vision.kTapeWidth, getDistanceHeight(Constants.Vision.kVerticalOffset));
     }
     
@@ -186,26 +191,61 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Set the camera to 
-     * @param driverCam If the limelight is in driving mode
+     * Set the camera up for driver or computer vision use
+     * @param camMode The camera mode
      */
-    public void camMode(boolean driverCam) {
-        mLimelight.getEntry("camMode").setNumber(driverCam ? 1 : 0);
+    public void setCamMode(CamMode camMode) {
+        mLimelight.getEntry("camMode").setNumber(camMode ==  CamMode.DRIVER ? 1 : 0);
     }
 
     /**
-     * Set the streaming mode to Side-by-Side
+     * Sets the streaming mode
+     * @param streamingMode The streaming mode
      */
-    public void setSBS() {
-        mLimelight.getEntry("stream").setNumber(0);
+    public void setStreamingMode(StreamingMode streamingMode) {
+        double mode = 0;
+        switch (streamingMode) {
+            case SBS:
+                mode = 0;
+                break;
+            case PIPPRIM:
+                mode = 1;
+                break;
+            case PIPAUX:
+                mode = 2;
+                break;
+        }
+        mLimelight.getEntry("stream").setNumber(mode);
     }
 
     /**
-     * Sets the streaming mode to Picture-in-Picture
-     * @param secondaryCam If the secondary camera is bigger than the limelight camera
+     * @return The camera mode
      */
-    public void setPIP(boolean secondaryCam) {
-        mLimelight.getEntry("stream").setNumber(secondaryCam ? 2 : 1);
+    public CamMode getCamMode() {
+        switch (mLimelight.getEntry("CamMode").getNumber(1).intValue()) {
+            case 1:
+                return CamMode.DRIVER;
+            case 0:
+                return CamMode.CV;
+            default:
+                return CamMode.DRIVER;
+        }
+    }
+
+    /**
+     * @return The streaming mode
+     */
+    public StreamingMode getStreamingMode() {
+        switch (mLimelight.getEntry("CamMode").getNumber(1).intValue()) {
+            case 2:
+                return StreamingMode.PIPAUX;
+            case 1:
+                return StreamingMode.PIPPRIM;
+            case 0:
+                return StreamingMode.SBS;
+            default:
+                return StreamingMode.SBS;
+        }
     }
 
     /**

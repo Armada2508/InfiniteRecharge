@@ -60,6 +60,9 @@ public class ColorWheelSubsystem extends SubsystemBase {
     }
 
     public String getColorString() {
+        if(DriverStation.getInstance().getGameSpecificMessage().isEmpty()) {
+            return "";
+        }
         switch(DriverStation.getInstance().getGameSpecificMessage().charAt(0))
         {
             case 'B' :

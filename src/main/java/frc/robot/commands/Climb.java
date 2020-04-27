@@ -34,10 +34,11 @@ public class Climb extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        mClimbSubsystem.setState(ClimbState.RETRACTED);
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }

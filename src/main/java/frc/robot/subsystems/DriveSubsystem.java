@@ -44,8 +44,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final PigeonIMU mImu = new PigeonIMU(0);
 
-    private ShuffleboardTab mRobotTab = Shuffleboard.getTab("Robot");
-
     private DriveState mState;
     
     public DriveSubsystem() {
@@ -57,8 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
         mDrive.setRightSideInverted(Constants.Drive.kRightInverted);
 
         mDrive.setSafetyEnabled(false);
-
-        mRobotTab.add("Drive", mDrive).withWidget(BuiltInWidgets.kDifferentialDrive);
 
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, Constants.Gyro.kPigeonCondFrame1Period);
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_6_SensorFusion, Constants.Gyro.kPigeonCondFrame6Period);
@@ -210,7 +206,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getOdometryHeading() {
-        return mOdometry.getPoseMeters().getRotation().getRadians();
+        return mOdometry.getPoseMeters().getRotation().getDegrees();
     }
 
     public double getOdometryX() {
@@ -254,27 +250,27 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public DoubleSupplier[] getVoltage() {
-        return new DoubleSupplier[] { mRight::getMotorOutputVoltage, mRightFollower::getMotorOutputVoltage, mLeft::getMotorOutputVoltage, mLeftFollower::getMotorOutputVoltage };
+        return new DoubleSupplier[] { mLeft::getMotorOutputVoltage, mLeftFollower::getMotorOutputVoltage, mRight::getMotorOutputVoltage, mRight::getMotorOutputVoltage };
     }
 
     public DoubleSupplier[] getCurrent() {
-        return new DoubleSupplier[] { mRight::getSupplyCurrent, mRightFollower::getSupplyCurrent, mLeft::getSupplyCurrent, mLeftFollower::getMotorOutputVoltage };
+        return new DoubleSupplier[] { mLeft::getSupplyCurrent, mLeftFollower::getSupplyCurrent, mRight::getSupplyCurrent, mRight::getMotorOutputVoltage };
     }
 
     public DoubleSupplier[] getTemps() {
-        return new DoubleSupplier[] { mRight::getTemperature, mRightFollower::getTemperature, mLeft::getTemperature, mLeftFollower::getTemperature };
+        return new DoubleSupplier[] { mLeft::getTemperature, mLeftFollower::getTemperature, mRight::getTemperature, mRight::getTemperature };
     }
 
     public DoubleSupplier[] getVelocities() {
-        return new DoubleSupplier[] { mRight::getSelectedSensorVelocity, mRightFollower::getSelectedSensorVelocity, mLeft::getSelectedSensorVelocity, mLeftFollower::getSelectedSensorVelocity };
+        return new DoubleSupplier[] { mLeft::getSelectedSensorVelocity, mLeftFollower::getSelectedSensorVelocity, mRight::getSelectedSensorVelocity, mRight::getSelectedSensorVelocity };
     }
 
     public DoubleSupplier[] getPositions() {
-        return new DoubleSupplier[] { mRight::getSelectedSensorPosition, mRightFollower::getSelectedSensorPosition, mLeft::getSelectedSensorPosition, mLeftFollower::getSelectedSensorPosition };
+        return new DoubleSupplier[] { mLeft::getSelectedSensorPosition, mLeftFollower::getSelectedSensorPosition, mRight::getSelectedSensorPosition, mRight::getSelectedSensorPosition };
     }
 
     public BooleanSupplier[] getInverted() {
-        return new BooleanSupplier[] { mRight::getInverted, mRightFollower::getInverted, mLeft::getInverted, mLeftFollower::getInverted };
+        return new BooleanSupplier[] { mLeft::getInverted, mLeftFollower::getInverted, mRight::getInverted, mRight::getInverted };
     }
 
     public int[] getIDs() {

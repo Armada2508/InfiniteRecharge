@@ -44,6 +44,6 @@ public class WheelPositions {
      */
     @Override
     public String toString() {
-        return ("Right Wheel Position: " + mRWheelPos + ", Left Wheel Position: w" + mLWheelPos);
+        return ("Left Wheel Position: " + mLWheelPos + ", Right Wheel Position: w" + mRWheelPos);
     }
 }

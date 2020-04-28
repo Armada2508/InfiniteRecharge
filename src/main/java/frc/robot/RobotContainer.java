@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint.MinMax;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.lib.logging.ShuffleboardManager;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
@@ -417,13 +416,14 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
-
-  /*      return FollowTrajectory.getCommand(mDrive,
+/*
+        return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
-            new Pose2d(5, 0, new Rotation2d()),
+            new Pose2d(2, 0, new Rotation2d()),
             Constants.Drive.kMaxVelocity,
-            Constants.Drive.kMaxAcceleration);
-*/  
+            Constants.Drive.kMaxAcceleration,
+            false);
+  */
         //return new SimpleAuto(mDrive, mShooter, mTransport, mIntake, mVision);
         //return new Aim(mDrive, mVision); FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
         

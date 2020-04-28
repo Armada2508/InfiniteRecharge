@@ -1,6 +1,5 @@
 package frc.lib.controller;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -21,15 +20,19 @@ public class FieldOrientedController {
     
     /**
      * Creates a new FieldOrientedController Object
+     * @param maxVelocity The maximum velocity of the robot
+     * @param turnController The PID controller used for turning
+     * @param trackWidth The width of the drivetrain
      */
-    public FieldOrientedController(double maxVelocity, PIDController turnController) {
+    public FieldOrientedController(double maxVelocity, PIDController turnController, double trackWidth) {
         mMaxVelocity = maxVelocity;
         mTurnController = turnController;
+        mKinematics = new DifferentialDriveKinematics(trackWidth);
     }
 
     /**
      * Creates a new FieldOrientedController Object
-     * @param velocity The global velocity of the robot
+     * @param velocity The global velocity of the robot(+X is away from alliance wall, +Y is left facing opposing alliance)
      * @param heading The heading of the robot in radians
      * @param maxVelocity The maximum velocity of the robot
      * @param turnController The PID controller used for turning
@@ -63,14 +66,19 @@ public class FieldOrientedController {
     
 
     /**
-     * @param velocity The global velocity of the robot
+     * @param velocity The global velocity of the robot(+X is away from alliance wall, +Y is left facing opposing alliance)
      * @param heading The heading of the robot in radians
      * @return The wheel speeds for the robot
      */
     public DifferentialDriveWheelSpeeds calculate(Vector2d velocity, Rotation2d heading) {
-        double desiredGlobalHeading = Math.atan2(-velocity.x, velocity.y);
+        double desiredGlobalHeading = Math.atan2(velocity.x, velocity.y);
         double localHeading = Util.boundedAngle(heading.getRadians() - desiredGlobalHeading);
         double omega = mTurnController.calculate(localHeading);
+        System.out.println("*********************************");
+        System.out.println("Desired Global Heading " + desiredGlobalHeading);
+        System.out.println("Local Heading " + localHeading);
+        System.out.println("Global Heading " + heading.getRadians());
+        System.out.println("*********************************");
         ChassisSpeeds localVelocity = ChassisSpeeds.fromFieldRelativeSpeeds(velocity.x, velocity.y, omega, heading);
         DifferentialDriveWheelSpeeds speeds = mKinematics.toWheelSpeeds(localVelocity);
         double lVelocity = speeds.leftMetersPerSecond;

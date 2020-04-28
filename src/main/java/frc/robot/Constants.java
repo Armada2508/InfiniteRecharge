@@ -82,8 +82,8 @@ public final class Constants {
         public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001);  // The config for the drive TODO: Tune PID
 
         // Trajectory Following Constants
-        public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.289, 2.42, 0.361); // The feedforward for the drive
-        public static final PIDController kPathPID = new PIDController(0.0287, 0,  0); // The PID for trajectory following
+        public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.213, 2.37, 0.371); // The feedforward for the drive
+        public static final PIDController kPathPID = new PIDController(0.75, 0,  0); // The PID for trajectory following
         public static final double kTrackWidth = 0.511; // The track width of the drive
         public static final double kB = 2.0; // The B constant for RamseteController
         public static final double kZeta = 0.7; // The Zeta constant for RamseteController
@@ -91,7 +91,7 @@ public final class Constants {
 
         // Trajectory Generation Constants
         public static final double kMaxVelocity = 0.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
-        public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
+        public static final double kMaxAcceleration = 1.0; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
 
     }
 
@@ -100,7 +100,7 @@ public final class Constants {
     // ===============================
     public static class Robot {
 
-        public static final double kMinBatteryVoltage = 9; // The lowest voltage the battery should sag to  // TODO: Determine correct value
+        public static final double kMinBatteryVoltage = 4; // The lowest voltage the battery should sag to  // TODO: Determine correct value
 
     }
     

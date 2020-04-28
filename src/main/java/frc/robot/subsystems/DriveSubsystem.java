@@ -99,9 +99,9 @@ public class DriveSubsystem extends SubsystemBase {
         mLeftMotors.set(throttle + turn);
     }
 
-    public void driveClosedLoop(double left, double right) {
-        mRight.set(ControlMode.Velocity, fromVelocity(right));
-        mLeft.set(ControlMode.Velocity, fromVelocity(left));
+    public void driveClosedLoop(DifferentialDriveWheelSpeeds speeds) {
+        mRight.set(ControlMode.Velocity, fromVelocity(speeds.rightMetersPerSecond));
+        mLeft.set(ControlMode.Velocity, fromVelocity(speeds.leftMetersPerSecond));
     }
 
     public void brake() {

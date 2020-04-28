@@ -64,7 +64,7 @@ public class RobotContainer {
 
     public void robotInit() {
         // Initialize the Dashboard
-        initDashboard();
+        //initDashboard();
 
         // Initialize the Camera(s)
         initCam();
@@ -417,18 +417,21 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
-
-  /*      return FollowTrajectory.getCommand(mDrive,
+        FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
+/*
+        return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
-            new Pose2d(5, 0, new Rotation2d()),
+            new Pose2d(1, 0, new Rotation2d()),
             Constants.Drive.kMaxVelocity,
-            Constants.Drive.kMaxAcceleration);
-*/  
+            Constants.Drive.kMaxAcceleration,
+            false);
+  */          
+
         //return new SimpleAuto(mDrive, mShooter, mTransport, mIntake, mVision);
         //return new Aim(mDrive, mVision); FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
         
-        // Configure global parameters for trajectory following
-        FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
+        // Configure global parameters for trajectory following\
+
 
         try {
             Trajectory line = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
@@ -436,13 +439,12 @@ public class RobotContainer {
             Trajectory intake2 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake2.wpilib.json"));
             Trajectory turn = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/90Turn.wpilib.json"));
             Trajectory[] paths = { intake1, intake2 };
-            return new MoveForward(mDrive, turn);
+            return FollowTrajectory.getCommand(mDrive, turn, mDrive.getPose());
         } catch (IOException e) {
             // If the trajectory file can't be read, print the error and return a new command that does nothing
             System.out.println(e);
             return new InstantCommand();
         }
-    
     }
 
     public void printOdo() {
@@ -452,7 +454,7 @@ public class RobotContainer {
 
     public void printPos() {
         // Print both wheel encoder positions
-        System.out.println(new WheelPositions(mDrive.getPositionLeft(), mDrive.getPositionRight()));
+        System.out.println(new DifferentialDriveWheelPositions(mDrive.getPositionLeft(), mDrive.getPositionRight()));
     }
 
     public void printVel() {

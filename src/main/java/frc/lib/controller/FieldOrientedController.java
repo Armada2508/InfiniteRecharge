@@ -1,18 +1,22 @@
 package frc.lib.controller;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.lib.util.Util;
 
 public class FieldOrientedController {
-    private DoubleSupplier mVelocityX;
-    private DoubleSupplier mVelocityY;
-    private DoubleSupplier mHeading;
+    private Supplier<Vector2d> mVelocity;
+    private Supplier<Rotation2d> mHeading;
     private double mMaxVelocity;
     private PIDController mTurnController;
+    private DifferentialDriveKinematics mKinematics;
 
     
     /**
@@ -25,28 +29,28 @@ public class FieldOrientedController {
 
     /**
      * Creates a new FieldOrientedController Object
-     * @param velocityX The global X velocity
-     * @param velocityY The global Y velocity
+     * @param velocity The global velocity of the robot
      * @param heading The heading of the robot in radians
      * @param maxVelocity The maximum velocity of the robot
      * @param turnController The PID controller used for turning
+     * @param trackWidth The width of the drivetrain
      */
-    public FieldOrientedController(DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier heading, double maxVelocity, PIDController turnController) {
-        mVelocityX = velocityX;
-        mVelocityY = velocityY;
+    public FieldOrientedController(Supplier<Vector2d> velocity, Supplier<Rotation2d> heading, double maxVelocity, PIDController turnController, double trackWidth) {
+        mVelocity = velocity;
         mHeading = heading;
         mMaxVelocity = maxVelocity;
         mTurnController = turnController;
+        mKinematics = new DifferentialDriveKinematics(trackWidth);
     }
 
     /**
      * @return The wheel speeds for the robot
      */
     public DifferentialDriveWheelSpeeds calculate() {
-        if(mVelocityX == null || mVelocityY == null || mHeading == null) {
+        if(mVelocity == null || mHeading == null) {
             return new DifferentialDriveWheelSpeeds(0.0, 0.0);
         }
-        return calculate(mVelocityX.getAsDouble(), mVelocityY.getAsDouble(), mHeading.getAsDouble());
+        return calculate(mVelocity.get(), mHeading.get());
     }
     
     /**
@@ -59,28 +63,27 @@ public class FieldOrientedController {
     
 
     /**
-     * @param velocityX The global X velocity of the robot
-     * @param velocityY The global Y velocity of the robot
+     * @param velocity The global velocity of the robot
      * @param heading The heading of the robot in radians
      * @return The wheel speeds for the robot
      */
-    public DifferentialDriveWheelSpeeds calculate(double velocityX, double velocityY, double heading) {
-        Vector2d globalVelocityVector = new Vector2d(velocityX, velocityY);
-        double desiredGlobalHeading = Math.atan2(-globalVelocityVector.x, globalVelocityVector.y);
-        double localHeading = Util.boundedAngle(heading - desiredGlobalHeading);
-        Vector2d localVelocityVector = new Vector2d(Math.sin(localHeading)*globalVelocityVector.magnitude(), Math.cos(localHeading)*globalVelocityVector.magnitude());
-        double turnPower = mTurnController.calculate(localHeading);
-        double lPower = localVelocityVector.y - turnPower;
-        double rPower = localVelocityVector.y + turnPower;
-        if(Math.abs(lPower) > mMaxVelocity || Math.abs(rPower) > mMaxVelocity) {
-            if(Math.abs(lPower) > Math.abs(rPower)) {
-                lPower /= Math.abs(lPower / mMaxVelocity);
-                rPower /= Math.abs(lPower / mMaxVelocity);
+    public DifferentialDriveWheelSpeeds calculate(Vector2d velocity, Rotation2d heading) {
+        double desiredGlobalHeading = Math.atan2(-velocity.x, velocity.y);
+        double localHeading = Util.boundedAngle(heading.getRadians() - desiredGlobalHeading);
+        double omega = mTurnController.calculate(localHeading);
+        ChassisSpeeds localVelocity = ChassisSpeeds.fromFieldRelativeSpeeds(velocity.x, velocity.y, omega, heading);
+        DifferentialDriveWheelSpeeds speeds = mKinematics.toWheelSpeeds(localVelocity);
+        double lVelocity = speeds.leftMetersPerSecond;
+        double rVelocity = speeds.rightMetersPerSecond;
+        if(Math.abs(lVelocity) > mMaxVelocity || Math.abs(rVelocity) > mMaxVelocity) {
+            if(Math.abs(lVelocity) > Math.abs(rVelocity)) {
+                lVelocity /= Math.abs(lVelocity / mMaxVelocity);
+                rVelocity /= Math.abs(lVelocity / mMaxVelocity);
             } else {
-                lPower /= Math.abs(rPower / mMaxVelocity);
-                rPower /= Math.abs(rPower / mMaxVelocity);
+                lVelocity /= Math.abs(rVelocity / mMaxVelocity);
+                rVelocity /= Math.abs(rVelocity / mMaxVelocity);
             }
         }
-        return new DifferentialDriveWheelSpeeds(lPower, rPower);
+        return new DifferentialDriveWheelSpeeds(lVelocity, rVelocity);
     }
 }

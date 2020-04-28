@@ -1,6 +1,6 @@
 package frc.lib.motion;
 
-public class WheelPositions {
+public class DifferentialDriveWheelPositions {
     private double mRWheelPos;
     private double mLWheelPos;
 
@@ -9,7 +9,7 @@ public class WheelPositions {
      * @param rWheelPos The right wheel position
      * @param lWheelPos The left wheel position
      */
-    public WheelPositions(double rWheelPos, double lWheelPos) {
+    public DifferentialDriveWheelPositions(double rWheelPos, double lWheelPos) {
         mRWheelPos = rWheelPos;
         mLWheelPos = lWheelPos;
     }
@@ -19,7 +19,7 @@ public class WheelPositions {
      * <br>
      * This object will be initialized with both wheel positions at 0.0
      */
-    public WheelPositions() {
+    public DifferentialDriveWheelPositions() {
         this(0.0, 0.0);
     }
 

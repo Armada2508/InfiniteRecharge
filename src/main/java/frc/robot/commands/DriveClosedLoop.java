@@ -10,6 +10,8 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveClosedLoop extends CommandBase {
@@ -71,7 +73,11 @@ public class DriveClosedLoop extends CommandBase {
       powerL = mMaxPower + turningPower;
     }
     
-    mDriveSubsystem.driveClosedLoop((powerL*Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)), (powerR*Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0)));
+    DifferentialDriveWheelSpeeds speeds = new DifferentialDriveWheelSpeeds(
+      powerL * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0),
+      powerR * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0));
+
+    mDriveSubsystem.driveClosedLoop(speeds);
   }
 
   // Called once the command ends or is interrupted.

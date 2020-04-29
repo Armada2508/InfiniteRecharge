@@ -17,6 +17,33 @@ public class Util {
     private Util() {}
 
     /**
+     * Clamps a value to a max magnitude
+     * @param value The value to clamp
+     * @param maxMagnitude The maximum magnitive
+     * @return The clamped value
+     */
+    public static double clamp(double value, double maxMagnitude) {
+        maxMagnitude = Math.max(0, maxMagnitude);
+        return MathUtil.clamp(value, -maxMagnitude, maxMagnitude);
+    }
+
+    /**
+     * Decay a value by a factor
+     * @param value The value to decay
+     * @param decayFactor The factor by which to decay the value
+     * @return The decayed value
+     */
+    public static double decay(double value, double decayFactor) {
+        if (value > decayFactor) {
+            return value - decayFactor;
+        } else if (value < -decayFactor) {
+            return value + decayFactor;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * @param value The value to check
      * @param maxMagnitude The max absolute value of the number
      * @return If the absolute value of a number is less than a maximum
@@ -34,6 +61,21 @@ public class Util {
      */
     public static boolean inRange(double value, double min, double max) {
         return value > min && value < max;
+    }
+
+    /**
+     * Applies a deadband function to the input
+     * 
+     * @param value The input value
+     * @param threshold The deadband threshold
+     * @return The deadband of the input at the set threshold
+    */
+    public static double deadband(double value, double threshold) {
+        if(Math.abs(value) > threshold) {
+            return value;
+        } else {
+            return 0.0;
+        }
     }
 
     /**

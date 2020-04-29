@@ -7,11 +7,13 @@
 
 package frc.robot.commands;
 
-import frc.lib.input.JoystickUtil;
+import frc.lib.drive.BasicDrive;
+import frc.lib.motion.DifferentialDriveWheelPowers;
 import frc.robot.Constants;
 import frc.robot.enums.DriveState;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Drive extends CommandBase {
@@ -20,22 +22,23 @@ public class Drive extends CommandBase {
   private DoubleSupplier mThrottle;
   private DoubleSupplier mTrim;
   private DoubleSupplier mTurn;
-  private double mMaxPower;
-  private double mTurnRatio;
-  private double mTrimRatio;
+  private BasicDrive mBasicDrive;
   /**
-   * Creates a new Drive.
+   * Creates a new Drive Command.
    *
-   * @param subsystem The subsystem used by this command.
    */
   public Drive(DriveSubsystem driveSubsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn) {
     mDriveSubsystem = driveSubsystem;
     mThrottle = throttle;
     mTrim = trim;
     mTurn = turn;
-    mMaxPower = Constants.Drive.kMaxPower;
-    mTurnRatio = Constants.Drive.kTurnRatio;
-    mTrimRatio = Constants.Drive.kTrimRatio;
+    double maxPower = Constants.Drive.kMaxPower;
+    double turnRatio = Constants.Drive.kTurnRatio;
+    double trimRatio = Constants.Drive.kTrimRatio;
+    double deadband = Constants.Drive.kDeadbandThreshold;
+
+    mBasicDrive = new BasicDrive();
+    mBasicDrive.config(turnRatio, trimRatio, maxPower, deadband);
 
     // Require DriveSubsystem
     addRequirements(mDriveSubsystem);
@@ -51,34 +54,12 @@ public class Drive extends CommandBase {
   @Override
   public void execute() {
 
-    double throttle = mThrottle.getAsDouble();
-    double trim = mTrim.getAsDouble();
-    double turn = mTurn.getAsDouble();
+    DifferentialDriveWheelPowers powers = mBasicDrive.drive(
+      mThrottle.getAsDouble(),
+      mTurn.getAsDouble(), 
+      mTrim.getAsDouble());
 
-    throttle = JoystickUtil.deadband(throttle, Constants.Drive.kDeadbandThreshold);
-    trim = JoystickUtil.deadband(trim, Constants.Drive.kDeadbandThreshold);
-    turn = JoystickUtil.deadband(turn, Constants.Drive.kDeadbandThreshold);
-    
-    turn *= mTurnRatio;
-    trim *= mTrimRatio;
-    turn += trim; 
-
-    double powerL = throttle + turn;
-    double powerR = throttle - turn;
-
-    powerR *= mMaxPower;
-    powerL *= mMaxPower;
-
-    double turningPower = powerL - powerR;
-    if(turningPower > 0 && powerL > mMaxPower) {
-      powerL = mMaxPower;
-      powerR = mMaxPower - turningPower;
-    } else if(turningPower < 0 && powerR > mMaxPower) {
-      powerR = mMaxPower;
-      powerL = mMaxPower + turningPower;
-    }
-
-    mDriveSubsystem.setPowers(powerL, powerR);
+    mDriveSubsystem.setPowers(powers.getLeft(), powers.getRight());
   }
 
   // Called once the command ends or is interrupted.

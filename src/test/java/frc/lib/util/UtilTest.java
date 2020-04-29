@@ -12,6 +12,34 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 public class UtilTest {
 
     @Test
+    public void clampTest() {
+        // Test clamping a number with a magnitude
+        assertEquals(0.0, Util.clamp(0.0, 1.0), Util.kEpsilon);
+        assertEquals(0.5, Util.clamp(0.5, 1.0), Util.kEpsilon);
+        assertEquals(1.0, Util.clamp(1.5, 1.0), Util.kEpsilon);
+        assertEquals(0.0, Util.clamp(0.0, -1.0), Util.kEpsilon);
+        assertEquals(-0.5, Util.clamp(-0.5, 1.0), Util.kEpsilon);
+        assertEquals(-1.0, Util.clamp(-1.0, 1.0), Util.kEpsilon);
+        assertEquals(-1.0, Util.clamp(-1.5, 1.0), Util.kEpsilon);
+    }
+
+    @Test
+    public void decayTest() {
+        // Test decaying a number
+        assertEquals(4.0, Util.decay(5.0, 1.0), Util.kEpsilon);
+        assertEquals(2.0, Util.decay(5.0, 3.0), Util.kEpsilon);
+        assertEquals(0.0, Util.decay(5.0, 8.0), Util.kEpsilon);
+        assertEquals(6.0, Util.decay(5.0, -1.0), Util.kEpsilon);
+        assertEquals(-4.0, Util.decay(-5.0, 1.0), Util.kEpsilon);
+        assertEquals(-6.0, Util.decay(-5.0, -1.0), Util.kEpsilon);
+        assertEquals(5.0, Util.decay(5.0, 0.0), Util.kEpsilon);
+        assertEquals(-5.0, Util.decay(-5.0, 0.0), Util.kEpsilon);
+        assertEquals(0.0, Util.decay(0.0, 2.0), Util.kEpsilon);
+        assertEquals(0.0, Util.decay(1.0, 2.0), Util.kEpsilon);
+        assertEquals(0.0, Util.decay(-1.0, 2.0), Util.kEpsilon);
+    }
+
+    @Test
     public void inRangeMagnitudeTest() {
         // Test if a number is contained in an interval
         assertEquals(true, Util.inRange(0.0, 1.0));
@@ -42,6 +70,16 @@ public class UtilTest {
         assertEquals(true, Util.inRange(Math.PI, -0.5, 3.15));
         assertEquals(true, Util.inRange(Math.PI, -0.1, 5));
         assertEquals(false, Util.inRange(Math.PI, 5, Math.PI));
+    }
+
+    @Test
+    public void deadbandTest() {
+        // Test Deadband Method
+        assertEquals(0, Util.deadband(0.025, 0.1), Util.kEpsilon);
+        assertEquals(0.1, Util.deadband(0.1, 0.01), Util.kEpsilon);
+        assertEquals(0, Util.deadband(0.1, 0.1), Util.kEpsilon);
+        assertEquals(0, Util.deadband(Math.PI, 3.15), Util.kEpsilon);
+        assertEquals(Math.PI, Util.deadband(Math.PI, 3.14), Util.kEpsilon);
     }
 
     @Test

@@ -7,24 +7,22 @@
 
 package frc.robot.commands;
 
+import frc.lib.motion.DifferentialDriveWheelPowers;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DrivePower extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem mDriveSubsystem;
-  private double mLeft;
-  private double mRight;
+  private DifferentialDriveWheelPowers mPowers;
 
   /**
-   * Creates a new Drive.
+   * Creates a new DrivePower Command.
    *
-   * @param subsystem The subsystem used by this command.
    */
   public DrivePower(DriveSubsystem driveSubsystem, Double left, Double right) {
     mDriveSubsystem = driveSubsystem;
-    mLeft = left;
-    mRight = right;
+    mPowers = new DifferentialDriveWheelPowers(right, left);
 
     // Require the DriveSubsystem
     addRequirements(mDriveSubsystem);
@@ -38,7 +36,7 @@ public class DrivePower extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mDriveSubsystem.setPowers(mLeft, mRight);
+    mDriveSubsystem.setPowers(mPowers.getLeft(), mPowers.getRight());
   }
 
   // Called once the command ends or is interrupted.

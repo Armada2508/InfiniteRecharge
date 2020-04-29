@@ -6,12 +6,12 @@ public class DifferentialDriveWheelPositions {
 
     /**
      * An object that stores two wheel positions
-     * @param rWheelPos The right wheel position
      * @param lWheelPos The left wheel position
+     * @param rWheelPos The right wheel position
      */
-    public DifferentialDriveWheelPositions(double rWheelPos, double lWheelPos) {
-        mRWheelPos = rWheelPos;
+    public DifferentialDriveWheelPositions(double lWheelPos, double rWheelPos) {
         mLWheelPos = lWheelPos;
+        mRWheelPos = rWheelPos;
     }
 
     /**
@@ -44,6 +44,6 @@ public class DifferentialDriveWheelPositions {
      */
     @Override
     public String toString() {
-        return ("Left Wheel Position: " + mLWheelPos + ", Right Wheel Position: w" + mRWheelPos);
+        return ("Left Wheel Position: " + mLWheelPos + ", Right Wheel Position: " + mRWheelPos);
     }
 }

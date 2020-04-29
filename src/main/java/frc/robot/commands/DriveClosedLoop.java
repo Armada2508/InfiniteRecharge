@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import frc.lib.drive.BasicDrive;
+import frc.lib.motion.DifferentialDriveWheelPowers;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
@@ -20,27 +22,27 @@ public class DriveClosedLoop extends CommandBase {
   private final DoubleSupplier mThrottle;
   private final DoubleSupplier mTrim;
   private final DoubleSupplier mTurn;
-  private final double mMaxPower;
-  private final double mTurnRatio;
-  private final double mTrimRatio;
+  private BasicDrive mBasicDrive;
   /**
-   * Creates a new Drive.
+   * Creates a new DriveClosedLoop Command.
    *
-   * @param subsystem The subsystem used by this command.
    */
   public DriveClosedLoop(DriveSubsystem driveSubsystem, DoubleSupplier throttle, DoubleSupplier trim, DoubleSupplier turn) {
     mDriveSubsystem = driveSubsystem;
     mThrottle = throttle;
     mTrim = trim;
     mTurn = turn;
-    mMaxPower = Constants.Drive.kMaxPower;
-    mTurnRatio = Constants.Drive.kTurnRatio;
-    mTrimRatio = Constants.Drive.kTrimRatio;
+    double maxPower = Constants.Drive.kMaxPower;
+    double turnRatio = Constants.Drive.kTurnRatio;
+    double trimRatio = Constants.Drive.kTrimRatio;
+    double deadband = Constants.Drive.kDeadbandThreshold;
+
+    mBasicDrive = new BasicDrive();
+    mBasicDrive.config(turnRatio, trimRatio, maxPower, deadband);
 
     // Require DriveSubsystem
     addRequirements(mDriveSubsystem);
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -50,32 +52,11 @@ public class DriveClosedLoop extends CommandBase {
   @Override
   public void execute() {
 
-    double throttle = mThrottle.getAsDouble();
-    double trim = mTrim.getAsDouble();
-    double turn = mTurn.getAsDouble();
-    
-    turn *= mTurnRatio;
-    trim *= mTrimRatio;
-    turn += trim; 
+    DifferentialDriveWheelPowers powers = mBasicDrive.drive(mThrottle.getAsDouble(), mTurn.getAsDouble(), mTrim.getAsDouble());
 
-    double powerL = throttle + turn;
-    double powerR = throttle - turn;
-
-    powerR *= mMaxPower;
-    powerL *= mMaxPower;
-
-    double turningPower = powerL - powerR;
-    if(turningPower > 0 && powerL > mMaxPower) {
-      powerL = mMaxPower;
-      powerR = mMaxPower - turningPower;
-    } else if(turningPower < 0 && powerR > mMaxPower) {
-      powerR = mMaxPower;
-      powerL = mMaxPower + turningPower;
-    }
-    
     DifferentialDriveWheelSpeeds speeds = new DifferentialDriveWheelSpeeds(
-      powerL * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0),
-      powerR * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0));
+      powers.getLeft() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0),
+      powers.getRight() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0));
 
     mDriveSubsystem.driveClosedLoop(speeds);
   }

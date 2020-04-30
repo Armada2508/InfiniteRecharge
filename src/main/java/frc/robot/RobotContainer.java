@@ -23,10 +23,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint.MinMax;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.motion.*;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
-import frc.robot.routines.MoveForward;
 import frc.robot.subsystems.*;
 
 import java.io.IOException;
@@ -93,13 +93,10 @@ public class RobotContainer {
         //      Map Buttons
         // =======================
         
-        //new JoystickButton(mJoystick, 3).whenHeld(new Intake(mIntake,  Constants.Intake.kIntakePower));
-        //new JoystickButton(mJoystick, 1).whileHeld(new TransportPower(mTransport, 1.0));
-        //new JoystickButton(mJoystick, 2).whenHeld(new SpinRoller(mShooter, 2000));
-        //new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
-        //new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
-        //new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
-        //new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
         new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 750));
@@ -416,34 +413,17 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
+        // Configure global parameters for trajectory following
         FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
-/*
+
+        // Follow a Trajectory
         return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
             new Pose2d(1, 0, new Rotation2d()),
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration,
             false);
-  */          
-
-        //return new SimpleAuto(mDrive, mShooter, mTransport, mIntake, mVision);
-        //return new Aim(mDrive, mVision); FollowTrajectory.config(Constants.Drive.kDriveFeedforward.ks, Constants.Drive.kDriveFeedforward.kv, Constants.Drive.kDriveFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
-        
-        // Configure global parameters for trajectory following\
-
-
-        try {
-            Trajectory line = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Line.wpilib.json"));
-            Trajectory intake1 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake1.wpilib.json"));
-            Trajectory intake2 = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/Intake2.wpilib.json"));
-            Trajectory turn = TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory().toString(), "/paths/output/90Turn.wpilib.json"));
-            Trajectory[] paths = { intake1, intake2 };
-            return FollowTrajectory.getCommand(mDrive, turn, mDrive.getPose());
-        } catch (IOException e) {
-            // If the trajectory file can't be read, print the error and return a new command that does nothing
-            System.out.println(e);
-            return new InstantCommand();
-        }
+            
     }
 
     public void printOdo() {

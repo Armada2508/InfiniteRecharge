@@ -12,18 +12,18 @@ import frc.robot.subsystems.TransportSubsystem;
 
 public class Shoot extends SequentialCommandGroup {
 
-    public Shoot(ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem frontIntake, IntakeSubsystem backIntake) {
+    public Shoot(ShooterSubsystem shooterSubsystem, TransportSubsystem transportSubsystem, IntakeSubsystem frontIntake) {
+        // ===========================
+        //    Simple Shoot Routine
+        // ===========================
         addCommands(new ParallelRaceGroup(
+            // Spin up the shooter
             new SpinRoller(shooterSubsystem, 6400),
             new SequentialCommandGroup(
+                // Feed balls into shooter for 2 seconds
                 new ParallelRaceGroup(
                     new WaitCommand(2.0),
                     new Intake(frontIntake, 1),
-                    new TransportPower(transportSubsystem, 1.0)
-                ),
-                new ParallelRaceGroup(
-                    new WaitCommand(2.0),
-                    new Intake(backIntake, 1),
                     new TransportPower(transportSubsystem, 1.0)
                 )
             )

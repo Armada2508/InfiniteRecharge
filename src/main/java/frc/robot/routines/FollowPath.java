@@ -5,10 +5,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.motion.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class MoveForward extends SequentialCommandGroup {
+public class FollowPath extends SequentialCommandGroup {
 
-    public MoveForward(DriveSubsystem driveSubsystem, Trajectory path) {
+    public FollowPath(DriveSubsystem driveSubsystem, Trajectory path) {
+        // ===================
+        //    Start of Auto
+        // ===================
         addCommands(
+            // Follow Path
             FollowTrajectory.getCommand(driveSubsystem, path, path.getInitialPose())
         );
     }

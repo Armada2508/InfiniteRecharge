@@ -48,7 +48,6 @@ public class Aim extends CommandBase {
     public void end(boolean interrupted) {
         mVisionSubsystem.setCamMode(mCamMode);
         mVisionSubsystem.setLED(false);
-        mDriveSubsystem.coast();
         mDriveSubsystem.setPowers(0, 0);
         mDriveSubsystem.setState(DriveState.DRIVE);
     }

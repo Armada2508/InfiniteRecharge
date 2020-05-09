@@ -2,11 +2,17 @@ package frc.lib.motion;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj.trajectory.*;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.*;
 
@@ -16,28 +22,72 @@ import frc.robot.subsystems.*;
  */
 public class FollowTrajectory {
 
-    private static SimpleMotorFeedforward mFeedforward;
-    private static DifferentialDriveKinematics mKinematics;
-    private static RamseteController mController;
-    private static PIDController mPidController;
+    private static NetworkTable kDebug = NetworkTableInstance.getDefault().getTable("ramsete");
+    private static NetworkTableEntry kLeftReference = kDebug.getEntry("left_reference");
+    private static NetworkTableEntry kRightReference = kDebug.getEntry("right_reference");
+
+    private static SimpleMotorFeedforward kFeedforward;
+    private static DifferentialDriveKinematics kKinematics;
+    private static RamseteController kController;
+    private static RamseteController kDisabledController;
+    private static PIDController kLeftPidController;
+    private static PIDController kRightPidController;
 
     
     /**
-     * @param kS The kS constant
-     * @param kV The kV constant
-     * @param kA The kA constant
-     * @param kP The kP constant
-     * @param kI The kI constant
-     * @param kD The kD constant
-     * @param b The B constant
-     * @param zeta The Zeta constant
-     * @param trackWidth The width between the tracks of the robot
+     * @param kS The kS constant(Feedforward)
+     * @param kV The kV constant(Feedforward)
+     * @param kA The kA constant(Feedforward)
+     * @param kP The kP constant(PID)
+     * @param kI The kI constant(PID)
+     * @param kD The kD constant(PID)
+     * @param b The B constant(RAMSETE)
+     * @param zeta The Zeta constant(RAMSETE)
+     * @param trackWidth The width of the drivetrain(Kinematics)
      */
     public static void config(double kS, double kV, double kA, double b, double zeta, double trackWidth, PIDController pidController) {
-        mFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
-        mKinematics = new DifferentialDriveKinematics(trackWidth);
-        mController = new RamseteController(b, zeta);
-        mPidController = pidController;
+        kFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
+        kKinematics = new DifferentialDriveKinematics(trackWidth);
+        kController = new RamseteController(b, zeta);
+        kLeftPidController = new PIDController(pidController.getP(), pidController.getI(), pidController.getD());
+        kRightPidController = new PIDController(pidController.getP(), pidController.getI(), pidController.getD());
+        kDisabledController = new RamseteController() {
+            @Override
+            public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+                    double angularVelocityRefRadiansPerSecond) {
+                return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+            }
+        };
+    }
+
+    /**
+     * Returns a RamseteCommand that follows the specified trajectory using no feedback
+     * @param driveSubsystem The DriveSubsystem to use
+     * @param trajectory The Trajectory to follow
+     * @param zeroPose The position to start relative to
+     * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
+     */
+    public static Command getCommandFeedforward(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
+        trajectory = trajectory.relativeTo(zeroPose);
+        PIDController leftController = new PIDController(0, 0, 0);
+        PIDController rightController = new PIDController(0, 0, 0);
+        driveSubsystem.brake();
+        return new RamseteCommand(
+                trajectory,
+                driveSubsystem::getPose,
+                kDisabledController,
+                kFeedforward,
+                kKinematics,
+                driveSubsystem::getWheelSpeeds,
+                leftController,
+                rightController,
+                (voltsL, voltsR) -> {
+                    driveSubsystem.setVoltage(voltsL, voltsR);
+
+                    kLeftReference.setNumber(leftController.getSetpoint());
+                    kRightReference.setNumber(rightController.getSetpoint());
+                },
+                driveSubsystem);
     }
 
     /**
@@ -49,41 +99,44 @@ public class FollowTrajectory {
      */
     public static Command getCommand(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
         trajectory = trajectory.relativeTo(zeroPose);
+        driveSubsystem.brake();
         return new RamseteCommand(
                 trajectory,
-                driveSubsystem::getPose,          // Equivalent Statement: () -> mdriveSubsystem.getPose(),
-                mController,
-                mFeedforward,
-                mKinematics,
-                driveSubsystem::getWheelSpeeds,   // Equivalent Statement: () -> mdriveSubsystem.getWheelSpeeds(),
-                mPidController,
-                mPidController,
-                driveSubsystem::setVoltage,       // Equivalent Statement: (voltsR, voltsL) -> mdriveSubsystem.setVoltage(voltsR, voltsL)
+                driveSubsystem::getPose,
+                kController,
+                kFeedforward,
+                kKinematics,
+                driveSubsystem::getWheelSpeeds,
+                kLeftPidController,
+                kRightPidController,
+                (voltsL, voltsR) -> {
+                    driveSubsystem.setVoltage(voltsL, voltsR);
+
+                    kLeftReference.setNumber(kLeftPidController.getSetpoint());
+                    kRightReference.setNumber(kRightPidController.getSetpoint());
+                },
                 driveSubsystem);
     }
-
+    
     /**
-     * Returns a RamseteCommand that follows the specified trajectory backwards
+     * Returns a RamseteCommand that follows a generated trajectory using no feedback
      * @param driveSubsystem The DriveSubsystem to use
-     * @param trajectory The Trajectory to follow
-     * @param zeroPose The position to start relative to
+     * @param start The position to start at
+     * @param end The position to end at
+     * @param maxVelocity The maximum velocity of the robot
+     * @param maxAcceleration The maximum acceleration of the robot
      * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
      */
-    public static Command getCommandReversed(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
-        trajectory = trajectory.relativeTo(zeroPose);
-        return new RamseteCommand(
-                trajectory,
-                driveSubsystem::getPoseReversed,          // Equivalent Statement: () -> mdriveSubsystem.getPose(),
-                mController,
-                mFeedforward,
-                mKinematics,
-                driveSubsystem::getWheelSpeedsReverse,   // Equivalent Statement: () -> mdriveSubsystem.getWheelSpeeds(),
-                mPidController,
-                mPidController,
-                driveSubsystem::setVoltageReverse,       // Equivalent Statement: (voltsR, voltsL) -> mdriveSubsystem.setVoltage(voltsR, voltsL)
-                driveSubsystem);
+    public static Command getCommandFeedforward(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, boolean reversed) {
+        TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
+        config.setReversed(reversed);
+        config.addConstraint(new DifferentialDriveKinematicsConstraint(kKinematics, maxVelocity));
+        config.addConstraint(new DifferentialDriveVoltageConstraint(kFeedforward, kKinematics, 6.0));
+        config.addConstraint(new CentripetalAccelerationConstraint(10));
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, new ArrayList<Translation2d>(), end,config);
+        trajectory = trajectory.relativeTo(trajectory.getInitialPose());
+        return getCommandFeedforward(driveSubsystem, trajectory, trajectory.getInitialPose());
     }
-
 
     /**
      * Returns a RamseteCommand that follows a generated trajectory

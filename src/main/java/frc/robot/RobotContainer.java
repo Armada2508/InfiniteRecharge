@@ -32,6 +32,8 @@ import frc.robot.subsystems.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -63,7 +65,7 @@ public class RobotContainer {
 
     public void robotInit() {
         // Initialize the Dashboard
-        //initDashboard();
+        initDashboard();
 
         // Initialize the Camera(s)
         initCam();
@@ -99,7 +101,7 @@ public class RobotContainer {
         new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
         new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kPower));
-        new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 750));
+        new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 6300));
         new JoystickButton(mButtonBoard, 4).whileHeld(new TransportPower(mTransport, 1.0));
         new JoystickButton(mButtonBoard, 12).whileHeld(new Climb(mClimb, ClimbState.EXTENDED));
         new JoystickButton(mButtonBoard, 13).whileHeld(new Climb(mClimb, ClimbState.VENTED));
@@ -116,22 +118,39 @@ public class RobotContainer {
         //      Drive
         // ================
 
-        // Talon Stuff
-        for (int i = 0; i < mDrive.getIDs().length; i++) {
-            Shuffleboard.getTab("Drive Physical")
-                .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kGrid)
-                .withPosition(0+3*i, 0)
-                .withSize(3, 6)
-                .withProperties(Map.of("Number of columns", 1))
-                .addNumber("Velocity", mDrive.getVelocities()[i])
-                .withWidget(BuiltInWidgets.kGraph)
-                .withPosition(0, 0);
-            Shuffleboard.getTab("Drive Physical")
-                .getLayout("Talon " + mDrive.getIDs()[i])
-                .addNumber("Position", mDrive.getPositions()[i])
-                .withWidget(BuiltInWidgets.kGraph)
-                .withPosition(0, 1);
-        }
+        // Physical Drive Stuff
+
+        NetworkTableEntry lRef = NetworkTableInstance.getDefault().getTable("ramsete").getEntry("left_reference");
+        NetworkTableEntry rRef = NetworkTableInstance.getDefault().getTable("ramsete").getEntry("right_reference");
+
+        Shuffleboard.getTab("Drive Physical")
+            .getLayout("Left", BuiltInLayouts.kGrid)
+            .withPosition(0, 0)
+            .withSize(6, 6)
+            .withProperties(Map.of("Number of columns", 1))
+            .addDoubleArray("Velocity", () -> { return new double[] { mDrive.getVelocityLeft(), lRef.getDouble(0)};})
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 0);
+        Shuffleboard.getTab("Drive Physical")
+            .getLayout("Left")
+            .addNumber("Position", mDrive::getPositionLeft)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 1);
+        Shuffleboard.getTab("Drive Physical")
+            .getLayout("Right", BuiltInLayouts.kGrid)
+            .withPosition(6, 0)
+            .withSize(6, 6)
+            .withProperties(Map.of("Number of columns", 1))
+            .addDoubleArray("Velocity", () -> { return new double[] { mDrive.getVelocityRight(), rRef.getDouble(0)};})
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 0);
+        Shuffleboard.getTab("Drive Physical")
+            .getLayout("Right")
+            .addNumber("Position", mDrive::getPositionRight)
+            .withWidget(BuiltInWidgets.kGraph)
+            .withPosition(0, 1);
+        /*
+        // Electrical Drive Stuff
         for (int i = 0; i < mDrive.getIDs().length; i++) {
             Shuffleboard.getTab("Drive Electrical")
                 .getLayout("Talon " + mDrive.getIDs()[i], BuiltInLayouts.kGrid)
@@ -165,22 +184,19 @@ public class RobotContainer {
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Gyro", mDrive::getHeading)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(BuiltInWidgets.kGyro)
             .withPosition(8, 3)
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Odometry Heading", mDrive::getOdometryHeading)
-            .withWidget(BuiltInWidgets.kGraph)
             .withPosition(4, 3)
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Odometry X", mDrive::getOdometryX)
-            .withWidget(BuiltInWidgets.kGraph)
             .withPosition(0, 0)
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Odometry Y", mDrive::getOdometryY)
-            .withWidget(BuiltInWidgets.kGraph)
             .withPosition(0, 3)
             .withSize(4, 3);
         Shuffleboard.getTab("Vision")
@@ -261,18 +277,15 @@ public class RobotContainer {
         Shuffleboard.getTab("Vision")
             .addNumber("Target Width", mVision::getTargetWidth)
             .withPosition(4, 0)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
+            .withSize(4, 3);
         Shuffleboard.getTab("Vision")
             .addNumber("Target Height", mVision::getTargetHeight)
             .withPosition(4, 3)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
+            .withSize(4, 3);
         Shuffleboard.getTab("Vision")
             .addNumber("Target Angle", mVision::getTargetAngle)
             .withPosition(0, 3)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
+            .withSize(4, 3);
 
 
         // ======================
@@ -286,8 +299,7 @@ public class RobotContainer {
         Shuffleboard.getTab("WOF")
             .addNumber("WOF RPM", mWOF::getRPM)
             .withPosition(5, 0)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
+            .withSize(4, 3);
         Shuffleboard.getTab("WOF")
             .addNumber("WOF Voltage", mWOF::getVoltage)
             .withPosition(9, 0)
@@ -300,8 +312,7 @@ public class RobotContainer {
         Shuffleboard.getTab("WOF")
             .addString("WOF Color", mWOF::getColorString)
             .withPosition(5, 3)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
+            .withSize(4, 3);
         Shuffleboard.getTab("WOF")
             .addNumber("WOF Current", mWOF::getCurrent)
             .withPosition(9, 3)
@@ -334,24 +345,6 @@ public class RobotContainer {
             .addBoolean("Short Fault", mPneumatics::getCompressorShortedFault)
             .withPosition(0, 2)
             .withSize(6, 2);
-        Shuffleboard.getTab("Pneumatics")
-            .getLayout("Pneumatics Sticky Faults", BuiltInLayouts.kGrid)
-            .withSize(5, 6)
-            .withPosition(8, 0)
-            .withProperties(Map.of("Number of columns", 1))
-            .addBoolean("Not Connected Sticky Fault", mPneumatics::getCompressorNotConnectedStickyFault)
-            .withPosition(0, 0)
-            .withSize(6, 2);
-        Shuffleboard.getTab("Pneumatics")
-            .getLayout("Pneumatics Sticky Faults")
-            .addBoolean("Current Sticky Fault", mPneumatics::getCompressorCurrentTooHighStickyFault)
-            .withPosition(0, 1)
-            .withSize(6, 2);
-        Shuffleboard.getTab("Pneumatics")
-            .getLayout("Pneumatics Sticky Faults")
-            .addBoolean("Short Sticky Fault", mPneumatics::getCompressorShortedStickyFault)
-            .withPosition(0, 2)
-            .withSize(6, 2);
 
         // =================
         //      Shooter
@@ -377,13 +370,12 @@ public class RobotContainer {
                 .addBoolean("Inverted", mShooter.getInverted()[i])
                 .withPosition(0, 2);
         }
-        
         Shuffleboard.getTab("Shooter")
             .addNumber("Shooter RPM", mShooter::getRPM)
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(8, 0)
             .withSize(5, 4);
-
+*/
     }
 
     public void initCam() {
@@ -416,10 +408,11 @@ public class RobotContainer {
         // Configure global parameters for trajectory following
         FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
 
+
         // Follow a Trajectory
-        return FollowTrajectory.getCommand(mDrive,
+        return FollowTrajectory.getCommandFeedforward(mDrive,
             new Pose2d(),
-            new Pose2d(1, 0, new Rotation2d()),
+            new Pose2d(2.0, -0.5, new Rotation2d(-Math.PI/4.0)),
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration,
             false);

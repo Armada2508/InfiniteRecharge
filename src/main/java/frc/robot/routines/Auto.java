@@ -47,7 +47,7 @@ public class Auto extends SequentialCommandGroup {
         new DrivePower(driveSubsystem, 0.0, 0.0),
         
         // Move Backwards
-        FollowTrajectory.getCommandReversed(driveSubsystem, paths[1], paths[1].getInitialPose()),
+        //FollowTrajectory.getCommandReversed(driveSubsystem, paths[1], paths[1].getInitialPose()),
         new DrivePower(driveSubsystem, 0.0, 0.0),
         //new Aim(driveSubsystem, visionSubsystem),
         new Shoot(shooterSubsystem, transportSubsystem, frontIntake));

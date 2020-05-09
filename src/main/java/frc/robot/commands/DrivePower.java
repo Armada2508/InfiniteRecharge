@@ -20,7 +20,7 @@ public class DrivePower extends CommandBase {
    * Creates a new DrivePower Command.
    *
    */
-  public DrivePower(DriveSubsystem driveSubsystem, Double left, Double right) {
+  public DrivePower(DriveSubsystem driveSubsystem, double left, double right) {
     mDriveSubsystem = driveSubsystem;
     mPowers = new DifferentialDriveWheelPowers(right, left);
 

@@ -75,9 +75,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setCurrent(double amps) {
         //mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
     }
-
-    public double[] getIDs() {
-        return new double[] { mLeftMotor.getDeviceID(), mRightMotor.getDeviceID() };
+ 
+    public int[] getIDs() {
+        return new int[] { mLeftMotor.getDeviceID(), mRightMotor.getDeviceID() };
     }
 
     public DoubleSupplier[] getVoltage() {

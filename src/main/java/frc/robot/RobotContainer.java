@@ -149,7 +149,7 @@ public class RobotContainer {
             .addNumber("Position", mDrive::getPositionRight)
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(0, 1);
-        /*
+        
         // Electrical Drive Stuff
         for (int i = 0; i < mDrive.getIDs().length; i++) {
             Shuffleboard.getTab("Drive Electrical")
@@ -375,7 +375,7 @@ public class RobotContainer {
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(8, 0)
             .withSize(5, 4);
-*/
+
     }
 
     public void initCam() {

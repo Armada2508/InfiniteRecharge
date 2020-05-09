@@ -83,7 +83,7 @@ public final class Constants {
 
         // Trajectory Following Constants
         public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.31, 1.95, 0.35); // The feedforward for the drive
-        public static final PIDController kPathPID = new PIDController(0.025, 0,  0); // The PID for trajectory following
+        public static final PIDController kPathPID = new PIDController(0.25, 0.01,  0); // The PID for trajectory following
         public static final double kTrackWidth = 0.6084; // The track width of the drive
         public static final double kB = 2.0; // The B constant for RamseteController
         public static final double kZeta = 0.7; // The Zeta constant for RamseteController
@@ -92,6 +92,8 @@ public final class Constants {
         // Trajectory Generation Constants
         public static final double kMaxVelocity = 1.2;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
         public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
+        public static final double kMaxCentripetalAcceleration = 2.0;  // The maximum centripetal acceleration of the path generated in m/s^2   // TODO: Determine correct value
+        public static final double kMaxVoltage = 8.0; //The maximum voltage applied to either side of the robot   // TODO: Determine correct value
 
     }
 

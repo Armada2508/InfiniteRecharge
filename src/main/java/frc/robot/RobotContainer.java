@@ -7,20 +7,14 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.*;
-
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.*;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint.MinMax;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -29,11 +23,7 @@ import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
 import frc.robot.subsystems.*;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -410,11 +400,13 @@ public class RobotContainer {
 
 
         // Follow a Trajectory
-        return FollowTrajectory.getCommandFeedforward(mDrive,
+        return FollowTrajectory.getCommand(mDrive,
             new Pose2d(),
-            new Pose2d(2.0, -0.5, new Rotation2d(-Math.PI/4.0)),
+            new Pose2d(2.0, 0.5, new Rotation2d(Math.PI/4.0)),
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration,
+            Constants.Drive.kMaxVoltage,
+            Constants.Drive.kMaxCentripetalAcceleration,
             false);
             
     }

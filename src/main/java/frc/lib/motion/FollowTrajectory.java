@@ -125,9 +125,12 @@ public class FollowTrajectory {
      * @param end The position to end at
      * @param maxVelocity The maximum velocity of the robot
      * @param maxAcceleration The maximum acceleration of the robot
+     * @param maxVoltage The maximum voltage that can be applied to the motors
+     * @param maxCentripetalAccleration The maximum centripetal acceleration of the robot
+     * @param reversed If the trajectory should be reversed
      * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
      */
-    public static Command getCommandFeedforward(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, boolean reversed) {
+    public static Command getCommandFeedforward(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, double maxVoltage, double maxCentripetalAccleration, boolean reversed) {
         TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
         config.setReversed(reversed);
         config.addConstraint(new DifferentialDriveKinematicsConstraint(kKinematics, maxVelocity));
@@ -145,11 +148,17 @@ public class FollowTrajectory {
      * @param end The position to end at
      * @param maxVelocity The maximum velocity of the robot
      * @param maxAcceleration The maximum acceleration of the robot
+     * @param maxVoltage The maximum voltage that can be applied to the motors
+     * @param maxCentripetalAccleration The maximum centripetal acceleration of the robot
+     * @param reversed If the trajectory should be reversed
      * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
      */
-    public static Command getCommand(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, boolean reversed) {
+    public static Command getCommand(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, double maxVoltage, double maxCentripetalAccleration, boolean reversed) {
         TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
         config.setReversed(reversed);
+        config.addConstraint(new DifferentialDriveKinematicsConstraint(kKinematics, maxVelocity));
+        config.addConstraint(new DifferentialDriveVoltageConstraint(kFeedforward, kKinematics, 6.0));
+        config.addConstraint(new CentripetalAccelerationConstraint(10));
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, new ArrayList<Translation2d>(), end,config);
         trajectory = trajectory.relativeTo(trajectory.getInitialPose());
         return getCommand(driveSubsystem, trajectory, trajectory.getInitialPose());

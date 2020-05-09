@@ -58,7 +58,7 @@ public class DriveClosedLoop extends CommandBase {
       powers.getLeft() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0),
       powers.getRight() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0));
 
-    mDriveSubsystem.driveClosedLoop(speeds);
+    mDriveSubsystem.setVelocity(speeds);
   }
 
   // Called once the command ends or is interrupted.

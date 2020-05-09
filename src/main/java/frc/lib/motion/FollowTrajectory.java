@@ -117,6 +117,30 @@ public class FollowTrajectory {
                 },
                 driveSubsystem);
     }
+
+    /**
+     * Returns a RamseteCommand that follows the specified trajectory and uses the PID loop on the Talons
+     * @param driveSubsystem The DriveSubsystem to use
+     * @param trajectory The Trajectory to follow
+     * @param zeroPose The position to start relative to
+     * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
+     */
+    public static Command getCommandTalon(DriveSubsystem driveSubsystem, Trajectory trajectory, Pose2d zeroPose) {
+        trajectory = trajectory.relativeTo(zeroPose);
+        driveSubsystem.brake();
+        return new RamseteCommand(
+                trajectory,
+                driveSubsystem::getPose,
+                kController,
+                kKinematics,
+                (velocityL, velocityR) -> {
+                    driveSubsystem.setVelocity(new DifferentialDriveWheelSpeeds(velocityL, velocityR));
+
+                    kLeftReference.setNumber(velocityL);
+                    kRightReference.setNumber(velocityR);
+                },
+                driveSubsystem);
+    }
     
     /**
      * Returns a RamseteCommand that follows a generated trajectory using no feedback
@@ -162,5 +186,28 @@ public class FollowTrajectory {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, new ArrayList<Translation2d>(), end,config);
         trajectory = trajectory.relativeTo(trajectory.getInitialPose());
         return getCommand(driveSubsystem, trajectory, trajectory.getInitialPose());
+    }
+
+    /**
+     * Returns a RamseteCommand that follows a generated trajectory and uses the PID loop on the Talons
+     * @param driveSubsystem The DriveSubsystem to use
+     * @param start The position to start at
+     * @param end The position to end at
+     * @param maxVelocity The maximum velocity of the robot
+     * @param maxAcceleration The maximum acceleration of the robot
+     * @param maxVoltage The maximum voltage that can be applied to the motors
+     * @param maxCentripetalAccleration The maximum centripetal acceleration of the robot
+     * @param reversed If the trajectory should be reversed
+     * @return Returns a RamseteCommand that will follow the specified trajectory with the specified driveSubsystem
+     */
+    public static Command getCommandTalon(DriveSubsystem driveSubsystem, Pose2d start, Pose2d end, double maxVelocity, double maxAcceleration, double maxVoltage, double maxCentripetalAccleration, boolean reversed) {
+        TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
+        config.setReversed(reversed);
+        config.addConstraint(new DifferentialDriveKinematicsConstraint(kKinematics, maxVelocity));
+        config.addConstraint(new DifferentialDriveVoltageConstraint(kFeedforward, kKinematics, 6.0));
+        config.addConstraint(new CentripetalAccelerationConstraint(10));
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, new ArrayList<Translation2d>(), end,config);
+        trajectory = trajectory.relativeTo(trajectory.getInitialPose());
+        return getCommandTalon(driveSubsystem, trajectory, trajectory.getInitialPose());
     }
 } 

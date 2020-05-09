@@ -13,6 +13,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
@@ -103,6 +104,8 @@ public class RobotContainer {
     
 
     public void initDashboard() {
+
+        LiveWindow.disableAllTelemetry();
         
         // ================
         //      Drive
@@ -400,7 +403,7 @@ public class RobotContainer {
 
 
         // Follow a Trajectory
-        return FollowTrajectory.getCommand(mDrive,
+        return FollowTrajectory.getCommandTalon(mDrive,
             new Pose2d(),
             new Pose2d(2.0, 0.5, new Rotation2d(Math.PI/4.0)),
             Constants.Drive.kMaxVelocity,

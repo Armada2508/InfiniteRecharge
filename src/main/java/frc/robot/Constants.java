@@ -77,21 +77,21 @@ public final class Constants {
         public static final boolean kRightInverted = true; // If the right side is inverted
         public static final boolean kLeftInverted = false; // If the left side is inverted
         public static final int kSlot = 0; // The PID slot to use for the drive subsystem
-        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.2, 0, 0.0, 0.05, 200); // The feedback constants for the drive
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.15, 0, 0.0, 0.0575, 200); // The feedback constants for the drive
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 10.71*(48.0/42.0)); //  The feedback config for the drive
         public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001);  // The config for the drive TODO: Tune PID
 
         // Trajectory Following Constants
         public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.31, 1.95, 0.35); // The feedforward for the drive
-        public static final PIDController kPathPID = new PIDController(1.8, 0.0,  0); // The PID for trajectory following
+        public static final PIDController kPathPID = new PIDController(0.125, 0.0,  0); // The PID for trajectory following
         public static final double kTrackWidth = 0.6084; // The track width of the drive
         public static final double kB = 2.0; // The B constant for RamseteController
         public static final double kZeta = 0.7; // The Zeta constant for RamseteController
         public static final double kWheelDiameter = Units.inchesToMeters(8); // The diameter of the wheels on the robot
 
         // Trajectory Generation Constants
-        public static final double kMaxVelocity = 1.2;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
-        public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
+        public static final double kMaxVelocity = 1.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
+        public static final double kMaxAcceleration = 1.5; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
         public static final double kMaxCentripetalAcceleration = 2.0;  // The maximum centripetal acceleration of the path generated in m/s^2   // TODO: Determine correct value
         public static final double kMaxVoltage = 8.0; //The maximum voltage applied to either side of the robot   // TODO: Determine correct value
 

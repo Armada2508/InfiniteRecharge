@@ -28,8 +28,10 @@ public class Robot extends TimedRobot {
     // Make a new RobotContainer to contain all the stuff we want to do
     mRobotContainer = new RobotContainer();
 
-    // Initialization
-    mRobotContainer.robotInit();
+    if(mRobotContainer.shouldInit()) {
+      // Initialization
+      mRobotContainer.robotInit();
+    }
     
     
   }

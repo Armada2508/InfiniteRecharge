@@ -67,11 +67,8 @@ public class VisionSubsystem extends SubsystemBase {
      * Setup the subsystem
      */
     public void setup() {
-        setLED(false);
+        reset();
         setYOffset(Constants.Vision.kLimelightAngle);
-        setPipeline(0);
-        setCamMode(CamMode.DRIVER);
-        setStreamingMode(StreamingMode.PIPPRIM);
     }
 
     /**

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.lib.motion.*;
+import frc.lib.util.LogUtil;
 import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
 import frc.robot.subsystems.*;
@@ -55,7 +56,21 @@ public class RobotContainer {
 
     }
 
+    /*
+	 * Checks to see if driver station is attached.
+	 */
+	public boolean shouldInit() {
+		if (!DriverStation.getInstance().isDisabled())
+			return true;
+
+		if (DriverStation.getInstance().isDSAttached())
+			return true;
+
+		return false;
+	}
+
     public void robotInit() {
+        System.out.println(LogUtil.getTimestamp());
         // Initialize the Dashboard
         //initDashboard();
 

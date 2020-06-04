@@ -50,11 +50,9 @@ public class Aim extends CommandBase {
     @Override
     public void execute() {
         if(mIteration == mTargetAngles.length) {
-            System.out.println("Calculating Offset");
             int recognizedFrames = 0;
             for (int i = 0; i < mTargetAngles.length; i++) {
                 if(mValidAngles[i]) {
-                    System.out.println("Gyro Angle: " + mGyroAngles[i] + ", Target Angle: " + mTargetAngles[i] + ", Total Angle: " + (mGyroAngles[i] - mTargetAngles[i]));
                     mTargetAngle += mGyroAngles[i] - mTargetAngles[i];
                     recognizedFrames++;
                 }
@@ -64,25 +62,21 @@ public class Aim extends CommandBase {
             } else {
                 mTargetAngle /= recognizedFrames;
             }
-            System.out.println("Target Angle: " + mTargetAngle);
             mPidController.setSetpoint(Constants.Vision.kAimOffset +  mTargetAngle);
         }
 
         if(mIteration < mTargetAngles.length) {
             if(mVisionSubsystem.targetFound()) {
-                System.out.println("Target Found");
                 mTargetAngles[mIteration] = mVisionSubsystem.getTargetCenter().getX();
                 mGyroAngles[mIteration] = mDriveSubsystem.getUnboundedHeading();
                 mValidAngles[mIteration] = true;
             } else {
-                System.out.println("Target Not Found");
                 mTargetAngles[mIteration] = 0;
                 mGyroAngles[mIteration] = 0;
                 mValidAngles[mIteration] = false;
             }
         } else {
             double power = mPidController.calculate(mDriveSubsystem.getUnboundedHeading());
-            System.out.println("Aiming; Setpoint: " + mPidController.getSetpoint() + ", Angle: " + mDriveSubsystem.getUnboundedHeading() + ", Error: " + mPidController.getPositionError());
             power = Math.abs(Math.min(Constants.Vision.kMaxAimPower, Math.abs(power))) * Math.signum(power);
             mDriveSubsystem.setPowers(-power, power);
         }

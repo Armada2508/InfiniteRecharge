@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Constants;
 import frc.robot.subsystems.*;
 
 
@@ -33,6 +34,8 @@ public class FollowTrajectory {
     private static PIDController kLeftPidController;
     private static PIDController kRightPidController;
 
+    private static double kTurnCompensation;
+
     
     /**
      * @param kS The kS constant(Feedforward)
@@ -44,8 +47,9 @@ public class FollowTrajectory {
      * @param b The B constant(RAMSETE)
      * @param zeta The Zeta constant(RAMSETE)
      * @param trackWidth The width of the drivetrain(Kinematics)
+     * @param turnCompensation How much to overcorrect for turning aka how much the tracks are couple, 0 for a perfect drive
      */
-    public static void config(double kS, double kV, double kA, double b, double zeta, double trackWidth, PIDController pidController) {
+    public static void config(double kS, double kV, double kA, double b, double zeta, double trackWidth, PIDController pidController, double turnCompensation) {
         kFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
         kKinematics = new DifferentialDriveKinematics(trackWidth);
         kController = new RamseteController(b, zeta);
@@ -58,6 +62,7 @@ public class FollowTrajectory {
                 return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
             }
         };
+        kTurnCompensation = turnCompensation;
     }
 
     /**
@@ -82,7 +87,9 @@ public class FollowTrajectory {
                 leftController,
                 rightController,
                 (voltsL, voltsR) -> {
-                    driveSubsystem.setVoltage(voltsL, voltsR);
+                    double turnCompensation = voltsR - voltsL;
+                    turnCompensation *= kTurnCompensation;
+                    driveSubsystem.setVoltage(voltsL - turnCompensation, voltsR + turnCompensation);
 
                     kLeftReference.setNumber(leftController.getSetpoint());
                     kRightReference.setNumber(rightController.getSetpoint());
@@ -110,7 +117,9 @@ public class FollowTrajectory {
                 kLeftPidController,
                 kRightPidController,
                 (voltsL, voltsR) -> {
-                    driveSubsystem.setVoltage(voltsL, voltsR);
+                    double turnCompensation = voltsR - voltsL;
+                    turnCompensation *= kTurnCompensation;
+                    driveSubsystem.setVoltage(voltsL - turnCompensation, voltsR + turnCompensation);
 
                     kLeftReference.setNumber(kLeftPidController.getSetpoint());
                     kRightReference.setNumber(kRightPidController.getSetpoint());

@@ -52,11 +52,12 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the button bindings
         configureButtonBindings();
+
     }
 
     public void robotInit() {
         // Initialize the Dashboard
-        initDashboard();
+        //initDashboard();
 
         // Initialize the Camera(s)
         initCam();
@@ -87,9 +88,13 @@ public class RobotContainer {
         // =======================
         
         new POVButton(mJoystick, 0).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
-        new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 45).whileHeld(new DrivePower(mDrive, 2*Constants.Drive.kCreepSpeed, 0.0));
+        new POVButton(mJoystick, 90).whileHeld(new DrivePower(mDrive, Constants.Drive.kCreepSpeed, 0.0));
+        new POVButton(mJoystick, 135).whileHeld(new DrivePower(mDrive, -2*Constants.Drive.kCreepSpeed, 0.0));
         new POVButton(mJoystick, 180).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, -Constants.Drive.kCreepSpeed));
-        new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, -Constants.Drive.kCreepSpeed, Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 225).whileHeld(new DrivePower(mDrive, 0.0, -2*Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 270).whileHeld(new DrivePower(mDrive, 0.0, Constants.Drive.kCreepSpeed));
+        new POVButton(mJoystick, 315).whileHeld(new DrivePower(mDrive, 0.0, 2*Constants.Drive.kCreepSpeed));
         new JoystickButton(mButtonBoard, 2).whileHeld(new Intake(mIntake, Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 1).whileHeld(new Intake(mIntake, -Constants.Intake.kPower));
         new JoystickButton(mButtonBoard, 15).whenHeld(new SpinRoller(mShooter, 6300));
@@ -98,13 +103,14 @@ public class RobotContainer {
         new JoystickButton(mButtonBoard, 13).whileHeld(new Climb(mClimb, ClimbState.VENTED));
         new JoystickButton(mButtonBoard, 14).whileHeld(new Climb(mClimb, ClimbState.RETRACTED));
         new JoystickButton(mButtonBoard, 3).whileHeld(new TransportPower(mTransport, -1.0));
-        new JoystickButton(mButtonBoard, 6).whileHeld(new Aim(mDrive, mVision));
+        new JoystickButton(mButtonBoard, 6).whileHeld(new Aim(mDrive, mVision, Constants.Vision.kAimSamples));
 
     }
     
 
     public void initDashboard() {
 
+        // Disable LiveWindow
         LiveWindow.disableAllTelemetry();
         
         // ================
@@ -142,7 +148,6 @@ public class RobotContainer {
             .addNumber("Position", mDrive::getPositionRight)
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(0, 1);
-        
         // Electrical Drive Stuff
         for (int i = 0; i < mDrive.getIDs().length; i++) {
             Shuffleboard.getTab("Drive Electrical")
@@ -177,7 +182,6 @@ public class RobotContainer {
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Gyro", mDrive::getHeading)
-            .withWidget(BuiltInWidgets.kGyro)
             .withPosition(8, 3)
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
@@ -388,7 +392,7 @@ public class RobotContainer {
     public void changeMode() {
         // Reset the Vision Subsystem because robotInit doesn't work when connected to the FMS for some reason
         mVision.reset();
-        mDrive.reset();
+        mDrive.reset(true);
     }
 
     public void stopTalons() {
@@ -398,14 +402,16 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
+        mDrive.reset(false);
+
         // Configure global parameters for trajectory following
-        FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID);
+        FollowTrajectory.config(Constants.Drive.kFeedforward.ks, Constants.Drive.kFeedforward.kv, Constants.Drive.kFeedforward.ka, Constants.Drive.kB, Constants.Drive.kZeta, Constants.Drive.kTrackWidth, Constants.Drive.kPathPID, Constants.Drive.kTurnCompensation);
 
 
         // Follow a Trajectory
         return FollowTrajectory.getCommandTalon(mDrive,
             new Pose2d(),
-            new Pose2d(2.0, 0.5, new Rotation2d(Math.PI/4.0)),
+            new Pose2d(2.0, 0.0, new Rotation2d(0.0)),
             Constants.Drive.kMaxVelocity,
             Constants.Drive.kMaxAcceleration,
             Constants.Drive.kMaxVoltage,
@@ -428,4 +434,5 @@ public class RobotContainer {
         // Print the wheel velocities
         System.out.println(mDrive.getWheelSpeeds());
     }
+    
 }

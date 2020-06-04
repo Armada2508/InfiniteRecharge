@@ -71,7 +71,7 @@ public class VisionSubsystem extends SubsystemBase {
         setYOffset(Constants.Vision.kLimelightAngle);
         setPipeline(0);
         setCamMode(CamMode.DRIVER);
-        setStreamingMode(StreamingMode.PIPAUX);
+        setStreamingMode(StreamingMode.PIPPRIM);
     }
 
     /**
@@ -81,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase {
         setLED(false);
         setPipeline(0);
         setCamMode(CamMode.DRIVER);
-        setStreamingMode(StreamingMode.PIPAUX);
+        setStreamingMode(StreamingMode.PIPPRIM);
     }
 
     /**

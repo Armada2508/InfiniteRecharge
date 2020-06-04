@@ -3,6 +3,7 @@ package frc.robot.routines;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.commands.Aim;
 import frc.robot.commands.DrivePower;
 import frc.robot.commands.SpinRoller;
@@ -33,7 +34,7 @@ public class SimpleAuto extends SequentialCommandGroup {
                 new WaitCommand(1.75),
                 // Wait for 1.5 seconds
                 new ParallelRaceGroup(
-                    new Aim(driveSubsystem, visionSubsystem),
+                    new Aim(driveSubsystem, visionSubsystem, Constants.Vision.kAimSamples),
                     new WaitCommand(1.5)
                 ),
                 // Feed balls

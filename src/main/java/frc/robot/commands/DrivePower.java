@@ -22,7 +22,7 @@ public class DrivePower extends CommandBase {
    */
   public DrivePower(DriveSubsystem driveSubsystem, double left, double right) {
     mDriveSubsystem = driveSubsystem;
-    mPowers = new DifferentialDriveWheelPowers(right, left);
+    mPowers = new DifferentialDriveWheelPowers(left, right);
 
     // Require the DriveSubsystem
     addRequirements(mDriveSubsystem);

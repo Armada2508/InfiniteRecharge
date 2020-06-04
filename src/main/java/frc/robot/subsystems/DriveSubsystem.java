@@ -46,13 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
     private DriveState mState;
     
     public DriveSubsystem() {
-        mRight.setInverted(Constants.Drive.kRightInverted);
-        mLeft.setInverted(Constants.Drive.kLeftInverted);
-        mRightFollower.setInverted(Constants.Drive.kRightInverted);
-        mLeftFollower.setInverted(Constants.Drive.kLeftInverted);
-
         mDrive.setRightSideInverted(Constants.Drive.kRightInverted);
-
         mDrive.setSafetyEnabled(false);
 
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, Constants.Gyro.kPigeonCondFrame1Period);
@@ -65,9 +59,8 @@ public class DriveSubsystem extends SubsystemBase {
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, Constants.Gyro.kPigeonBiasedFrame2Period);
         mImu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, Constants.Gyro.kPigeonBiasedFrame6Period);
 
-        brake();
 
-        configTalons();
+        configTalons(true);
         resetHeading();
         resetEncoders();
         mOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -99,6 +92,19 @@ public class DriveSubsystem extends SubsystemBase {
         mLeft.set(ControlMode.Velocity, fromVelocity(speeds.leftMetersPerSecond));
     }
 
+    public void setVelocity(DifferentialDriveWheelSpeeds speeds, double deadband) {
+        if(Util.inRange(speeds.rightMetersPerSecond, deadband)) {
+            mRight.set(ControlMode.PercentOutput, 0);
+        } else {
+            mRight.set(ControlMode.Velocity, fromVelocity(speeds.rightMetersPerSecond));
+        }
+        if(Util.inRange(speeds.leftMetersPerSecond, deadband)) {
+            mLeft.set(ControlMode.PercentOutput, 0);
+        } else {
+            mLeft.set(ControlMode.Velocity, fromVelocity(speeds.leftMetersPerSecond));
+        }
+    }
+
     public void brake() {
         mLeft.setNeutralMode(NeutralMode.Brake);
         mRight.setNeutralMode(NeutralMode.Brake);
@@ -110,8 +116,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void hold() {
-        mLeft.set(ControlMode.Position, 0.0);
-        mRight.set(ControlMode.Position, 0.0);
+        mLeft.set(ControlMode.Position, mLeft.getSelectedSensorPosition());
+        mRight.set(ControlMode.Position, mRight.getSelectedSensorPosition());
     }
 
     public Pose2d getPose() {
@@ -130,9 +136,9 @@ public class DriveSubsystem extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getVelocityLeft(), getVelocityRight());
     }
 
-    public void reset() {
+    public void reset(boolean ramp) {
         resetOdometry(new Pose2d());
-        configTalons();
+        configTalons(ramp);
         resetHeading();
     }
 
@@ -167,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
         mLeft.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void configTalons() {
+    public void configTalons(boolean ramp) {
         resetTalons();
         mRightFollower.follow(mRight);
         mLeftFollower.follow(mLeft);
@@ -181,6 +187,25 @@ public class DriveSubsystem extends SubsystemBase {
         FeedbackConfig.config(mLeft, Constants.Drive.kFeedbackConfig);
         MotorConfig.config(mRight, Constants.Drive.kConfig);
         MotorConfig.config(mLeft, Constants.Drive.kConfig);
+        mRight.setInverted(Constants.Drive.kRightInverted);
+        mLeft.setInverted(Constants.Drive.kLeftInverted);
+        mRightFollower.setInverted(Constants.Drive.kRightInverted);
+        mLeftFollower.setInverted(Constants.Drive.kLeftInverted);
+        ramp(ramp);
+    }
+
+    public void ramp(boolean on) {
+        if(on) {
+            mLeft.configOpenloopRamp(Constants.Drive.kRamp);
+            mRight.configOpenloopRamp(Constants.Drive.kRamp);
+            mLeft.configClosedloopRamp(Constants.Drive.kRamp);
+            mRight.configClosedloopRamp(Constants.Drive.kRamp);
+        } else {
+            mLeft.configOpenloopRamp(0);
+            mRight.configOpenloopRamp(0);
+            mLeft.configClosedloopRamp(0);
+            mRight.configClosedloopRamp(0);
+        }
     }
 
     public double getPositionLeft() {

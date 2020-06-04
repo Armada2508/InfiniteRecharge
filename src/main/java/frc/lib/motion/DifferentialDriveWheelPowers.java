@@ -1,5 +1,7 @@
 package frc.lib.motion;
 
+import frc.lib.util.Util;
+
 public class DifferentialDriveWheelPowers {
     private double mRPower;
     private double mLPower;
@@ -37,6 +39,15 @@ public class DifferentialDriveWheelPowers {
 
     public double getLeft() {
         return mLPower;
+    }
+
+    /**
+     * Deadband the powers
+     * @param threshold The threshold
+     */
+    public void deadband(double threshold) {
+        mRPower = Util.deadband(mRPower, threshold);
+        mLPower = Util.deadband(mLPower, threshold);
     }
 
     /**

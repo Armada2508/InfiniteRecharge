@@ -10,17 +10,26 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class Aim extends CommandBase {
 
-    private DriveSubsystem mDriveSubsystem;
-    private VisionSubsystem mVisionSubsystem;
-    private PIDController mPidController;
+    private final DriveSubsystem mDriveSubsystem;
+    private final VisionSubsystem mVisionSubsystem;
+    private final PIDController mPidController;
+    private double[] mTargetAngles;
+    private double[] mGyroAngles;
+    private boolean[] mValidAngles;
+    private double mTargetAngle;
     private CamMode mCamMode;
+    private int mIteration;
 
-    public Aim(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem) {
+    public Aim(DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, int samples) {
         mDriveSubsystem = driveSubsystem;
         mVisionSubsystem = visionSubsystem;
         mPidController = new PIDController(Constants.Vision.kPAim, Constants.Vision.kIAim, Constants.Vision.kDAim);
 
-        mPidController.setSetpoint(Constants.Vision.kAimOffset);
+        mTargetAngles = new double[samples];
+        mGyroAngles = new double[samples];
+        mValidAngles = new boolean[samples];
+
+        mTargetAngle = 0.0;
 
         // Require DriveSubsystem and VisionSubsystem
         addRequirements(mDriveSubsystem, mVisionSubsystem);
@@ -28,6 +37,8 @@ public class Aim extends CommandBase {
 
     @Override
     public void initialize() {
+        mIteration = 0;
+        mTargetAngle = 0.0;
         mCamMode = mVisionSubsystem.getCamMode();
         mVisionSubsystem.setCamMode(CamMode.CV);
         mVisionSubsystem.setLED(true);
@@ -38,10 +49,44 @@ public class Aim extends CommandBase {
 
     @Override
     public void execute() {
-        double offset = mVisionSubsystem.getTargetCenter().getX();
-        double power = mPidController.calculate(offset);
-        power = Math.abs(Math.min(Constants.Vision.kMaxAimPower, Math.abs(power))) * Math.signum(power);
-        mDriveSubsystem.setPowers(-power, power);
+        if(mIteration == mTargetAngles.length) {
+            System.out.println("Calculating Offset");
+            int recognizedFrames = 0;
+            for (int i = 0; i < mTargetAngles.length; i++) {
+                if(mValidAngles[i]) {
+                    System.out.println("Gyro Angle: " + mGyroAngles[i] + ", Target Angle: " + mTargetAngles[i] + ", Total Angle: " + (mGyroAngles[i] - mTargetAngles[i]));
+                    mTargetAngle += mGyroAngles[i] - mTargetAngles[i];
+                    recognizedFrames++;
+                }
+            }
+            if(recognizedFrames == 0) {
+                mTargetAngle = mDriveSubsystem.getUnboundedHeading();
+            } else {
+                mTargetAngle /= recognizedFrames;
+            }
+            System.out.println("Target Angle: " + mTargetAngle);
+            mPidController.setSetpoint(Constants.Vision.kAimOffset +  mTargetAngle);
+        }
+
+        if(mIteration < mTargetAngles.length) {
+            if(mVisionSubsystem.targetFound()) {
+                System.out.println("Target Found");
+                mTargetAngles[mIteration] = mVisionSubsystem.getTargetCenter().getX();
+                mGyroAngles[mIteration] = mDriveSubsystem.getUnboundedHeading();
+                mValidAngles[mIteration] = true;
+            } else {
+                System.out.println("Target Not Found");
+                mTargetAngles[mIteration] = 0;
+                mGyroAngles[mIteration] = 0;
+                mValidAngles[mIteration] = false;
+            }
+        } else {
+            double power = mPidController.calculate(mDriveSubsystem.getUnboundedHeading());
+            System.out.println("Aiming; Setpoint: " + mPidController.getSetpoint() + ", Angle: " + mDriveSubsystem.getUnboundedHeading() + ", Error: " + mPidController.getPositionError());
+            power = Math.abs(Math.min(Constants.Vision.kMaxAimPower, Math.abs(power))) * Math.signum(power);
+            mDriveSubsystem.setPowers(-power, power);
+        }
+        mIteration++;
     }
 
     @Override

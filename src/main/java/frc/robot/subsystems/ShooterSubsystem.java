@@ -61,6 +61,11 @@ public class ShooterSubsystem extends SubsystemBase {
         mRightMotor.set(ControlMode.Velocity, velocity);
     }
 
+    public void setPower(double power) {
+        mLeftMotor.set(ControlMode.PercentOutput, power);
+        mRightMotor.set(ControlMode.PercentOutput, power);
+    }
+
     public void coast() {
         mLeftMotor.set(ControlMode.PercentOutput, 0.0);
         mRightMotor.set(ControlMode.PercentOutput, 0.0);
@@ -74,6 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // TODO: Fix shooter current limiting
     public void setCurrent(double amps) {
         //mLeftMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
+        //mRightMotor.configGetStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, amps, 0, 0));
     }
  
     public int[] getIDs() {

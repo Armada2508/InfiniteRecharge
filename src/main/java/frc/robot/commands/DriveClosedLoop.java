@@ -22,7 +22,8 @@ public class DriveClosedLoop extends CommandBase {
   private final DoubleSupplier mThrottle;
   private final DoubleSupplier mTrim;
   private final DoubleSupplier mTurn;
-  private BasicDrive mBasicDrive;
+  private final double mDeadband;
+  private final BasicDrive mBasicDrive;
   /**
    * Creates a new DriveClosedLoop Command.
    *
@@ -35,10 +36,10 @@ public class DriveClosedLoop extends CommandBase {
     double maxPower = Constants.Drive.kMaxPower;
     double turnRatio = Constants.Drive.kTurnRatio;
     double trimRatio = Constants.Drive.kTrimRatio;
-    double deadband = Constants.Drive.kDeadbandThreshold;
+    mDeadband = Constants.Drive.kDeadbandThreshold;
 
     mBasicDrive = new BasicDrive();
-    mBasicDrive.config(turnRatio, trimRatio, maxPower, deadband);
+    mBasicDrive.config(turnRatio, trimRatio, maxPower, mDeadband);
 
     // Require DriveSubsystem
     addRequirements(mDriveSubsystem);
@@ -58,7 +59,7 @@ public class DriveClosedLoop extends CommandBase {
       powers.getLeft() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0),
       powers.getRight() * Constants.Drive.kFeedforward.maxAchievableVelocity(Constants.Robot.kMinBatteryVoltage, 0.0));
 
-    mDriveSubsystem.setVelocity(speeds);
+    mDriveSubsystem.setVelocity(speeds, mDeadband);
   }
 
   // Called once the command ends or is interrupted.

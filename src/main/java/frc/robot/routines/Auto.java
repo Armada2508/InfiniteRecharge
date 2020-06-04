@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.motion.FollowTrajectory;
+import frc.robot.Constants;
 import frc.robot.commands.Aim;
 import frc.robot.commands.DrivePower;
 import frc.robot.commands.Intake;
@@ -37,7 +38,7 @@ public class Auto extends SequentialCommandGroup {
             )
         ),
         // Aim
-        new Aim(driveSubsystem, visionSubsystem),
+        new Aim(driveSubsystem, visionSubsystem, Constants.Vision.kAimSamples),
         new Shoot(shooterSubsystem, transportSubsystem, frontIntake),
         new ParallelRaceGroup(
             new SpinRoller(shooterSubsystem, 6400),

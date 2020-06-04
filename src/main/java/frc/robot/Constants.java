@@ -71,27 +71,29 @@ public final class Constants {
         public static final boolean kThrottleInverted = true; // If the throttle axis is inverted
         public static final boolean kTurnInverted = false; // If the turn axis is inverted
         public static final boolean kTrimInverted = false; // If the trim axis is inverted
-        public static final double kCreepSpeed = 0.15; // How fast the robot creeps
+        public static final double kCreepSpeed = 0.075; // How fast the robot creeps(0.0-1.0)
 
         // Drive System Constants
         public static final boolean kRightInverted = true; // If the right side is inverted
         public static final boolean kLeftInverted = false; // If the left side is inverted
         public static final int kSlot = 0; // The PID slot to use for the drive subsystem
-        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.15, 0, 0.0, 0.0575, 200); // The feedback constants for the drive
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.125, 0, 0.0, 0.0575, 200); // The feedback constants for the drive
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 10.71*(48.0/42.0)); //  The feedback config for the drive
         public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001);  // The config for the drive TODO: Tune PID
+        public static final double kRamp = 0.75; // How fast the Drive will go from 0-100% power
 
         // Trajectory Following Constants
         public static final SimpleMotorFeedforward kFeedforward = new SimpleMotorFeedforward(0.31, 1.95, 0.35); // The feedforward for the drive
-        public static final PIDController kPathPID = new PIDController(0.125, 0.0,  0); // The PID for trajectory following
+        public static final PIDController kPathPID = new PIDController(0.25, 0.0,  0); // The PID for trajectory following
         public static final double kTrackWidth = 0.6084; // The track width of the drive
         public static final double kB = 2.0; // The B constant for RamseteController
         public static final double kZeta = 0.7; // The Zeta constant for RamseteController
         public static final double kWheelDiameter = Units.inchesToMeters(8); // The diameter of the wheels on the robot
+        public static final double kTurnCompensation = 0.875;  // How much the drive overcompensates for turning because of weird drive dynamics
 
         // Trajectory Generation Constants
-        public static final double kMaxVelocity = 1.75;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
-        public static final double kMaxAcceleration = 1.5; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
+        public static final double kMaxVelocity = 1.0;  // The maximum velocity of the path generated in m/s   // TODO: Determine correct value
+        public static final double kMaxAcceleration = 0.75; //The maximum acceleration of the path generated in m/s^2   // TODO: Determine correct value
         public static final double kMaxCentripetalAcceleration = 2.0;  // The maximum centripetal acceleration of the path generated in m/s^2   // TODO: Determine correct value
         public static final double kMaxVoltage = 8.0; //The maximum voltage applied to either side of the robot   // TODO: Determine correct value
 
@@ -102,7 +104,7 @@ public final class Constants {
     // ===============================
     public static class Robot {
 
-        public static final double kMinBatteryVoltage = 4; // The lowest voltage the battery should sag to  // TODO: Determine correct value
+        public static final double kMinBatteryVoltage = 8; // The lowest voltage the battery should sag to  // TODO: Determine correct value
 
     }
     
@@ -175,11 +177,12 @@ public final class Constants {
         public static final double kVerticalOffset = kTargetHeight - kLimelightHeight; // The difference between the height of the limelight and the height of the target
         public static final double kTargetWidth = 1.0; // The width of the retro-reflective tape on the port
         public static final double kTapeWidth = (4.0 / Math.sqrt(3)) * 0.0254; // The width of the tape 
-        public static final double kPAim = 0.01; // The P value used for aiming
+        public static final double kPAim = 0.02; // The P value used for aiming
         public static final double kIAim = 0.0;  // The I value used for aiming
-        public static final double kDAim = 0.0005; // The D value used for aiming
+        public static final double kDAim = 0.0015; // The D value used for aiming
         public static final double kAimOffset = 0.0; // A horizontal offset to use for aiming
-        public static final double kMaxAimPower = 0.35; // The maximum motor power used for aiming(0.0-1.0)
+        public static final double kMaxAimPower = 0.125; // The maximum motor power used for aiming(0.0-1.0)
+        public static final int kAimSamples = 30; // The number of samles used while aiming
 
     }
 
@@ -201,7 +204,7 @@ public final class Constants {
         
         public static final int kLeftMotor = 11; // The ID of the Shooter Falcon on the left
         public static final int kRightMotor = 10; // The ID of the Shooter Falcon on the right
-        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.1, 0.001, 0.0, 0.0463, 10000); // The feedback constants to use for the shooter
+        public static final FeedbackConstants kFeedbackConstants = new FeedbackConstants(0.05, 0.0, 0.0, 0.0495, 0); // The feedback constants to use for the shooter
         public static final FeedbackConfig kFeedbackConfig = new FeedbackConfig(FeedbackDevice.IntegratedSensor, 2048, 1.0); // The feedback config for the shooter
         public static final MotorConfig kConfig = new MotorConfig(40, 0, 0, 0.001); // The config for the shooter motors // TODO: Redo current on shooter, add voltage compensation
         public static final double kStableRPMThreshold = 100; // The threshold to consider the rpm "Stable" at and switch to a lower current

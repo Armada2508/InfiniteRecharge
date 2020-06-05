@@ -28,7 +28,6 @@ import frc.robot.subsystems.*;
 
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import badlog.lib.*;
 
@@ -65,7 +64,7 @@ public class RobotContainer {
     }
 
     public void robotInit() {
-        System.out.println(LogUtil.getTimestamp());
+        
         // Initialize the Dashboard
         initDashboard();
 
@@ -372,7 +371,7 @@ public class RobotContainer {
         BadLog.createValue("Match Number", "" + DriverStation.getInstance().getMatchNumber());
         BadLog.createValue("Alliance", DriverStation.getInstance().getAlliance().toString());
         BadLog.createValue("Alliance Station", "" + DriverStation.getInstance().getLocation());
-        BadLog.createTopic("Match Time", "s", Timer::getMatchTime);
+        BadLog.createTopic("Match Time", "s", Timer::getMatchTime, "zero");
 
 
 
@@ -381,22 +380,21 @@ public class RobotContainer {
         // ================
 
         // Physical Drive Stuff
-        BadLog.createTopic("Drive Physical/Left Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("left_reference").getDouble(0));
-        BadLog.createTopic("Drive Physical/Right Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("right_reference").getDouble(0));
+        BadLog.createTopic("Ramsete/Left Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("left_reference").getDouble(0));
+        BadLog.createTopic("Ramsete/Right Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("right_reference").getDouble(0));
 
         BadLog.createTopic("Drive Physical/Left Velocity", "m/s", () -> mDrive.getVelocityLeft());
         BadLog.createTopic("Drive Physical/Left Position", "m", mDrive::getPositionLeft);
         BadLog.createTopic("Drive Physical/Right Velocity", "m/s", () -> mDrive.getVelocityRight());
         BadLog.createTopic("Drive Physical/Right Position", "m", mDrive::getPositionRight);
         
-        System.out.println(Timer.getFPGATimestamp());
-
         // Electrical Drive Stuff
-        // for () {
-        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Output", "V", () -> mDrive.getVoltage()[i].getAsDouble());
-        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Current", "A", () -> mDrive.getCurrent()[i].getAsDouble());
-        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Temperature", "C", () -> mDrive.getTemps()[i].getAsDouble());
-        // }
+        for (int i = 0; i < mDrive.getIDs().length; i++) {
+            final int index = i;
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + " Output", "V", () -> mDrive.getVoltage()[index].getAsDouble());
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + " Current", "A", () -> mDrive.getCurrent()[index].getAsDouble());
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + " Temperature", "C", () -> mDrive.getTemps()[index].getAsDouble(), "zero");
+        }
 
         // Global Robot Stuff
         BadLog.createTopic("Robot/Velocity", "m/s", mDrive::getVelocity);
@@ -405,7 +403,7 @@ public class RobotContainer {
         BadLog.createTopic("Robot/Odometry Heading", "deg", mDrive::getOdometryHeading);
         BadLog.createTopic("Robot/Odometry X", "m", mDrive::getOdometryX);
         BadLog.createTopic("Robot/Odometry Y", "m", mDrive::getOdometryY);
-        BadLog.createTopicStr("Robot/Is Aiming", "bool", () -> LogUtil.boolToString(mDrive.isAiming()));
+        BadLog.createTopicStr("Robot/Is Aiming", "bool", () -> LogUtil.boolToString(mDrive.isAiming()), "zero");
         
 
 
@@ -413,11 +411,12 @@ public class RobotContainer {
         //      Power
         // ===============
 
-        BadLog.createTopic("Power/Battery Voltage", "J", RobotController::getBatteryVoltage);
-        BadLog.createTopic("Power/Total Energy", "J", mPDP::getTotalEnergy);
-        // for () {
-        //     BadLog.createTopic("Power/Channel " + i + "Current", "A", () -> mPDP.getCurrent(i);
-        // }
+        BadLog.createTopic("Power/Battery Voltage", "J", RobotController::getBatteryVoltage, "zero");
+        BadLog.createTopic("Power/Total Energy", "J", mPDP::getTotalEnergy, "zero");
+        for (int i = 0; i < 16; i++) {
+            final int index = i;
+            BadLog.createTopic("Power/Channel " + i + " Current", "A", () -> mPDP.getCurrent(index));
+        }
         BadLog.createTopic("Power/Total Current", "A", mPDP::getTotalCurrent);
         BadLog.createTopic("Power/RIO Voltage", "V", RobotController::getInputVoltage);
         BadLog.createTopic("Power/RIO Current", "A", RobotController::getInputCurrent);
@@ -429,9 +428,9 @@ public class RobotContainer {
         // ====================
 
         BadLog.createTopicStr("System/FPGA Active", "bool", () -> LogUtil.boolToString(RobotController.isSysActive()));
-        BadLog.createTopic("System/CAN Utilization", "percent", () -> RobotController.getCANStatus().percentBusUtilization);
-        BadLog.createTopic("System/Uptime", "s", Timer::getFPGATimestamp);
-        BadLog.createTopicSubscriber("System/Loop Time", "s", DataInferMode.DEFAULT);
+        BadLog.createTopic("System/CAN Utilization", "percent", () -> { return RobotController.getCANStatus().percentBusUtilization * 100.0; }, "zero");
+        BadLog.createTopic("System/Uptime", "s", Timer::getFPGATimestamp, "xaxis", "zero");
+        BadLog.createTopicSubscriber("System/Loop Time", "s", DataInferMode.DEFAULT, "zero");
         BadLog.createTopicStr("System/Mode", BadLog.UNITLESS, () -> {
             if(DriverStation.getInstance().isEStopped()) {
                 return "-1";
@@ -488,7 +487,7 @@ public class RobotContainer {
         BadLog.createTopic("Vision/Target Width", "px", mVision::getTargetWidth);
         BadLog.createTopic("Vision/Target Height", "px", mVision::getTargetHeight);
         BadLog.createTopic("Vision/Target Angle", "deg", mVision::getTargetAngle);
-        BadLog.createTopic("Vision/Target Distance", "m", () -> mVision.getDistanceHeight(Constants.Vision.kTargetHeight));
+        BadLog.createTopic("Vision/Target Distance", "m", () -> mVision.getDistanceHeight(Constants.Vision.kTargetHeight), "zero");
 
 
 
@@ -499,7 +498,24 @@ public class RobotContainer {
         BadLog.createTopic("WOF/RPM", "rpm", mWOF::getRPM);
         BadLog.createTopic("WOF/Output", "V", mWOF::getVoltage);
         BadLog.createTopic("WOF/Current", "A", mWOF::getCurrent);
-        BadLog.createTopicStr("WOF/Color", BadLog.UNITLESS, mWOF::getColorString);;
+        BadLog.createTopicStr("WOF/Color", BadLog.UNITLESS, () -> {
+            if(!mWOF.isColor()) {
+                return "0";
+            }
+
+            char c = mWOF.getColor();
+            if (c == 'R') {
+                return "1";
+            } if (c == 'Y') {
+                return "2";
+            } else if (c == 'G') {
+                return "3";
+            } else if (c == 'B') {
+                return "4";
+            } else {
+                return "-1";
+            }
+        });
 
 
 
@@ -517,11 +533,12 @@ public class RobotContainer {
 
         
         BadLog.createTopic("Shooter/RPM", "rpm", mShooter::getRPM);
-        // for () {
-        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Output", "V", () -> mShooter.getVoltage()[i].getAsDouble());
-        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Current", "A", () -> mShooter.getCurrent()[i].getAsDouble());
-        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Temperature", "C", () -> mShooter.getTemp()[i].getAsDouble());
-        // }
+        for (int i = 0; i < mShooter.getIDs().length; i++) {
+            final int index = i;
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + " Output", "V", () -> mShooter.getVoltage()[index].getAsDouble());
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + " Current", "A", () -> mShooter.getCurrent()[index].getAsDouble());
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + " Temperature", "C", () -> mShooter.getTemp()[index].getAsDouble(), "zero");
+        }
         mLogger.finishInitialization();
         
     }

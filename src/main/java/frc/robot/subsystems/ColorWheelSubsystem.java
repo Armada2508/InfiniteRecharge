@@ -55,13 +55,17 @@ public class ColorWheelSubsystem extends SubsystemBase {
         return mWOFTalon.getInverted();
     }
 
+    public boolean isColor() {
+        return !DriverStation.getInstance().getGameSpecificMessage().isEmpty();
+    }
+
     public char getColor() {
         return DriverStation.getInstance().getGameSpecificMessage().charAt(0);
     }
 
     public String getColorString() {
         if(DriverStation.getInstance().getGameSpecificMessage().isEmpty()) {
-            return "";
+            return "none";
         }
         switch(DriverStation.getInstance().getGameSpecificMessage().charAt(0))
         {
@@ -74,7 +78,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
             case 'Y' :
                 return "yellow";
             default :
-                return "";
+                return "error";
         }
     }
 

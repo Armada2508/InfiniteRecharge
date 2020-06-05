@@ -3,6 +3,9 @@ package frc.lib.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class LogUtil {
 
@@ -17,6 +20,19 @@ public class LogUtil {
 
 	public static String getSessionName() {
 		return kSessionNameFormat.format(new Date());
+	}
+
+	public static String getSessionNameEvent() {
+		DriverStation ds = DriverStation.getInstance();
+		return ds.getMatchType().toString() + ds.getMatchNumber() + "-" + ds.getAlliance().toString() + ds.getLocation() + (ds.getEventName() == null ? "" : "-") + Optional.ofNullable(ds.getEventName()).orElse("");
+	}
+
+	public static String getSessionNameAuto() {
+		if(DriverStation.getInstance().isFMSAttached()) {
+			return getSessionNameEvent();
+		} else {
+			return getSessionName();
+		}
 	}
 
 	public static String boolToString(boolean bool) {

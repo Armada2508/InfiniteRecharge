@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -25,7 +26,11 @@ import frc.robot.commands.*;
 import frc.robot.enums.ClimbState;
 import frc.robot.subsystems.*;
 
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import badlog.lib.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -46,6 +51,9 @@ public class RobotContainer {
     private final Joystick mJoystick = new Joystick(Constants.Drive.kJoystickPort);
     private final Joystick mButtonBoard = new Joystick(Constants.ButtonBoard.kPort);
     private final PowerDistributionPanel mPDP = new PowerDistributionPanel();
+    private BadLog mLogger;
+    private Timer mLoggerTimer;
+    private double mLastTime = 0.0;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,23 +64,13 @@ public class RobotContainer {
 
     }
 
-    /*
-	 * Checks to see if driver station is attached.
-	 */
-	public boolean shouldInit() {
-		if (!DriverStation.getInstance().isDisabled())
-			return true;
-
-		if (DriverStation.getInstance().isDSAttached())
-			return true;
-
-		return false;
-	}
-
     public void robotInit() {
         System.out.println(LogUtil.getTimestamp());
         // Initialize the Dashboard
-        //initDashboard();
+        initDashboard();
+
+        // Initialize the Logger
+        initLogger();
 
         // Initialize the Camera(s)
         initCam();
@@ -175,11 +173,6 @@ public class RobotContainer {
                 .withPosition(0, 0);
             Shuffleboard.getTab("Drive Electrical")
                 .getLayout("Talon " + mDrive.getIDs()[i])
-                .addNumber("Current Draw", mDrive.getCurrent()[i])
-                .withWidget(BuiltInWidgets.kGraph)
-                .withPosition(0, 1);
-            Shuffleboard.getTab("Drive Electrical")
-                .getLayout("Talon " + mDrive.getIDs()[i])
                 .addBoolean("Inverted", mDrive.getInverted()[i])
                 .withPosition(0, 2);
         }
@@ -189,11 +182,6 @@ public class RobotContainer {
             .addNumber("Robot Velocity", mDrive::getVelocity)
             .withWidget(BuiltInWidgets.kGraph)
             .withPosition(4, 0)
-            .withSize(4, 3);
-        Shuffleboard.getTab("Robot")
-            .addNumber("Turn Velocity", mDrive::getTurnVelocity)
-            .withWidget(BuiltInWidgets.kGraph)
-            .withPosition(8, 0)
             .withSize(4, 3);
         Shuffleboard.getTab("Robot")
             .addNumber("Gyro", mDrive::getHeading)
@@ -215,20 +203,6 @@ public class RobotContainer {
             .addBoolean("Is Aiming", mDrive::isAiming)
             .withPosition(12, 0)
             .withSize(1, 6);
-
-        
-        // ================
-        //      Power
-        // ================
-        Shuffleboard.getTab("Power")
-            .add("Power", mPDP)
-            .withPosition(0, 0)
-            .withSize(6, 5);
-        Shuffleboard.getTab("Power")
-            .addNumber("Total Energy", mPDP::getTotalEnergy)
-            .withWidget(BuiltInWidgets.kGraph)
-            .withPosition(6,0)
-            .withSize(6,5);
         
         // =================
         //      Intake
@@ -325,11 +299,6 @@ public class RobotContainer {
             .addString("WOF Color", mWOF::getColorString)
             .withPosition(5, 3)
             .withSize(4, 3);
-        Shuffleboard.getTab("WOF")
-            .addNumber("WOF Current", mWOF::getCurrent)
-            .withPosition(9, 3)
-            .withSize(4, 3)
-            .withWidget(BuiltInWidgets.kGraph);
 
 
         // =====================
@@ -390,6 +359,171 @@ public class RobotContainer {
 
     }
 
+    public void initLogger() {
+        mLoggerTimer = new Timer();
+        mLoggerTimer.start();
+
+        String session = LogUtil.getSessionName();
+        mLogger = BadLog.init(Paths.get(Filesystem.getOperatingDirectory().getAbsolutePath(), "log", session + ".bag").toString());
+        
+        BadLog.createValue("Start Time", LogUtil.getTimestamp());
+        BadLog.createValue("Event Name", Optional.ofNullable(DriverStation.getInstance().getEventName()).orElse(""));
+        BadLog.createValue("Match Type", DriverStation.getInstance().getMatchType().toString());
+        BadLog.createValue("Match Number", "" + DriverStation.getInstance().getMatchNumber());
+        BadLog.createValue("Alliance", DriverStation.getInstance().getAlliance().toString());
+        BadLog.createValue("Alliance Station", "" + DriverStation.getInstance().getLocation());
+        BadLog.createTopic("Match Time", "s", Timer::getMatchTime);
+
+
+
+        // ================
+        //      Drive
+        // ================
+
+        // Physical Drive Stuff
+        BadLog.createTopic("Drive Physical/Left Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("left_reference").getDouble(0));
+        BadLog.createTopic("Drive Physical/Right Reference", "m/s", () -> NetworkTableInstance.getDefault().getTable("ramsete").getEntry("right_reference").getDouble(0));
+
+        BadLog.createTopic("Drive Physical/Left Velocity", "m/s", () -> mDrive.getVelocityLeft());
+        BadLog.createTopic("Drive Physical/Left Position", "m", mDrive::getPositionLeft);
+        BadLog.createTopic("Drive Physical/Right Velocity", "m/s", () -> mDrive.getVelocityRight());
+        BadLog.createTopic("Drive Physical/Right Position", "m", mDrive::getPositionRight);
+        // Electrical Drive Stuff
+        for (AtomicInteger i = new AtomicInteger(); i.get() < mDrive.getIDs().length; i.getAndIncrement()) {
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Output", "V", () -> mDrive.getVoltage()[i.get()].getAsDouble());
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Current", "A", () -> mDrive.getCurrent()[i.get()].getAsDouble());
+            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Temperature", "C", () -> mDrive.getTemps()[i.get()].getAsDouble());
+        }
+
+        // Global Robot Stuff
+        BadLog.createTopic("Robot/Velocity", "m/s", mDrive::getVelocity);
+        BadLog.createTopic("Robot/Turn Rate", "rad/s", mDrive::getTurnRate);
+        BadLog.createTopic("Robot/Gyro", "deg", mDrive::getHeading);
+        BadLog.createTopic("Robot/Odometry Heading", "deg", mDrive::getOdometryHeading);
+        BadLog.createTopic("Robot/Odometry X", "m", mDrive::getOdometryX);
+        BadLog.createTopic("Robot/Odometry Y", "m", mDrive::getOdometryY);
+        BadLog.createTopicStr("Robot/Is Aiming", "bool", () -> LogUtil.boolToString(mDrive.isAiming()));
+        
+
+
+        // ===============
+        //      Power
+        // ===============
+
+        BadLog.createTopic("Power/Battery Voltage", "J", RobotController::getBatteryVoltage);
+        BadLog.createTopic("Power/Total Energy", "J", mPDP::getTotalEnergy);
+        for (AtomicInteger i = new AtomicInteger(); i.get() < 16; i.getAndIncrement()) {
+            BadLog.createTopic("Power/Channel " + i + "Current", "A", () -> mPDP.getCurrent(i.get()));
+        }
+        BadLog.createTopic("Power/Total Current", "A", mPDP::getTotalCurrent);
+        BadLog.createTopic("Power/RIO Voltage", "V", RobotController::getInputVoltage);
+        BadLog.createTopic("Power/RIO Current", "A", RobotController::getInputCurrent);
+        BadLog.createTopicStr("Power/Is Browned Out", "bool", () -> LogUtil.boolToString(RobotController.isBrownedOut()));
+        
+        
+        // ====================
+        //      System
+        // ====================
+
+        BadLog.createTopicStr("System/FPGA Active", "bool", () -> LogUtil.boolToString(RobotController.isSysActive()));
+        BadLog.createTopic("System/CAN Utilization", "percent", () -> RobotController.getCANStatus().percentBusUtilization);
+        BadLog.createTopic("System/Uptime", "s", Timer::getFPGATimestamp);
+        BadLog.createTopicSubscriber("System/Loop Time", "s", DataInferMode.DEFAULT);
+        BadLog.createTopicStr("System/Mode", BadLog.UNITLESS, () -> {
+            if(DriverStation.getInstance().isEStopped()) {
+                return "-1";
+            }
+            if(DriverStation.getInstance().isDisabled()) {
+                return "0";
+            } else {
+                if(DriverStation.getInstance().isAutonomous()) {
+                    return "1";
+                } else if(DriverStation.getInstance().isOperatorControl()) {
+                    return "2";
+                } else if(DriverStation.getInstance().isTest()) {
+                    return "3";
+                } else {
+                    return "-2";
+                }
+            }
+        });
+        
+
+        // =================
+        //      Intake
+        // =================
+
+        BadLog.createTopic("Intake/Output", "V", mIntake::getVoltage);
+        BadLog.createTopic("Intake/Current", "A", mIntake::getCurrent);
+
+
+        // ================
+        //      Climb
+        // ================
+        
+        BadLog.createTopicStr("Climb/State", BadLog.UNITLESS, () -> {
+            if(mClimb.isExtended()) {
+                return "0";
+            } else if(mClimb.isVented()) {
+                return "1";
+            } else if(mClimb.isRetracted()) {
+                return "2";
+            } else {
+                return "-1";
+            }
+        });
+
+
+
+        // ================
+        //      Vision 
+        // ================
+
+        BadLog.createTopicStr("Vision/Target Found", "bool", () -> LogUtil.boolToString(mVision.targetFound()));
+        BadLog.createTopic("Vision/Target X", "deg", mVision::getX);
+        BadLog.createTopic("Vision/Target Y", "deg", mVision::getY);
+        BadLog.createTopic("Vision/Target Width", "px", mVision::getTargetWidth);
+        BadLog.createTopic("Vision/Target Height", "px", mVision::getTargetHeight);
+        BadLog.createTopic("Vision/Target Angle", "deg", mVision::getTargetAngle);
+        BadLog.createTopic("Vision/Target Distance", "m", () -> mVision.getDistanceHeight(Constants.Vision.kTargetHeight));
+
+
+
+        // ======================
+        //      Color Wheel
+        // ======================
+        BadLog.createTopic("WOF/Rotations", BadLog.UNITLESS, mWOF::getRotations);
+        BadLog.createTopic("WOF/RPM", "rpm", mWOF::getRPM);
+        BadLog.createTopic("WOF/Output", "V", mWOF::getVoltage);
+        BadLog.createTopic("WOF/Current", "A", mWOF::getCurrent);
+        BadLog.createTopicStr("WOF/Color", BadLog.UNITLESS, mWOF::getColorString);;
+
+
+
+        // =====================
+        //      Pneumatics
+        // =====================
+        BadLog.createTopicStr("Pneumatics/Pressure Switch", "bool", () -> LogUtil.boolToString(mPneumatics.getPressureSwitch()));
+        BadLog.createTopicStr("Pneumatics/Compressor Not Connected", "bool", () -> LogUtil.boolToString(mPneumatics.getCompressorNotConnectedFault()));
+        BadLog.createTopicStr("Pneumatics/Compresor Current Too High", "bool", () -> LogUtil.boolToString(mPneumatics.getCompressorCurrentTooHighFault()));
+        BadLog.createTopicStr("Pneumatics/Compressor Shorted", "bool", () -> LogUtil.boolToString(mPneumatics.getCompressorShortedFault()));
+
+        // =================
+        //      Shooter
+        // =================
+
+        
+        BadLog.createTopic("Shooter/RPM", "rpm", mShooter::getRPM);
+        for (AtomicInteger i = new AtomicInteger(); i.get() < mShooter.getIDs().length; i.getAndIncrement()) {
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Output", "V", () -> mShooter.getVoltage()[i.get()].getAsDouble());
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Current", "A", () -> mShooter.getCurrent()[i.get()].getAsDouble());
+            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Temperature", "C", () -> mShooter.getTemp()[i.get()].getAsDouble());
+        }
+        mLogger.finishInitialization();
+        
+    }
+
+
     public void initCam() {
         // Get the back camera plugged into the RIO
         UsbCamera backCamera = CameraServer.getInstance().startAutomaticCapture(0);
@@ -402,6 +536,17 @@ public class RobotContainer {
         backCamera.setFPS(Constants.Camera.kCameraFPS);
         backCameraStream.setFPS(Constants.Camera.kCameraFPS);
         
+    }
+
+    public void updateLogger() {
+        if(mLoggerTimer.hasPeriodPassed(DriverStation.getInstance().isEnabled() ? Constants.Logging.kEnabledLogPeriod / 1000.0 : Constants.Logging.kDisabledLogPeriod / 1000.0)) {
+            BadLog.publish("System/Loop Time", Timer.getFPGATimestamp() - mLastTime);
+
+            mLogger.updateTopics();
+
+            mLogger.log();
+        }
+        mLastTime = Timer.getFPGATimestamp();
     }
     
     public void changeMode() {

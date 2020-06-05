@@ -26,7 +26,7 @@ public final class Constants {
     // =============================
     //    Button Board Constants
     // =============================
-    public static class ButtonBoard {
+    public static final class ButtonBoard {
         // Button Mapping
         public static final int kPort = 1;
         public static final int kSpinUp = 1;
@@ -47,11 +47,32 @@ public final class Constants {
         public static final int kWOFRightSmall = 16;
     }
 
+    // ===============================
+    //    Global Robot Constants
+    // ===============================
+    public static final class Robot {
+
+        public static final double kMinBatteryVoltage = 9; // The lowest voltage the battery is predicted to be
+
+    }
+
+
+    // =========================
+    //    Logging Constants
+    // =========================
+    public static final class Logging {
+
+        // Logging Periods in ms
+        public static final double kDisabledLogPeriod = 250; // The logging period when disabled
+        public static final double kEnabledLogPeriod = 20; // The logging period when enabled
+
+    }
+
 
     // ======================
     //    Drive Constants
     // ======================
-    public static class Drive {
+    public static final class Drive {
 
         // Motor Ports
         public static final int kLeftMotorPort = 0; // The left drive motor port
@@ -98,21 +119,12 @@ public final class Constants {
         public static final double kMaxVoltage = 8.0; //The maximum voltage applied to either side of the robot   // TODO: Determine correct value
 
     }
-
-    // ===============================
-    //    Global Robot Constants
-    // ===============================
-    public static class Robot {
-
-        public static final double kMinBatteryVoltage = 8; // The lowest voltage the battery should sag to  // TODO: Determine correct value
-
-    }
     
 
     // ========================================
     //    Global Motor Controller Constants
     // ========================================
-    public static class MotorController {
+    public static final class MotorController {
 
         // Status frames are sent over CAN that contain data about the Talon.
         // They are broken up into different pieces of data and the frequency
@@ -133,7 +145,7 @@ public final class Constants {
     //    Gyro Constants
     // =====================
 
-    public static class Gyro {
+    public static final class Gyro {
 
         // Status frames are used to transmit data from the gyro to the RIO over
         // CAN.  The frequency at which they are sent can be changed according
@@ -156,7 +168,7 @@ public final class Constants {
     // ==========================
     //    Dashboard Constants
     // ==========================
-    public static class Dashboard {
+    public static final class Dashboard {
 
         // Dashboard Constants
         public static final double kUpdateRate = 0.5; // The dashboard update rate // TODO: Determine correct value
@@ -167,7 +179,7 @@ public final class Constants {
     // =======================
     //    Vision Constants
     // =======================
-    public static class Vision {
+    public static final class Vision {
 
         public static final FOV kLimelightFOV = new FOV(59.6, 45.7); // The Field-of-view of the limelight
         public static final Resolution kLimelightResolution = new Resolution(960, 720); // The resolution of the limelight
@@ -189,7 +201,7 @@ public final class Constants {
     // ======================
     //    Camera Constants
     // ======================
-    public static class Camera {
+    public static final class Camera {
          
         // Camera Constants
         public static final Resolution kCameraResolution = new Resolution(160, 120); // The resolution to use for streaming the camera to the dashboard
@@ -200,7 +212,7 @@ public final class Constants {
     // =======================
     //    Shooter Constants
     // =======================
-    public static class Shooter {
+    public static final class Shooter {
         
         public static final int kLeftMotor = 11; // The ID of the Shooter Falcon on the left
         public static final int kRightMotor = 10; // The ID of the Shooter Falcon on the right
@@ -220,7 +232,7 @@ public final class Constants {
     // ===========================
     //    Color Wheel Constants   
     // ===========================
-    public static class WOF {
+    public static final class WOF {
 
         public static final double kDiameter = 32; // The diameter of the Wheel-of-Fortune
         public static final double kWheelDiameter = 7.5; // The diameter of the wheel used to turn the wheel of fortune
@@ -245,7 +257,7 @@ public final class Constants {
     // ==========================
     //    Transport Constants
     // ==========================
-    public static class Transport {
+    public static final class Transport {
 
         public static final int kTalon = 6; // The ID of the Talon used for the Transport
         public static final double kPulleyDiameter = 2.75; // The diameter of the pulley used in the transport in inches //TODO: Get correct diameter
@@ -285,7 +297,7 @@ public final class Constants {
     // =======================
     //    Intake Constants
     // =======================
-    public static class Intake {
+    public static final class Intake {
         public static final int kTalon = 4; // The ID of the Intake Talon
         public static final double kPower = 0.75; // The power to run the Intake at
         public static final boolean kInverted = false; // If the intake is inverted
@@ -295,7 +307,7 @@ public final class Constants {
     // =====================
     //    Climb Constants
     // =====================
-    public static class Climb {
+    public static final class Climb {
 
         // Solenoids
         public static final int kLeftTop = 3; // The Solenoid Connected to the top port on the left climb cylinder

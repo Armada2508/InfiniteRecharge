@@ -142,7 +142,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get the skewed angle of the target
+     * Get the skew angle of the target
      * @return The angle of the target in degrees
      */
     public double getTargetAngle() {

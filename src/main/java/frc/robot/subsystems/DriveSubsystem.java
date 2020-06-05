@@ -244,7 +244,7 @@ public class DriveSubsystem extends SubsystemBase {
         return mKinematics.toChassisSpeeds(getWheelSpeeds()).vxMetersPerSecond;
     }
 
-    public double getTurnVelocity() {
+    public double getTurnRate() {
         return mKinematics.toChassisSpeeds(getWheelSpeeds()).omegaRadiansPerSecond;
     }
 

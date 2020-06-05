@@ -28,10 +28,8 @@ public class Robot extends TimedRobot {
     // Make a new RobotContainer to contain all the stuff we want to do
     mRobotContainer = new RobotContainer();
 
-    if(mRobotContainer.shouldInit()) {
-      // Initialization
-      mRobotContainer.robotInit();
-    }
+    // Initialization
+    mRobotContainer.robotInit();
     
     
   }
@@ -40,6 +38,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     // Run the scheduler to update commands
     CommandScheduler.getInstance().run();
+
+    // Update the logger
+    mRobotContainer.updateLogger();
   }
 
   /**

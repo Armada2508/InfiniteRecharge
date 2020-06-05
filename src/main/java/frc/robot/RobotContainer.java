@@ -364,7 +364,7 @@ public class RobotContainer {
         mLoggerTimer.start();
 
         String session = LogUtil.getSessionName();
-        mLogger = BadLog.init(Paths.get(Filesystem.getOperatingDirectory().getAbsolutePath(), "log", session + ".bag").toString());
+        mLogger = BadLog.init(Paths.get(Filesystem.getOperatingDirectory().getAbsolutePath(), "log", session + ".badlog").toString());
         
         BadLog.createValue("Start Time", LogUtil.getTimestamp());
         BadLog.createValue("Event Name", Optional.ofNullable(DriverStation.getInstance().getEventName()).orElse(""));
@@ -388,12 +388,15 @@ public class RobotContainer {
         BadLog.createTopic("Drive Physical/Left Position", "m", mDrive::getPositionLeft);
         BadLog.createTopic("Drive Physical/Right Velocity", "m/s", () -> mDrive.getVelocityRight());
         BadLog.createTopic("Drive Physical/Right Position", "m", mDrive::getPositionRight);
+        
+        System.out.println(Timer.getFPGATimestamp());
+
         // Electrical Drive Stuff
-        for (AtomicInteger i = new AtomicInteger(); i.get() < mDrive.getIDs().length; i.getAndIncrement()) {
-            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Output", "V", () -> mDrive.getVoltage()[i.get()].getAsDouble());
-            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Current", "A", () -> mDrive.getCurrent()[i.get()].getAsDouble());
-            BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i.get()] + "Temperature", "C", () -> mDrive.getTemps()[i.get()].getAsDouble());
-        }
+        // for () {
+        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Output", "V", () -> mDrive.getVoltage()[i].getAsDouble());
+        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Current", "A", () -> mDrive.getCurrent()[i].getAsDouble());
+        //     BadLog.createTopic("Drive Electrical/Talon " + mDrive.getIDs()[i] + "Temperature", "C", () -> mDrive.getTemps()[i].getAsDouble());
+        // }
 
         // Global Robot Stuff
         BadLog.createTopic("Robot/Velocity", "m/s", mDrive::getVelocity);
@@ -412,9 +415,9 @@ public class RobotContainer {
 
         BadLog.createTopic("Power/Battery Voltage", "J", RobotController::getBatteryVoltage);
         BadLog.createTopic("Power/Total Energy", "J", mPDP::getTotalEnergy);
-        for (AtomicInteger i = new AtomicInteger(); i.get() < 16; i.getAndIncrement()) {
-            BadLog.createTopic("Power/Channel " + i + "Current", "A", () -> mPDP.getCurrent(i.get()));
-        }
+        // for () {
+        //     BadLog.createTopic("Power/Channel " + i + "Current", "A", () -> mPDP.getCurrent(i);
+        // }
         BadLog.createTopic("Power/Total Current", "A", mPDP::getTotalCurrent);
         BadLog.createTopic("Power/RIO Voltage", "V", RobotController::getInputVoltage);
         BadLog.createTopic("Power/RIO Current", "A", RobotController::getInputCurrent);
@@ -514,11 +517,11 @@ public class RobotContainer {
 
         
         BadLog.createTopic("Shooter/RPM", "rpm", mShooter::getRPM);
-        for (AtomicInteger i = new AtomicInteger(); i.get() < mShooter.getIDs().length; i.getAndIncrement()) {
-            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Output", "V", () -> mShooter.getVoltage()[i.get()].getAsDouble());
-            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Current", "A", () -> mShooter.getCurrent()[i.get()].getAsDouble());
-            BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i.get()] + "Temperature", "C", () -> mShooter.getTemp()[i.get()].getAsDouble());
-        }
+        // for () {
+        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Output", "V", () -> mShooter.getVoltage()[i].getAsDouble());
+        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Current", "A", () -> mShooter.getCurrent()[i].getAsDouble());
+        //     BadLog.createTopic("Shooter/Talon " + mShooter.getIDs()[i] + "Temperature", "C", () -> mShooter.getTemp()[i].getAsDouble());
+        // }
         mLogger.finishInitialization();
         
     }
